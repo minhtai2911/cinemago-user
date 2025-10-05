@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axiosInstance";
+import axios from "axios";
 import {
   SignUpPayload,
   LoginPayload,
@@ -14,11 +15,11 @@ export const signUp = (data: SignUpPayload) => {
 };
 
 export const login = (data: LoginPayload) => {
-  return axiosInstance.post("/v1/auth/login", data);
+  return axios.post("/api/auth/login", data);
 };
 
 export const logout = (data: LogoutPayload) => {
-  return axiosInstance.post("/v1/auth/logout", data);
+  return axios.post("/api/auth/logout", data);
 };
 
 export const verifyAccount = (data: VerifyAccountPayload) => {

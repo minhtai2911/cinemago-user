@@ -12,7 +12,7 @@ export async function POST() {
     if (!refreshToken) {
       return NextResponse.json(
         { message: "No refresh token" },
-        { status: 401 }
+        { status: 400 }
       );
     }
 
@@ -27,7 +27,6 @@ export async function POST() {
 
     const { newAccessToken, newRefreshToken } = response.data;
 
-    localStorage.setItem("accessToken", newAccessToken);
     cookieStore.set("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: true,

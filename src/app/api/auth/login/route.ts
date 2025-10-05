@@ -17,7 +17,6 @@ export async function POST(request: Request) {
 
     const { accessToken, refreshToken } = response.data;
 
-    localStorage.setItem("accessToken", accessToken);
     cookieStore.set("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
