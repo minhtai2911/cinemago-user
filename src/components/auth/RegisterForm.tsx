@@ -1,36 +1,31 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signUp } from "@/services";
 
 export default function RegisterForm() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    fullname: '',
-    gender: 'male'
+    email: "",
+    password: "",
+    fullname: "",
+    gender: "male",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/v1/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
+      const response = await signUp(formData);
+
+      if (response.status === 201) {
         // Chuyển về trang đăng nhập
-        router.push('/auth/login');
+        router.push("/login");
       } else {
-        alert(data.message);
+        alert(response.data.message);
       }
     } catch (error) {
-      alert('Có lỗi xảy ra');
+      alert("Có lỗi xảy ra");
     }
   };
 
@@ -52,7 +47,9 @@ export default function RegisterForm() {
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
                 placeholder="Họ tên"
                 value={formData.fullname}
-                onChange={(e) => setFormData({...formData, fullname: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, fullname: e.target.value })
+                }
               />
             </div>
             <div>
@@ -62,7 +59,9 @@ export default function RegisterForm() {
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
                 placeholder="Email"
                 value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
             </div>
             <div>
@@ -72,14 +71,18 @@ export default function RegisterForm() {
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
                 placeholder="Mật khẩu"
                 value={formData.password}
-                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
               />
             </div>
             <div>
               <select
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-700 bg-gray-800 text-white rounded-b-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
                 value={formData.gender}
-                onChange={(e) => setFormData({...formData, gender: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, gender: e.target.value })
+                }
               >
                 <option value="male">Nam</option>
                 <option value="female">Nữ</option>
@@ -100,8 +103,11 @@ export default function RegisterForm() {
 
         <div className="text-center">
           <p className="text-sm text-gray-400">
-            Đã có tài khoản?{' '}
-            <a href="/auth/login" className="font-medium text-red-500 hover:text-red-400">
+            Đã có tài khoản?{" "}
+            <a
+              href="/auth/login"
+              className="font-medium text-red-500 hover:text-red-400"
+            >
               Đăng nhập
             </a>
           </p>

@@ -1,31 +1,26 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { forgotPassword } from "@/services";
 
 export default function ForgotForm() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/v1/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email })
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        alert('Vui lòng kiểm tra email để đặt lại mật khẩu');
-        router.push('/auth/login');
+      const response = await forgotPassword({ email });
+
+      if (response.status === 200) {
+        alert("Vui lòng kiểm tra email để đặt lại mật khẩu");
+        router.push("/login");
       } else {
-        alert(data.message);
+        alert(response.data.message);
       }
     } catch (error) {
-      alert('Có lỗi xảy ra');
+      alert("Có lỗi xảy ra");
     }
   };
 
@@ -64,7 +59,10 @@ export default function ForgotForm() {
         </form>
 
         <div className="text-center">
-          <a href="/auth/login" className="font-medium text-red-500 hover:text-red-400">
+          <a
+            href="/auth/login"
+            className="font-medium text-red-500 hover:text-red-400"
+          >
             Quay lại đăng nhập
           </a>
         </div>

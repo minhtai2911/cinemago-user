@@ -1,16 +1,12 @@
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+"use client";
 
-export function useAuth() {
-  const router = useRouter();
-  
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token && !router.pathname.startsWith('/auth')) {
-      router.push('/auth/login');
-    }
-    if (token && router.pathname.startsWith('/auth')) {
-      router.push('/');
-    }
-  }, [router.pathname]);
-}
+import { useContext } from "react";
+import AuthContext from "@/context/AuthContext";
+
+const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  return context;
+};
+
+export default useAuth;
