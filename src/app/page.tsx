@@ -1,102 +1,78 @@
+"use client";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import FixedMenu from "../components/FixedMenu";
+import BannerSlider from "../components/BannerSlider";
+import QuickBooking from "../components/QuickBooking";
+import MovieSection from "../components/MovieSection";
 
-const HomePage: React.FC = () => {
+const API_URL = "http://localhost:8000/v1";
+
+export default function Home() {
+  const [nowShowing, setNowShowing] = useState<any[]>([]);
+  const [comingSoon, setComingSoon] = useState<any[]>([]);
+  const [cinemas, setCinemas] = useState<any[]>([]);
+  const [showtimes, setShowtimes] = useState<any[]>([]);
+  const [selectedMovie, setSelectedMovie] = useState("");
+  const [selectedCinema, setSelectedCinema] = useState("");
+  const [selectedShowtime, setSelectedShowtime] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [availableDates, setAvailableDates] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Lấy Phim Đang Chiếu
+    fetch(`${API_URL}/movies/public?isActive=true`)
+      .then((res) => res.json())
+      .then((data) => setNowShowing(data.data || []))
+      .catch((error) => console.error("Lỗi khi tải Phim Đang Chiếu:", error));
+
+    // Lấy Phim Sắp Chiếu
+    fetch(`${API_URL}/movies/public?isActive=false`)
+      .then((res) => res.json())
+      .then((data) => setComingSoon(data.data || []))
+      .catch((error) => console.error("Lỗi khi tải Phim Sắp Chiếu:", error));
+
+    // Lấy Cụm Rạp
+    fetch(`${API_URL}/cinemas/public`)
+      .then((res) => res.json())
+      .then((data) => setCinemas(data.data || []))
+      .catch((error) => console.error("Lỗi khi tải Cụm Rạp:", error));
+  }, []);
+
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
-      <Navbar />
-      <main className="flex-1 max-w-4xl mx-auto p-8">
-        <h1 className="text-4xl font-extrabold text-red-500 mb-4">
-          Welcome to CinemaGo!
-        </h1>
-        <p className="mb-8 text-lg text-gray-300">
-          Đây là trang chủ. Navbar và Footer đã được thêm thành công 🎉
-        </p>
-        <div className="grid md:grid-cols-2 gap-8">
-          <section>
-            <h2 className="text-2xl font-bold text-red-400 mb-2">CinemaGo</h2>
-            <p className="mb-2 text-gray-300">
-              Be happy, be a star <span className="text-yellow-400">⭐</span>
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="hover:text-red-400 underline">
-                Facebook
-              </a>
-              <a href="#" className="hover:text-red-400 underline">
-                YouTube
-              </a>
-              <a href="#" className="hover:text-red-400 underline">
-                TikTok
-              </a>
-            </div>
-          </section>
-          <section>
-            <h2 className="text-xl font-semibold text-red-400 mb-2">
-              Tài khoản
-            </h2>
-            <ul className="space-y-1">
-              <li>
-                <a href="#" className="hover:text-red-400 underline">
-                  Đăng nhập
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-red-400 underline">
-                  Đăng ký
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-red-400 underline">
-                  Membership
-                </a>
-              </li>
-            </ul>
-            <h2 className="text-xl font-semibold text-red-400 mt-6 mb-2">
-              Xem phim
-            </h2>
-            <ul className="space-y-1">
-              <li>
-                <a href="#" className="hover:text-red-400 underline">
-                  Phim đang chiếu
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-red-400 underline">
-                  Phim sắp chiếu
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-red-400 underline">
-                  Suất chiếu đặc biệt
-                </a>
-              </li>
-            </ul>
-            <h2 className="text-xl font-semibold text-red-400 mt-6 mb-2">
-              Liên hệ
-            </h2>
-            <ul className="space-y-1">
-              <li>
-                <a href="#" className="hover:text-red-400 underline">
-                  Giới thiệu
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-red-400 underline">
-                  Tuyển dụng
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-red-400 underline">
-                  Hỗ trợ
-                </a>
-              </li>
-            </ul>
-          </section>
-        </div>
-      </main>
+      <div className="fixed top-0 left-0 right-0 z-50 bg-black">
+        <Navbar />
+      </div>
+
+      <FixedMenu />
+
+      <div className="pt-[150px]">
+        <BannerSlider />
+        <QuickBooking
+          cinemas={cinemas}
+          nowShowing={nowShowing}
+          showtimes={showtimes}
+          selectedMovie={selectedMovie}
+          selectedCinema={selectedCinema}
+          selectedShowtime={selectedShowtime}
+          selectedDate={selectedDate}
+          availableDates={availableDates}
+          setSelectedMovie={setSelectedMovie}
+          setSelectedCinema={setSelectedCinema}
+          setSelectedShowtime={setSelectedShowtime}
+          setSelectedDate={setSelectedDate}
+        />
+        <MovieSection
+          title="PHIM ĐANG CHIẾU"
+          movies={nowShowing}
+          showBookingButton
+        />
+        <MovieSection title="PHIM SẮP CHIẾU" movies={comingSoon} />
+      </div>
+
       <Footer />
     </div>
   );
-};
-
-export default HomePage;
+}
