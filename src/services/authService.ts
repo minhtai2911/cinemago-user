@@ -4,7 +4,6 @@ import {
   SignUpPayload,
   LoginPayload,
   VerifyAccountPayload,
-  LogoutPayload,
   ForgotPasswordPayload,
   ResetPasswordPayload,
   ChangePasswordPayload,
@@ -18,8 +17,16 @@ export const login = (data: LoginPayload) => {
   return axios.post("/api/auth/login", data);
 };
 
-export const logout = (data: LogoutPayload) => {
-  return axios.post("/api/auth/logout", data);
+export const logout = () => {
+  return axios.post(
+    "/api/auth/logout",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    }
+  );
 };
 
 export const verifyAccount = (data: VerifyAccountPayload) => {

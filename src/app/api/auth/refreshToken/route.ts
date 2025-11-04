@@ -6,7 +6,6 @@ import axios from "axios";
 export async function POST() {
   try {
     const cookieStore = await cookies();
-
     const refreshToken = cookieStore.get("refreshToken")?.value || null;
 
     if (!refreshToken) {
@@ -25,7 +24,8 @@ export async function POST() {
       body
     );
 
-    const { newAccessToken, newRefreshToken } = response.data;
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+      response.data;
 
     cookieStore.set("refreshToken", newRefreshToken, {
       httpOnly: true,
@@ -40,11 +40,21 @@ export async function POST() {
       { status: 200 }
     );
   } catch (error: unknown) {
-    localStorage.removeItem("accessToken");
     const cookieStore = await cookies();
     cookieStore.delete("refreshToken");
-    const message = error instanceof Error ? error.message : "Login failed";
+    const message =
+      error instanceof axios.AxiosError && error.response
+        ? error.response.data
+        : "Login failed";
 
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json(
+      { error: message },
+      {
+        status:
+          error instanceof axios.AxiosError && error.response
+            ? error.response.status
+            : 500,
+      }
+    );
   }
 }

@@ -1,7 +1,13 @@
 "use client";
 
-import React, { createContext, useEffect, useState, ReactNode } from "react";
-import { jwtDecode } from "jwt-decode";
+import React, {
+  createContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useCallback,
+} from "react";
+import { getProfile } from "@/services";
 
 export enum Role {
   USER = "USER",
@@ -10,7 +16,7 @@ export enum Role {
 }
 
 export interface Profile {
-  userId: string;
+  id: string;
   fullname: string;
   role: Role;
   avatarUrl?: string;
@@ -22,40 +28,82 @@ interface AuthContextProps {
   profile: Profile | null;
   setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
   setProfile: React.Dispatch<React.SetStateAction<Profile | null>>;
-  setAccessToken: (accessToken: string) => void;
+  setAccessToken: (accessToken: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FC<{
   children: ReactNode;
-  initialAccessToken?: string;
-}> = ({ children, initialAccessToken }) => {
+  initialAccessToken?: string | null;
+}> = ({ children, initialAccessToken = null }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(
-    initialAccessToken || null
+  const [accessToken, setAccessTokenState] = useState<string | null>(
+    initialAccessToken
   );
 
-  useEffect(() => {
-    if (accessToken) {
-      try {
-        const decoded = jwtDecode<Profile>(accessToken);
-        setIsLogged(true);
-        setProfile(decoded);
-      } catch {
-        setIsLogged(false);
-        setProfile(null);
-      }
+  const setAccessToken = useCallback((token: string | null) => {
+    setAccessTokenState(token);
+
+    localStorage.setItem("accessToken", token || "");
+    if (token) {
+      localStorage.setItem("accessToken", token);
     } else {
-      setIsLogged(false);
-      setProfile(null);
+      localStorage.removeItem("accessToken");
     }
-  }, [accessToken]);
+  }, []);
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem("accessToken");
+    if (savedToken) {
+      setAccessTokenState(savedToken);
+    }
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchProfile = async () => {
+      if (!accessToken) {
+        if (isMounted) {
+          setIsLogged(false);
+          setProfile(null);
+        }
+        return;
+      }
+
+      try {
+        const response = await getProfile();
+        if (isMounted) {
+          setIsLogged(true);
+          setProfile(response.data.data as Profile);
+        }
+      } catch {
+        if (isMounted) {
+          setIsLogged(false);
+          setProfile(null);
+          setAccessToken(null);
+        }
+      }
+    };
+
+    fetchProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [accessToken, setAccessToken]);
 
   return (
     <AuthContext.Provider
-      value={{ isLogged, profile, setIsLogged, setProfile, setAccessToken }}
+      value={{
+        isLogged,
+        profile,
+        setIsLogged,
+        setProfile,
+        setAccessToken,
+      }}
     >
       {children}
     </AuthContext.Provider>
