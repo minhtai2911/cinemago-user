@@ -1,4 +1,5 @@
 import { fetcher } from "@/lib/fetcher";
+import { MovieStatus } from "@/types";
 
 export const getMovies = async (
   page?: number,
@@ -6,7 +7,8 @@ export const getMovies = async (
   search?: string,
   rating?: number,
   genresQuery?: string,
-  isActive?: boolean
+  isActive?: boolean,
+  status?: MovieStatus
 ) => {
   return fetcher(
     "v1/movies/public/?" +
@@ -17,6 +19,11 @@ export const getMovies = async (
         rating: rating?.toString() || "",
         genres: genresQuery || "",
         isActive: isActive !== undefined ? isActive.toString() : "",
+        status: status ? status.toString() : "",
       })
   );
+};
+
+export const getMovieById = async (movieId: string) => {
+  return fetcher(`v1/movies/public/${movieId}`);
 };

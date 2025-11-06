@@ -30,8 +30,19 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Login failed";
+    const message =
+      error instanceof axios.AxiosError && error.response
+        ? error.response.data?.error
+        : "Login failed";
 
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json(
+      { error: message },
+      {
+        status:
+          error instanceof axios.AxiosError && error.response
+            ? error.response.status
+            : 500,
+      }
+    );
   }
 }
