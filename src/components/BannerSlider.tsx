@@ -1,6 +1,8 @@
 "use client";
+
 import { useState, useEffect, useRef } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import Image from "next/image";
 
 const bannerImages = [
   "/banners/banner1.png",
@@ -40,10 +42,13 @@ export default function BannerSlider() {
         <FiChevronLeft size={48} />
       </button>
 
-      <img
+      <Image
         src={bannerImages[currentBanner]}
         alt={`Banner ${currentBanner + 1}`}
-        className="w-full h-[300px] md:h-[450px] object-cover rounded-2xl shadow-lg transition-all duration-500 bg-white"
+        width={1200}
+        height={450}
+        className="w-full h-[300px] md:h-[450px] object-cover rounded-2xl shadow-lg transition-all duration-500"
+        suppressHydrationWarning
       />
 
       <button

@@ -3,13 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import useAuth from "@/hooks/useAuth";
 import { logout } from "@/services";
 
 export default function Navbar() {
-  const router = useRouter();
   const { isLogged, profile, setAccessToken, setIsLogged, setProfile } =
     useAuth();
 
@@ -34,7 +32,6 @@ export default function Navbar() {
       setProfile(null);
       localStorage.removeItem("accessToken");
       toast.success("Đăng xuất thành công!");
-      router.push("/login");
     } catch {
       toast.error("Đăng xuất thất bại. Vui lòng thử lại.");
     }

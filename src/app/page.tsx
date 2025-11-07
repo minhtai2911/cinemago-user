@@ -1,44 +1,77 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import FixedMenu from "../components/FixedMenu";
-import BannerSlider from "../components/BannerSlider";
-import QuickBooking from "../components/QuickBooking";
-import MovieSection from "../components/MovieSection";
+import { getMovies, getCinemas, getShowtimes } from "@/services";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import FixedMenu from "@/components/FixedMenu";
+import BannerSlider from "@/components/BannerSlider";
+import QuickBooking from "@/components/QuickBooking";
+import MovieSection from "@/components/MovieSection";
+import { Movie, Cinema, Showtime, MovieStatus } from "@/types";
+import { toast } from "sonner";
+import Loading from "@/components/ui/Loading";
 
-const API_URL = "http://localhost:8000/v1";
-
-export default function Home() {
-  const [nowShowing, setNowShowing] = useState<any[]>([]);
-  const [comingSoon, setComingSoon] = useState<any[]>([]);
-  const [cinemas, setCinemas] = useState<any[]>([]);
-  const [showtimes, setShowtimes] = useState<any[]>([]);
+export default function HomePage() {
+  const [nowShowing, setNowShowing] = useState<Movie[]>([]);
+  const [comingSoon, setComingSoon] = useState<Movie[]>([]);
+  const [cinemas, setCinemas] = useState<Cinema[]>([]);
+  const [showtimes, setShowtimes] = useState<Showtime[]>([]);
   const [selectedMovie, setSelectedMovie] = useState("");
   const [selectedCinema, setSelectedCinema] = useState("");
   const [selectedShowtime, setSelectedShowtime] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
-  const [availableDates, setAvailableDates] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Lấy Phim Đang Chiếu
-    fetch(`${API_URL}/movies/public?isActive=true`)
-      .then((res) => res.json())
-      .then((data) => setNowShowing(data.data || []))
-      .catch((error) => console.error("Lỗi khi tải Phim Đang Chiếu:", error));
+    (async () => {
+      try {
+        setIsLoading(true);
+        const [nowRes, soonRes, cinemaRes, showtimes] = await Promise.all([
+          getMovies(
+            undefined,
+            undefined,
+            "",
+            undefined,
+            "",
+            true,
+            MovieStatus.NOW_SHOWING
+          ),
+          getMovies(
+            undefined,
+            undefined,
+            "",
+            undefined,
+            "",
+            true,
+            MovieStatus.COMING_SOON
+          ),
+          getCinemas(undefined, undefined, "", true),
+          getShowtimes(
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            true,
+            new Date()
+          ),
+        ]);
 
-    // Lấy Phim Sắp Chiếu
-    fetch(`${API_URL}/movies/public?isActive=false`)
-      .then((res) => res.json())
-      .then((data) => setComingSoon(data.data || []))
-      .catch((error) => console.error("Lỗi khi tải Phim Sắp Chiếu:", error));
-
-    // Lấy Cụm Rạp
-    fetch(`${API_URL}/cinemas/public`)
-      .then((res) => res.json())
-      .then((data) => setCinemas(data.data || []))
-      .catch((error) => console.error("Lỗi khi tải Cụm Rạp:", error));
+        setNowShowing(nowRes.data || []);
+        setComingSoon(soonRes.data || []);
+        setCinemas(cinemaRes.data || []);
+        setShowtimes(showtimes.data || []);
+      } catch {
+        toast.error("Đã có lỗi xảy ra khi tải dữ liệu.");
+      } finally {
+        setIsLoading(false);
+      }
+    })();
   }, []);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -48,7 +81,7 @@ export default function Home() {
 
       <FixedMenu />
 
-      <div className="pt-[150px]">
+      <main className="pt-[150px]">
         <BannerSlider />
         <QuickBooking
           cinemas={cinemas}
@@ -58,7 +91,6 @@ export default function Home() {
           selectedCinema={selectedCinema}
           selectedShowtime={selectedShowtime}
           selectedDate={selectedDate}
-          availableDates={availableDates}
           setSelectedMovie={setSelectedMovie}
           setSelectedCinema={setSelectedCinema}
           setSelectedShowtime={setSelectedShowtime}
@@ -68,10 +100,14 @@ export default function Home() {
           title="PHIM ĐANG CHIẾU"
           movies={nowShowing}
           showBookingButton
+          showMoreLink="/movies/now-showing"
         />
-        <MovieSection title="PHIM SẮP CHIẾU" movies={comingSoon} />
-      </div>
-
+        <MovieSection
+          title="PHIM SẮP CHIẾU"
+          movies={comingSoon}
+          showMoreLink="/movies/coming-soon"
+        />
+      </main>
       <Footer />
     </div>
   );

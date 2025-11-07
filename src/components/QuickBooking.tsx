@@ -1,5 +1,22 @@
 "use client";
-import React from "react";
+
+import { useEffect, useMemo } from "react";
+import { Cinema, Movie, Showtime } from "@/types";
+import { toast } from "sonner";
+
+interface QuickBookingProps {
+  cinemas: Cinema[];
+  nowShowing: Movie[];
+  showtimes: Showtime[];
+  selectedMovie: string;
+  selectedCinema: string;
+  selectedShowtime: string;
+  selectedDate: string;
+  setSelectedMovie: (v: string) => void;
+  setSelectedCinema: (v: string) => void;
+  setSelectedShowtime: (v: string) => void;
+  setSelectedDate: (v: string) => void;
+}
 
 export default function QuickBooking({
   cinemas,
@@ -9,90 +26,176 @@ export default function QuickBooking({
   selectedCinema,
   selectedShowtime,
   selectedDate,
-  availableDates,
   setSelectedMovie,
   setSelectedCinema,
   setSelectedShowtime,
   setSelectedDate,
-  handleQuickBooking,
-}: any) {
-  return (
-    <section className="max-w-6xl mx-auto mb-10 border border-gray-300 rounded-lg px-4 py-4 flex items-center gap-4 shadow-sm bg-transparent">
-      <h2 className="text-2xl font-extrabold tracking-wider text-white mr-2 whitespace-nowrap">
-        ĐẶT VÉ NHANH
-      </h2>
-      <form
-        className="flex flex-1 flex-row flex-nowrap gap-4 items-center justify-center self-stretch"
-        onSubmit={handleQuickBooking}
-      >
-        <select
-          className="w-1/4 px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-base font-bold text-black text-center truncate"
-          value={selectedCinema}
-          onChange={(e) => setSelectedCinema(e.target.value)}
-          required
-        >
-          <option value="">Chọn rạp</option>
-          {cinemas.map((c: any) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+}: QuickBookingProps) {
+  useEffect(() => {
+    setSelectedDate("");
+    setSelectedShowtime("");
+  }, [selectedMovie, setSelectedDate, setSelectedShowtime]);
 
-        {/* CHỌN PHIM */}
+  useEffect(() => {
+    setSelectedDate("");
+    setSelectedShowtime("");
+  }, [selectedCinema, setSelectedDate, setSelectedShowtime]);
+
+  const now = useMemo(() => new Date(), []);
+
+  const availableMovies = useMemo(() => {
+    const validShowtimes = showtimes.filter((s) => new Date(s.startTime) > now);
+
+    if (!selectedCinema) {
+      const movieIds = new Set(validShowtimes.map((s) => s.movieId));
+      return nowShowing.filter((m) => movieIds.has(m.id));
+    }
+
+    const movieIds = new Set(
+      validShowtimes
+        .filter((s) => s.cinemaId === selectedCinema)
+        .map((s) => s.movieId)
+    );
+    return nowShowing.filter((m) => movieIds.has(m.id));
+  }, [nowShowing, showtimes, selectedCinema, now]);
+
+  const availableCinemas = useMemo(() => {
+    const validShowtimes = showtimes.filter((s) => new Date(s.startTime) > now);
+
+    if (!selectedMovie) {
+      const cinemaIds = new Set(validShowtimes.map((s) => s.cinemaId));
+      return cinemas.filter((c) => cinemaIds.has(c.id));
+    }
+
+    const cinemaIds = new Set(
+      validShowtimes
+        .filter((s) => s.movieId === selectedMovie)
+        .map((s) => s.cinemaId)
+    );
+    return cinemas.filter((c) => cinemaIds.has(c.id));
+  }, [cinemas, showtimes, selectedMovie, now]);
+
+  const availableDates = useMemo(() => {
+    if (!selectedMovie || !selectedCinema) return [];
+
+    const dates = new Set(
+      showtimes
+        .filter((s) => {
+          const d = new Date(s.startTime);
+          return (
+            s.movieId === selectedMovie &&
+            s.cinemaId === selectedCinema &&
+            d > now
+          );
+        })
+        .map((s) =>
+          new Date(s.startTime).toLocaleDateString("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })
+        )
+    );
+
+    return Array.from(dates);
+  }, [showtimes, selectedMovie, selectedCinema, now]);
+
+  const availableShowtimes = useMemo(() => {
+    if (!selectedMovie || !selectedCinema || !selectedDate) return [];
+
+    return showtimes
+      .filter((s) => {
+        const d = new Date(s.startTime);
+        const dateString = d.toLocaleDateString("vi-VN", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+        return (
+          s.movieId === selectedMovie &&
+          s.cinemaId === selectedCinema &&
+          dateString === selectedDate &&
+          d > now
+        );
+      })
+      .sort(
+        (a, b) =>
+          new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+      );
+  }, [showtimes, selectedMovie, selectedCinema, selectedDate, now]);
+
+  return (
+    <div className="bg-gray-800 p-6 mx-6 rounded-2xl shadow-lg mt-8">
+      <h3 className="text-xl font-semibold mb-4">🎟️ Đặt vé nhanh</h3>
+
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <select
-          className="w-1/4 px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-base font-bold text-black text-center truncate"
+          className="bg-gray-700 p-3 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500"
           value={selectedMovie}
           onChange={(e) => setSelectedMovie(e.target.value)}
-          required
         >
           <option value="">Chọn phim</option>
-          {nowShowing.map((m: any) => (
+          {availableMovies.map((m) => (
             <option key={m.id} value={m.id}>
               {m.title}
             </option>
           ))}
         </select>
 
-        {/* CHỌN NGÀY */}
         <select
-          className="w-1/4 px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-base font-bold text-black text-center truncate"
+          className="bg-gray-700 p-3 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+          value={selectedCinema}
+          onChange={(e) => setSelectedCinema(e.target.value)}
+        >
+          <option value="">Chọn rạp</option>
+          {availableCinemas.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+
+        <select
+          className="bg-gray-700 p-3 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value)}
-          required
+          disabled={!selectedMovie || !selectedCinema}
         >
           <option value="">Chọn ngày</option>
-          {availableDates.map((d: any) => (
+          {availableDates.map((d) => (
             <option key={d} value={d}>
               {d}
             </option>
           ))}
         </select>
 
-        {/* CHỌN SUẤT */}
         <select
-          className="w-1/4 px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-base font-bold text-black text-center truncate"
+          className="bg-gray-700 p-3 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
           value={selectedShowtime}
           onChange={(e) => setSelectedShowtime(e.target.value)}
-          required
+          disabled={!selectedDate || !selectedMovie || !selectedCinema}
         >
-          <option value="">Chọn suất</option>
-          {showtimes.map((s: any) => (
-            <option key={s._id} value={s._id}>
-              {s.startTime} - {s.roomName}
+          <option value="">Chọn suất chiếu</option>
+          {availableShowtimes.map((s) => (
+            <option key={s.id} value={s.id}>
+              {new Date(s.startTime).toLocaleTimeString("vi-VN", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </option>
           ))}
         </select>
 
         <button
-          type="submit"
-          className="relative w-44 text-center px-6 py-2.5 rounded-xl bg-gradient-to-r from-black via-black to-black border-2 border-red-500 text-red-500 font-medium transition-all duration-300 
-              before:absolute before:inset-0 before:bg-gradient-to-r before:from-red-500/20 before:via-transparent before:to-red-500/20 before:rounded-xl before:opacity-0
-              hover:before:opacity-100 hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:border-red-400 hover:text-red-400 whitespace-nowrap"
+          className="col-span-1 bg-red-600 hover:bg-red-700 rounded-lg p-3 text-white font-medium transition"
+          onClick={() => {
+            if (!selectedShowtime) toast.info("Vui lòng chọn suất chiếu!");
+            else toast.success("Đang chuyển đến trang đặt vé...");
+          }}
         >
-          <span className="relative">ĐẶT NGAY</span>
+          Đặt vé
         </button>
-      </form>
-    </section>
+      </div>
+    </div>
   );
 }
