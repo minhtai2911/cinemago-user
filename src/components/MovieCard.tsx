@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Movie, Genre } from "@/types";
 import Image from "next/image";
 import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface MovieCardProps {
   movie: Movie;
@@ -15,6 +16,11 @@ const MovieCard: React.FC<MovieCardProps> = ({
   showBookingButton = false,
 }) => {
   const [showTrailer, setShowTrailer] = useState(false);
+  const router = useRouter();
+
+  const handleGoToDetail = () => {
+    router.push(`/movies/${movie.id}`);
+  };
 
   const genreNames =
     movie.genres && Array.isArray(movie.genres)
@@ -36,7 +42,10 @@ const MovieCard: React.FC<MovieCardProps> = ({
 
   return (
     <>
-      <div className="flex flex-col items-center group transition-transform hover:scale-105">
+      <div
+        className="flex flex-col items-center group transition-transform hover:scale-105 cursor-pointer"
+        onClick={handleGoToDetail}
+      >
         <div className="relative w-full rounded-xl overflow-hidden shadow-md border border-gray-700">
           <Image
             src={movie.thumbnail}
@@ -69,7 +78,10 @@ const MovieCard: React.FC<MovieCardProps> = ({
         <div className="flex items-center justify-center gap-4 mt-2">
           {movie.trailerUrl && (
             <button
-              onClick={() => setShowTrailer(true)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowTrailer(true);
+              }}
               className="flex items-center gap-1 text-sm text-white hover:text-red-400 transition"
             >
               Xem Trailer
@@ -77,7 +89,13 @@ const MovieCard: React.FC<MovieCardProps> = ({
           )}
 
           {showBookingButton && (
-            <button className="bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold px-6 py-1.5 rounded-lg transition">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/booking/${movie.id}`);
+              }}
+              className="bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold px-6 py-1.5 rounded-lg transition"
+            >
               ĐẶT VÉ
             </button>
           )}

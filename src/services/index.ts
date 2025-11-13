@@ -6,3 +6,4 @@ export * from "./cinemaService";
 export * from "./genresService";
 export * from "./showtimeService";
 export * from "./bookingService";
+export * from "./reviewService";
