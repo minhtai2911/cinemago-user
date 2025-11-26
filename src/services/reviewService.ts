@@ -49,9 +49,18 @@ export const getReviews = async (
           type
           status
           isActive
+          userDetail {
+            fullname
+            avatarUrl
+          }
           createdAt
           updatedAt
           response {
+            userId
+            userDetail {
+              fullname
+              avatarUrl
+            }
             content
             createdAt
           }
@@ -89,7 +98,18 @@ export const getReviewById = async (reviewId: string) => {
         type
         status
         isActive
+        createdAt
+        updatedAt
+        userDetail {
+          fullname
+          avatarUrl
+        }
         response {
+          userId
+          userDetail {  
+            fullname
+            avatarUrl
+          }
           content
           createdAt
         }
@@ -109,6 +129,11 @@ export const replyToReview = async (reviewId: string, content: string) => {
       replyToReview(reviewId: $reviewId, content: $content) {
         id
         response {
+          userId
+          userDetail {
+            fullname
+            avatarUrl
+          }
           content
           createdAt
         }
@@ -119,5 +144,62 @@ export const replyToReview = async (reviewId: string, content: string) => {
   return axiosInstance.post("/v1/reviews", {
     query: mutation,
     variables: { reviewId, content },
+  });
+};
+
+export const getReviewOverview = async (movieId: string) => {
+  const query = `
+    query GetReviewOverview($movieId: String!) {
+      getReviewOverview(movieId: $movieId) {
+        averageRating
+        totalReviews
+        ratingDistribution
+      }
+    }
+  `;
+
+  return fetcher("v1/reviews", {
+    method: "POST",
+    body: JSON.stringify({ query, variables: { movieId } }),
+  });
+};
+
+export const createReview = async (
+  movieId: string,
+  content: string,
+  rating: number
+) => {
+  const mutation = `
+    mutation CreateReview(
+      $movieId: String!
+      $content: String!
+      $rating: Float!
+    ) {
+      createReview(
+        movieId: $movieId
+        content: $content
+        rating: $rating
+      ) {
+        id
+        userId
+        movieId
+        content
+        rating
+        type
+        status
+        isActive
+        userDetail {  
+          fullname
+          avatarUrl
+        }
+        createdAt
+        updatedAt
+      }
+    }
+  `;
+
+  return axiosInstance.post("/v1/reviews", {
+    query: mutation,
+    variables: { movieId, content, rating },
   });
 };

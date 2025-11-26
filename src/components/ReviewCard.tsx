@@ -1,13 +1,14 @@
 "use client";
 
 import { Star, MessageCircle, Reply, Loader2, LogIn } from "lucide-react";
-import { Review } from "@/types/review";
+import { Review, ReviewResponse } from "@/types/review";
 import { useState } from "react";
 import { replyToReview } from "@/services";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import useAuth from "@/hooks/useAuth";
 import Link from "next/link";
+import Image from "next/image";
 
 interface ReviewCardProps {
   review: Review;
@@ -21,23 +22,32 @@ export default function ReviewCard({
   const [reply, setReply] = useState("");
   const [isReplying, setIsReplying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [responses, setResponses] = useState(review.response || []);
+  const [responses, setResponses] = useState<ReviewResponse[]>(
+    review.response || []
+  );
 
   const router = useRouter();
   const { isLogged, profile } = useAuth();
 
   const handleSendReply = async () => {
     const content = reply.trim();
-    if (!content || isLoading) return;
+    if (!content || isLoading || !isLogged) {
+      return;
+    }
 
     setIsLoading(true);
-    const tempTimestamp = Date.now().toString();
 
-    setResponses((prev) => [
-      ...prev,
-      { content, createdAt: tempTimestamp, userId: profile?.id || "unknown" },
-    ]);
+    const tempResponse: ReviewResponse = {
+      content,
+      createdAt: new Date().toISOString(),
+      userId: profile!.id,
+      userDetail: {
+        fullname: profile?.fullname || "Bạn",
+        avatarUrl: profile?.avatarUrl || "",
+      },
+    };
 
+    setResponses((prev) => [...prev, tempResponse]);
     setReply("");
     setIsReplying(false);
 
@@ -46,9 +56,26 @@ export default function ReviewCard({
       router.refresh();
       toast.success("Phản hồi đã được gửi!");
     } catch {
+      setResponses((prev) =>
+        prev.filter((r) => r.createdAt !== tempResponse.createdAt)
+      );
       toast.error("Gửi phản hồi thất bại. Vui lòng thử lại.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const formatDate = (dateStr: string) => {
+    try {
+      return new Date(Number(dateStr)).toLocaleDateString("vi-VN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch {
+      return "Vừa xong";
     }
   };
 
@@ -56,24 +83,38 @@ export default function ReviewCard({
     <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 hover:border-yellow-500/40 transition-all">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-black font-bold text-lg">
-            U
+          <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-800 flex-shrink-0">
+            {review.userDetail?.avatarUrl ? (
+              <Image
+                src={review.userDetail.avatarUrl}
+                alt={review.userDetail.fullname || "User"}
+                width={48}
+                height={48}
+                className="w-full h-full object-cover"
+                unoptimized
+                onError={(e) => {
+                  e.currentTarget.src = "/default-avatar.jpg";
+                }}
+              />
+            ) : (
+              <>
+                <Image
+                  src="/default-avatar.jpg"
+                  alt="Avatar"
+                  width={48}
+                  height={48}
+                  className="w-full h-full object-cover"
+                />
+              </>
+            )}
           </div>
+
           <div>
-            <p className="font-bold text-white text-lg">Khán giả ẩn danh</p>
+            <p className="font-bold text-white text-lg">
+              {review.userDetail?.fullname || "Khán giả ẩn danh"}
+            </p>
             <p className="text-xs text-gray-500">
-              {review.createdAt
-                ? new Date(Number(review.createdAt)).toLocaleDateString(
-                    "vi-VN",
-                    {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    }
-                  )
-                : "Vừa xong"}
+              {review.createdAt ? formatDate(review.createdAt) : "Vừa xong"}
             </p>
           </div>
         </div>
@@ -140,7 +181,7 @@ export default function ReviewCard({
           <button
             onClick={handleSendReply}
             disabled={isLoading || !reply.trim()}
-            className="bg-yellow-400 hover:bg-yellow-300 disabled:bg-gray-600 text-black font-bold px-5 py-2 rounded-lg transition-transform hover:scale-105 flex items-center gap-2"
+            className="bg-yellow-400 hover:bg-yellow-300 disabled:bg-gray-600 text-black font-bold px-5 py-2 rounded-lg transition-transform hover:scale-105 flex items-center gap-2 whitespace-nowrap"
           >
             {isLoading ? (
               <>
@@ -156,39 +197,28 @@ export default function ReviewCard({
 
       {showResponse && responses.length > 0 && (
         <div className="space-y-3 pt-4 border-t border-gray-700">
-          {responses.map((res, idx) => {
-            return (
-              <div
-                key={`${res?.createdAt ?? idx}-${idx}`}
-                className="flex gap-3 text-sm bg-gray-800/70 p-4 rounded-xl"
-              >
-                <MessageCircle
-                  size={18}
-                  className="text-yellow-400 mt-1 flex-shrink-0"
-                />
-                <div className="flex-1">
-                  <p className="font-medium text-yellow-300">
-                    {isLogged && profile?.id === review.userId
-                      ? "Bạn"
-                      : "Người dùng khác"}
-                  </p>
-                  <p className="text-gray-300 mt-1">{res?.content}</p>
-                  <p className="text-xs text-gray-500 mt-2">
-                    {new Date(Number(res?.createdAt)).toLocaleDateString(
-                      "vi-VN",
-                      {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      }
-                    )}
-                  </p>
-                </div>
+          {responses.map((res) => (
+            <div
+              key={res.createdAt}
+              className="flex gap-3 text-sm bg-gray-800/70 p-4 rounded-xl"
+            >
+              <MessageCircle
+                size={18}
+                className="text-yellow-400 mt-1 flex-shrink-0"
+              />
+              <div className="flex-1">
+                <p className="font-medium text-yellow-300">
+                  {isLogged && profile?.id === res.userId
+                    ? "Bạn"
+                    : res.userDetail?.fullname || "Rạp phim"}
+                </p>
+                <p className="text-gray-300 mt-1">{res.content}</p>
+                <p className="text-xs text-gray-500 mt-2">
+                  {formatDate(res.createdAt)}
+                </p>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
     </div>

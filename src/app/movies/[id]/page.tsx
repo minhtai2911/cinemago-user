@@ -9,10 +9,11 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { getMovieById, getReviews } from "@/services";
+import { getMovieById, getReviews, getReviewOverview } from "@/services";
 import { Genre, Movie, Review } from "@/types";
 import ReviewCard from "@/components/ReviewCard";
 import Navbar from "@/components/Navbar";
+import ReviewModal from "@/components/ReviewModal";
 
 export default async function MovieDetailPage({
   params,
@@ -28,25 +29,42 @@ export default async function MovieDetailPage({
 
   const movieRes = await getMovieById(id);
   const movie: Movie | null = movieRes.data || null;
+  if (!movie) {
+    return notFound();
+  }
 
-  if (!movie) return notFound();
+  const overviewRes = await getReviewOverview(id);
+  const overview = overviewRes.data?.getReviewOverview || {
+    averageRating: 0,
+    totalReviews: 0,
+    ratingDistribution: [0, 0, 0, 0, 0],
+  };
+
+  const avgRating = overview.averageRating
+    ? Number(overview.averageRating).toFixed(1)
+    : "0.0";
+  const totalReviews = overview.totalReviews || 0;
+  const distribution = overview.ratingDistribution || [0, 0, 0, 0, 0];
+
+  const ratingBars = [5, 4, 3, 2, 1].map((star) => ({
+    star,
+    count: distribution[star - 1] || 0,
+  }));
+
+  const maxCount = Math.max(...ratingBars.map((b) => b.count), 1);
 
   const reviewsRes = await getReviews(currentPage, pageSize, id);
   const reviewsData = reviewsRes.data?.getReviews;
-  const reviews = reviewsData?.data || [];
-  const pagination = reviewsData?.pagination;
-
-  const totalPages = pagination?.totalPages || 1;
-  const hasNext = pagination?.hasNextPage || false;
-  const hasPrev = pagination?.hasPrevPage || false;
-  const totalReviews = pagination?.totalItems || 0;
-  const avgRating = movie.rating?.toFixed(1) || "0.0";
+  const reviews: Review[] = reviewsData?.data || [];
+  const pagination = reviewsData?.pagination || {};
+  const totalPages = pagination.totalPages || 1;
+  const hasNext = pagination.hasNextPage || false;
+  const hasPrev = pagination.hasPrevPage || false;
 
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 py-10 pt-[120px]">
-        {/* Movie Info */}
         <div className="grid md:grid-cols-3 gap-10 mb-16">
           <div className="md:col-span-1">
             <div className="relative overflow-hidden rounded-2xl shadow-2xl">
@@ -63,14 +81,12 @@ export default async function MovieDetailPage({
           </div>
 
           <div className="md:col-span-2 space-y-6">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-yellow-400 mb-3">
-                {movie.title}
-              </h1>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                {movie.description}
-              </p>
-            </div>
+            <h1 className="text-4xl md:text-5xl font-bold text-yellow-400">
+              {movie.title}
+            </h1>
+            <p className="text-gray-300 text-lg leading-relaxed">
+              {movie.description}
+            </p>
 
             <div className="flex flex-wrap gap-6 text-sm md:text-base">
               <div className="flex items-center gap-2">
@@ -90,97 +106,125 @@ export default async function MovieDetailPage({
             </div>
 
             <Link href={`/booking?movie=${movie.id}`}>
-              <button className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-8 py-3 rounded-xl text-lg transition-all transform hover:scale-105 shadow-lg">
+              <button className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-8 py-4 rounded-xl text-lg transition-all transform hover:scale-105 shadow-xl">
                 ĐẶT VÉ NGAY
               </button>
             </Link>
           </div>
         </div>
 
-        {/* Reviews Section */}
-        <div>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <h2 className="text-3xl font-bold text-white">
-              Đánh giá từ khán giả
-            </h2>
-
-            <div className="flex items-center gap-3 bg-gray-900 px-6 py-3 rounded-xl shadow-md">
-              <div className="flex items-center gap-1">
+        <div className="space-y-12">
+          <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-3xl p-8 md:p-12">
+            <div className="text-center mt-10 mb-10">
+              <div className="text-7xl font-bold text-yellow-400 mb-3">
+                {avgRating}
+              </div>
+              <div className="flex justify-center gap-2 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    size={20}
+                    size={36}
                     className={`${
-                      i < Math.floor(Number(avgRating))
+                      i < Math.round(Number(avgRating))
                         ? "fill-yellow-400 text-yellow-400"
-                        : i < Number(avgRating)
-                        ? "fill-yellow-400/30 text-yellow-400"
-                        : "text-gray-600"
+                        : "text-gray-700"
                     }`}
                   />
                 ))}
               </div>
-              <span className="text-xl font-bold text-yellow-400">
-                {avgRating}
-              </span>
-              <span className="text-gray-400">/ 5</span>
-              <span className="text-sm text-gray-500">
-                ({totalReviews} đánh giá)
-              </span>
+              <p className="text-xl text-gray-300">
+                {totalReviews.toLocaleString("vi-VN")} người đã đánh giá
+              </p>
+            </div>
+
+            <div className="max-w-2xl mx-auto space-y-4">
+              {ratingBars.map(({ star, count }) => {
+                const barWidth =
+                  totalReviews > 0 ? (count / maxCount) * 100 : 0;
+                return (
+                  <div key={star} className="flex items-center gap-4">
+                    <div className="w-10 text-right text-gray-400 font-medium">
+                      {star} stars
+                    </div>
+                    <div className="flex-1 bg-gray-800 rounded-full h-10 relative overflow-hidden">
+                      <div
+                        className="absolute inset-0 bg-gradient-to-r from-yellow-500 to-yellow-400 transition-all duration-1000 ease-out"
+                        style={{ width: `${barWidth}%` }}
+                      />
+                      <span className="absolute inset-0 flex items-center justify-end pr-4 text-sm font-bold text-black">
+                        {count > 0 && count.toLocaleString("vi-VN")}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {reviews.length > 0 ? (
-            <div className="space-y-6">
-              {reviews.map((review: Review) => (
-                <ReviewCard
-                  key={review.id}
-                  review={review}
-                  showResponse={true}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16 bg-gray-900 rounded-2xl">
-              <p className="text-gray-400 text-xl">Chưa có đánh giá nào.</p>
-              <p className="text-sm text-gray-500 mt-2">
-                Hãy là người đầu tiên chia sẻ cảm nhận!
-              </p>
-            </div>
-          )}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            <h2 className="text-3xl font-bold text-white text-center sm:text-left">
+              Đánh giá từ khán giả
+            </h2>
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-3 mt-10">
-              <Link
-                href={{ query: { page: currentPage - 1 } }}
-                className={`p-2 rounded-lg transition-all ${
-                  hasPrev
-                    ? "bg-gray-800 hover:bg-gray-700 text-white"
-                    : "bg-gray-900 text-gray-600 cursor-not-allowed"
-                }`}
-                aria-disabled={!hasPrev}
-              >
-                <ChevronLeft size={20} />
-              </Link>
-
-              <span className="px-4 py-2 bg-yellow-400 text-black font-bold rounded-lg">
-                Trang {currentPage} / {totalPages}
-              </span>
-
-              <Link
-                href={{ query: { page: currentPage + 1 } }}
-                className={`p-2 rounded-lg transition-all ${
-                  hasNext
-                    ? "bg-gray-800 hover:bg-gray-700 text-white"
-                    : "bg-gray-900 text-gray-600 cursor-not-allowed"
-                }`}
-                aria-disabled={!hasNext}
-              >
-                <ChevronRight size={20} />
-              </Link>
+            <div className="flex justify-center sm:justify-end">
+              <ReviewModal movieId={id} movieTitle={movie.title} />
             </div>
-          )}
+          </div>
+
+          <div>
+            {reviews.length > 0 ? (
+              <div className="space-y-8">
+                {reviews.map((review) => (
+                  <ReviewCard
+                    key={review.id}
+                    review={review}
+                    showResponse={true}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20 bg-gray-900/50 rounded-3xl border border-gray-800">
+                <p className="text-gray-400 text-xl mb-3">
+                  Chưa có đánh giá nào
+                </p>
+                <p className="text-gray-500">
+                  Hãy là người đầu tiên chia sẻ cảm nhận!
+                </p>
+              </div>
+            )}
+
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-3 mt-10">
+                <Link
+                  href={{ query: { page: currentPage - 1 } }}
+                  className={`p-2 rounded-lg transition-all ${
+                    hasPrev
+                      ? "bg-gray-800 hover:bg-gray-700 text-white"
+                      : "bg-gray-900 text-gray-600 cursor-not-allowed"
+                  }`}
+                  aria-disabled={!hasPrev}
+                >
+                  <ChevronLeft size={20} />
+                </Link>
+
+                <span className="px-4 py-2 bg-yellow-400 text-black font-bold rounded-lg">
+                  Trang {currentPage} / {totalPages}
+                </span>
+
+                <Link
+                  href={{ query: { page: currentPage + 1 } }}
+                  className={`p-2 rounded-lg transition-all ${
+                    hasNext
+                      ? "bg-gray-800 hover:bg-gray-700 text-white"
+                      : "bg-gray-900 text-gray-600 cursor-not-allowed"
+                  }`}
+                  aria-disabled={!hasNext}
+                >
+                  <ChevronRight size={20} />
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
