@@ -19,6 +19,8 @@ export interface Profile {
   id: string;
   fullname: string;
   role: Role;
+  email: string;
+  gender: string;
   avatarUrl?: string;
   publicId?: string;
 }

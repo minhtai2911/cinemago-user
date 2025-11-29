@@ -61,7 +61,7 @@ export default function RegisterPage() {
     }
   };
 
-   if (isLogged) {
+  if (isLogged) {
     router.push("/");
     return null;
   }
@@ -111,6 +111,7 @@ export default function RegisterPage() {
             >
               <option value="male">Nam</option>
               <option value="female">Nữ</option>
+              <option value="other">Khác</option>
             </select>
           </div>
 
