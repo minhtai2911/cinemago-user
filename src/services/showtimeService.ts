@@ -1,4 +1,5 @@
 import { fetcher } from "@/lib/fetcher";
+import { PaginatedShowtimeResponse, Showtime } from "@/types/showtime";
 
 export const getShowtimes = async (
   page?: number,
@@ -8,7 +9,7 @@ export const getShowtimes = async (
   isActive?: boolean,
   startTime?: Date,
   endTime?: Date
-) => {
+): Promise<PaginatedShowtimeResponse> => {
   return fetcher(
     "v1/showtimes/public/?" +
       new URLSearchParams({
@@ -23,6 +24,8 @@ export const getShowtimes = async (
   );
 };
 
-export const getShowtimeById = async (showtimeId: string) => {
+export const getShowtimeById = async (
+  showtimeId: string
+): Promise<Showtime> => {
   return fetcher(`v1/showtimes/public/${showtimeId}`);
 };
