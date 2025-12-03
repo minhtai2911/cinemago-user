@@ -26,10 +26,11 @@ const axiosInstance: AxiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const accessToken = localStorage.getItem("accessToken") || null;
-
-    if (accessToken && config.headers) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    if (typeof window !== "undefined") {
+      const accessToken = localStorage.getItem("accessToken");
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
     }
 
     return config;
@@ -56,9 +57,7 @@ axiosInstance.interceptors.response.use(
           { withCredentials: true }
         );
 
-        if (originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-        }
+        localStorage.setItem("accessToken", data.accessToken);
 
         return axiosInstance(originalRequest);
       } catch (err) {

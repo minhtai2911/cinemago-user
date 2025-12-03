@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { AuthProvider } from "@/context/AuthContext";
 import type { Metadata } from "next";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -66,6 +67,7 @@ export default async function RootLayout({
     <html lang="vi">
       <body>
         <AuthProvider initialAccessToken={accessToken}>{children}</AuthProvider>
+        <Toaster richColors position="top-right" expand closeButton />
       </body>
     </html>
   );

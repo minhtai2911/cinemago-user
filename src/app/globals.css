@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+/* Custom helper classes used in login page */
+.bg-peach-gradient {
+  background: linear-gradient(90deg, #fde6d8 0%, #ffd6c6 50%, #ffd0bf 100%);
+}
+
+.glass-overlay {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.soft-shadow {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
