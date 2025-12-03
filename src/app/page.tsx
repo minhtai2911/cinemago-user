@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import FixedMenu from "@/components/FixedMenu";
 import HeroSection from "@/components/sections/HeroSection";
@@ -82,6 +82,7 @@ export default function HomePage() {
       <div className="fixed top-0 left-0 right-0 z-50 bg-black">
         <Navbar />
       </div>
+
       <main className="flex-1">
         <HeroSection />
         <QuickBooking />
@@ -89,6 +90,7 @@ export default function HomePage() {
         <ComingSoon />
         <Features />
       </main>
+
       <Footer />
     </div>
   );

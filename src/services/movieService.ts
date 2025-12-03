@@ -25,5 +25,5 @@ export const getMovies = async (
 };
 
 export const getMovieById = async (movieId: string): Promise<Movie> => {
-  return fetcher(`v1/movies/public/${movieId}`) as Promise<Movie>;
+  return fetcher(`v1/movies/public/${movieId}`);
 };
