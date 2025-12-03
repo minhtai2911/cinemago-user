@@ -17,14 +17,14 @@ export default function QuickBooking() {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedCinema, setSelectedCinema] = useState("");
-  
+
   const [movies, setMovies] = useState<Movie[]>([]);
   const [cinemas, setCinemas] = useState<Cinema[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fallbackMovies = [
     "Venom: The Last Dance",
-    "Transformers One", 
+    "Transformers One",
     "Joker: Folie À Deux",
     "The Wild Robot",
     "Beetlejuice Beetlejuice",
@@ -32,25 +32,31 @@ export default function QuickBooking() {
 
   const fallbackCinemas = [
     "CinemaGo Vincom Center",
-    "CinemaGo Landmark 81", 
+    "CinemaGo Landmark 81",
     "CinemaGo Saigon Center",
     "CinemaGo Diamond Plaza",
   ];
 
-  const showtimes = [
-    "09:00", "11:30", "14:00", "16:30", "19:00", "21:30"
-  ];
+  const showtimes = ["09:00", "11:30", "14:00", "16:30", "19:00", "21:30"];
 
   // Load data from APIs
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         // Load movies và cinemas song song
         const [moviesResponse, cinemasResponse] = await Promise.all([
-          getMovies(1, 20, undefined, undefined, undefined, true, MovieStatus.NOW_SHOWING) as Promise<any>,
-          getCinemas(1, 20, undefined, true) as Promise<any>
+          getMovies(
+            1,
+            20,
+            undefined,
+            undefined,
+            undefined,
+            true,
+            MovieStatus.NOW_SHOWING
+          ) as Promise<any>,
+          getCinemas(1, 20, undefined, true) as Promise<any>,
         ]);
 
         // Set movies
@@ -58,7 +64,7 @@ export default function QuickBooking() {
           setMovies(moviesResponse.data);
         }
 
-        // Set cinemas  
+        // Set cinemas
         if (cinemasResponse?.data && Array.isArray(cinemasResponse.data)) {
           setCinemas(cinemasResponse.data);
         }
@@ -76,7 +82,9 @@ export default function QuickBooking() {
   return (
     <section className="py-20">
       <div className="container mx-auto px-4 max-w-2xl">
-        <h2 className="text-3xl md:text-4xl font-extrabold text-[#F25019] mb-8 text-center">Đặt vé nhanh</h2>
+        <h2 className="text-3xl md:text-4xl font-extrabold text-[#F25019] mb-8 text-center">
+          Đặt vé nhanh
+        </h2>
         <div className="glass-overlay soft-shadow p-8 md:p-12 rounded-3xl border border-white/30">
           <div className="space-y-6">
             {/* Movie Selection */}
@@ -90,19 +98,20 @@ export default function QuickBooking() {
                 disabled={loading}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:outline-none bg-white text-gray-800 transition-all duration-300 disabled:opacity-50"
               >
-                <option value="">{loading ? "Đang tải..." : "Chọn phim bạn muốn xem"}</option>
-                {movies.length > 0 ? 
-                  movies.map((movie) => (
-                    <option key={movie.id} value={movie.id}>
-                      {movie.title}
-                    </option>
-                  )) :
-                  fallbackMovies.map((movie, index) => (
-                    <option key={index} value={movie}>
-                      {movie}
-                    </option>
-                  ))
-                }
+                <option value="">
+                  {loading ? "Đang tải..." : "Chọn phim bạn muốn xem"}
+                </option>
+                {movies.length > 0
+                  ? movies.map((movie) => (
+                      <option key={movie.id} value={movie.id}>
+                        {movie.title}
+                      </option>
+                    ))
+                  : fallbackMovies.map((movie, index) => (
+                      <option key={index} value={movie}>
+                        {movie}
+                      </option>
+                    ))}
               </select>
             </div>
 
@@ -117,19 +126,20 @@ export default function QuickBooking() {
                 disabled={loading}
                 className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:outline-none bg-white text-gray-800 transition-all duration-300 disabled:opacity-50"
               >
-                <option value="">{loading ? "Đang tải..." : "Chọn rạp chiếu"}</option>
-                {cinemas.length > 0 ?
-                  cinemas.map((cinema) => (
-                    <option key={cinema.id} value={cinema.id}>
-                      {cinema.name}
-                    </option>
-                  )) :
-                  fallbackCinemas.map((cinema, index) => (
-                    <option key={index} value={cinema}>
-                      {cinema}
-                    </option>
-                  ))
-                }
+                <option value="">
+                  {loading ? "Đang tải..." : "Chọn rạp chiếu"}
+                </option>
+                {cinemas.length > 0
+                  ? cinemas.map((cinema) => (
+                      <option key={cinema.id} value={cinema.id}>
+                        {cinema.name}
+                      </option>
+                    ))
+                  : fallbackCinemas.map((cinema, index) => (
+                      <option key={index} value={cinema}>
+                        {cinema}
+                      </option>
+                    ))}
               </select>
             </div>
 
@@ -143,7 +153,7 @@ export default function QuickBooking() {
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
+                  min={new Date().toISOString().split("T")[0]}
                   className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-[#F25019] focus:outline-none bg-white text-gray-800 transition-all duration-300"
                 />
               </div>
@@ -167,8 +177,14 @@ export default function QuickBooking() {
             </div>
 
             {/* Book Button */}
-            <button 
-              disabled={loading || !selectedMovie || !selectedCinema || !selectedDate || !selectedTime}
+            <button
+              disabled={
+                loading ||
+                !selectedMovie ||
+                !selectedCinema ||
+                !selectedDate ||
+                !selectedTime
+              }
               className="w-full bg-gradient-to-r from-[#F25019] to-[#E9391B] text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               {loading ? "Đang tải..." : "Chọn ghế & Thanh toán"}
