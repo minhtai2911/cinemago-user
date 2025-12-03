@@ -3,18 +3,18 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import useAuth from "@/hooks/useAuth";
 import { logout } from "@/services";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const router = useRouter();
   const { isLogged, profile, setAccessToken, setIsLogged, setProfile } =
     useAuth();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -33,8 +33,8 @@ export default function Navbar() {
       setIsLogged(false);
       setProfile(null);
       localStorage.removeItem("accessToken");
+      router.push("/");
       toast.success("Đăng xuất thành công!");
-      router.push("/login");
     } catch {
       toast.error("Đăng xuất thất bại. Vui lòng thử lại.");
     }
@@ -54,11 +54,6 @@ export default function Navbar() {
           <Link href="/movies" className="hover:text-red-400 transition">
             Phim
           </Link>
-          {isLogged && (
-            <Link href="/profile" className="hover:text-red-400 transition">
-              Tài khoản
-            </Link>
-          )}
         </div>
 
         <div className="flex items-center gap-4 relative" ref={menuRef}>

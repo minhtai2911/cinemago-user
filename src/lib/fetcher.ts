@@ -1,14 +1,6 @@
 const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-export interface FetcherOptions extends RequestInit {
-  headers?: Record<string, string>;
-  cache?: "force-cache" | "no-cache" | "reload";
-}
-
-export async function fetcher<T>(
-  url: string,
-  options: FetcherOptions = {}
-): Promise<T> {
+export async function fetcher(url: string, options: RequestInit = {}) {
   const response = await fetch(`${baseURL}/${url}`, {
     ...options,
     cache: options.cache || "no-cache",
@@ -25,5 +17,5 @@ export async function fetcher<T>(
     );
   }
 
-  return response.json() as Promise<T>;
+  return response.json();
 }
