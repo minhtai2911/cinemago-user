@@ -53,17 +53,14 @@ export default function ChangePasswordSection() {
   };
 
   return (
-    <div className="mt-16 bg-white rounded-3xl p-10 shadow-2xl">
-      <div className="flex items-center gap-4 mb-10">
-        <div className="p-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl shadow-lg">
-          <Lock className="w-8 h-8 text-white" />
-        </div>
-        <h3 className="text-3xl font-bold text-gray-800">Đổi mật khẩu</h3>
+    <div className="mt-12 bg-white/90 rounded-2xl p-6 shadow-xl border border-white/30 soft-shadow">
+      <div className="flex items-center gap-3 mb-6">
+        <h3 className="text-xl font-bold text-[#1f2937]">Đổi mật khẩu</h3>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl">
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-3">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Mật khẩu cũ <span className="text-red-500">*</span>
           </label>
           <div className="relative">
@@ -73,14 +70,14 @@ export default function ChangePasswordSection() {
               onChange={(e) =>
                 setFormData({ ...formData, oldPassword: e.target.value })
               }
-              className="w-full px-6 py-5 text-lg border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-300 focus:border-purple-500 transition pr-14"
+              className="appearance-none rounded-md block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm pr-12"
               placeholder="Nhập mật khẩu hiện tại"
               required
             />
             <button
               type="button"
               onClick={() => setShowOld(!showOld)}
-              className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-500 hover:text-purple-600 transition"
+              className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-500 hover:text-red-400 transition"
             >
               {showOld ? (
                 <EyeOff className="w-6 h-6" />
@@ -92,7 +89,7 @@ export default function ChangePasswordSection() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-3">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Mật khẩu mới <span className="text-red-500">*</span>
           </label>
           <div className="relative">
@@ -102,7 +99,7 @@ export default function ChangePasswordSection() {
               onChange={(e) =>
                 setFormData({ ...formData, newPassword: e.target.value })
               }
-              className="w-full px-6 py-5 text-lg border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-300 focus:border-purple-500 transition pr-14"
+              className="appearance-none rounded-md block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm pr-12"
               placeholder="Tối thiểu 6 ký tự"
               required
               minLength={6}
@@ -110,7 +107,7 @@ export default function ChangePasswordSection() {
             <button
               type="button"
               onClick={() => setShowNew(!showNew)}
-              className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-500 hover:text-purple-600 transition"
+              className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-500 hover:text-red-400 transition"
             >
               {showNew ? (
                 <EyeOff className="w-6 h-6" />
@@ -122,7 +119,7 @@ export default function ChangePasswordSection() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-3">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Xác nhận mật khẩu mới <span className="text-red-500">*</span>
           </label>
           <div className="relative">
@@ -132,11 +129,11 @@ export default function ChangePasswordSection() {
               onChange={(e) =>
                 setFormData({ ...formData, confirmPassword: e.target.value })
               }
-              className={`w-full px-6 py-5 text-lg border-2 rounded-2xl pr-14 transition ${
+              className={`appearance-none rounded-md block w-full px-3 py-2 pr-12 transition bg-white text-gray-900 placeholder-gray-400 sm:text-sm ${
                 formData.confirmPassword &&
                 formData.newPassword !== formData.confirmPassword
                   ? "border-red-400 focus:ring-red-300"
-                  : "border-gray-200 focus:ring-purple-300 focus:border-purple-500"
+                  : "border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500"
               }`}
               placeholder="Nhập lại mật khẩu mới"
               required
@@ -144,7 +141,7 @@ export default function ChangePasswordSection() {
             <button
               type="button"
               onClick={() => setShowConfirm(!showConfirm)}
-              className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-500 hover:text-purple-600 transition"
+              className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-500 hover:text-red-400 transition"
             >
               {showConfirm ? (
                 <EyeOff className="w-6 h-6" />
@@ -159,19 +156,19 @@ export default function ChangePasswordSection() {
             )}
         </div>
 
-        <div className="pt-6">
+        <div className="pt-4">
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full sm:w-auto inline-flex justify-center items-center gap-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold text-xl px-20 py-6 rounded-2xl shadow-2xl transform hover:scale-105 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto inline-flex justify-center items-center gap-2 bg-gradient-to-r from-[#F25019] to-[#E9391B] hover:from-[#E9391B] hover:to-[#F25019] text-white font-semibold text-sm px-4 py-2 rounded-md shadow transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-7 h-7 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin" />
                 Đang xử lý...
               </>
             ) : (
-              <>ĐỔI MẬT KHẨU</>
+              <>Đổi mật khẩu</>
             )}
           </button>
         </div>

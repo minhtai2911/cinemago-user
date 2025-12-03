@@ -63,19 +63,19 @@ export default function PersonalInfoSection() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-12">
-      <div className="flex flex-col sm:flex-row items-center gap-10 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 rounded-3xl p-10 shadow-2xl">
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <div className="flex flex-col sm:flex-row items-center gap-6 bg-white/90 p-6 rounded-2xl border border-white/30 shadow-xl soft-shadow">
         <div className="relative group">
           <Image
             src={
               profile.avatarUrl && profile.avatarUrl !== ""
                 ? profile.avatarUrl
-                : "/default-avatar.jpg"
+                : "/default-avatar.png"
             }
             alt="Avatar"
-            width={180}
-            height={180}
-            className="rounded-full border-8 border-white shadow-2xl object-cover"
+            width={140}
+            height={140}
+            className="rounded-full border-4 border-white shadow-2xl object-cover"
             priority
           />
 
@@ -87,9 +87,9 @@ export default function PersonalInfoSection() {
 
           <label
             htmlFor="avatar"
-            className="absolute bottom-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 p-4 rounded-full shadow-2xl cursor-pointer hover:scale-110 transition-all flex items-center justify-center z-20"
+            className="absolute bottom-0 right-0 bg-gradient-to-r from-[#F25019] to-[#E9391B] p-2.5 rounded-full shadow-lg cursor-pointer hover:scale-110 transition-all flex items-center justify-center z-20"
           >
-            <Camera className="w-7 h-7 text-white" />
+            <Camera className="w-4 h-4 text-white" />
           </label>
 
           <input
@@ -138,25 +138,24 @@ export default function PersonalInfoSection() {
         </div>
 
         <div className="text-center sm:text-left">
-          <p className="text-2xl font-light text-gray-600">Xin chào,</p>
-          <h1 className="text-5xl font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mt-3">
+          <p className="text-base font-medium text-[#374151]">Xin chào,</p>
+          <h1 className="text-2xl font-extrabold bg-gradient-to-r from-[#F25019] to-[#E9391B] bg-clip-text text-transparent mt-2">
             {profile.fullname}
           </h1>
-          <p className="text-lg text-gray-600 mt-3">{profile.email}</p>
-          <span className="inline-block mt-5 px-6 py-3 bg-purple-100 text-purple-700 rounded-full text-sm font-bold">
+          <p className="text-sm text-gray-600 mt-2">{profile.email}</p>
+          <span className="inline-block mt-3 px-3 py-1 bg-gradient-to-r from-[#F25019] to-[#E9391B] text-white rounded-full text-xs font-semibold shadow-sm">
             {profile.role === "ADMIN" ? "Quản trị viên" : "Thành viên"}
           </span>
         </div>
       </div>
-
-      <div className="bg-white rounded-3xl p-10 shadow-2xl">
-        <h3 className="text-3xl font-bold text-gray-800 mb-10">
+      <div className="bg-white/90 rounded-2xl p-6 shadow-xl border border-white/30">
+        <h3 className="text-xl font-bold text-[#1f2937] mb-4">
           Thông tin cá nhân
         </h3>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-4xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-4xl">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Họ và tên
             </label>
             <input
@@ -165,14 +164,14 @@ export default function PersonalInfoSection() {
               onChange={(e) =>
                 setFormData({ ...formData, fullname: e.target.value })
               }
-              className="w-full px-6 py-5 text-lg border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-300 focus:border-purple-500 transition"
+              className="appearance-none rounded-md block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm"
               placeholder="Nhập họ và tên"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Giới tính
             </label>
             <select
@@ -180,7 +179,7 @@ export default function PersonalInfoSection() {
               onChange={(e) =>
                 setFormData({ ...formData, gender: e.target.value })
               }
-              className="w-full px-6 py-5 text-lg border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-300"
+              className="appearance-none rounded-md block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm"
             >
               <option value="male">Nam</option>
               <option value="female">Nữ</option>
@@ -189,26 +188,26 @@ export default function PersonalInfoSection() {
           </div>
 
           <div className="lg:col-span-2">
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Email đăng nhập
             </label>
             <input
               type="email"
               value={profile.email}
               disabled
-              className="w-full px-6 py-5 text-lg bg-gray-100 border-2 border-gray-300 rounded-2xl text-gray-600 cursor-not-allowed"
+              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-md text-gray-600 cursor-not-allowed"
             />
           </div>
         </div>
 
-        <div className="mt-12 text-center">
+        <div className="mt-6 text-center">
           <button
             type="submit"
             disabled={isLoading}
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold text-xl px-20 py-6 rounded-2xl shadow-2xl transform hover:scale-105 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#F25019] to-[#E9391B] hover:from-[#E9391B] hover:to-[#F25019] text-white font-semibold text-sm px-4 py-2 rounded-md shadow transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {isLoading && <Loader2 className="w-7 h-7 animate-spin" />}
-            {isLoading ? "Đang lưu..." : "LƯU THÔNG TIN"}
+            {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+            {isLoading ? "Đang lưu..." : "Lưu thông tin"}
           </button>
         </div>
       </div>
