@@ -148,7 +148,7 @@ export default function PersonalInfoSection() {
           </span>
         </div>
       </div>
-      <div className="bg-white/90 rounded-2xl p-6 shadow-xl border border-white/30">
+      <div className="bg-white/70 rounded-2xl p-6 shadow-xl border border-white/30">
         <h3 className="text-xl font-bold text-[#1f2937] mb-4">
           Thông tin cá nhân
         </h3>

@@ -36,21 +36,20 @@ export default function ProfileLayout({
   };
 
   return (
-    <div className="min-h-screen bg-peach-gradient flex items-start justify-center py-3 px-4 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen bg-peach-gradient flex items-start justify-center py-3 px-4 sm:px-6 lg:px-8">
+      {/* subtle white overlay to make the peach gradient lighter */}
+      <div className="absolute inset-0 bg-white/20 pointer-events-none"></div>
+
       <div className="relative max-w-7xl w-full px-6 py-10">
         <img
-          src="/popcorn.png"
+          src="/corn.png"
           alt=""
           aria-hidden
-          className="hidden lg:block pointer-events-none select-none absolute -left-52 top-6 w-[85%] opacity-20"
+          className="hidden lg:block pointer-events-none select-none absolute top-6 w-[70%] opacity-20"
           style={{ transform: "scaleX(-1) rotate(-6deg)" }}
         />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-black text-center bg-gradient-to-r from-[#F25019] to-[#E9391B] bg-clip-text text-transparent mb-6">
-            THÔNG TIN CÁ NHÂN
-          </h1>
-
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <aside className="lg:col-span-1">
               <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-white/30 min-w-[220px] lg:h-[192px]">

@@ -53,7 +53,7 @@ export default function ChangePasswordSection() {
   };
 
   return (
-    <div className="mt-12 bg-white/90 rounded-2xl p-6 shadow-xl border border-white/30 soft-shadow">
+    <div className="mt-12 bg-white/70 rounded-2xl p-6 shadow-xl border border-white/30 soft-shadow">
       <div className="flex items-center gap-3 mb-6">
         <h3 className="text-xl font-bold text-[#1f2937]">Đổi mật khẩu</h3>
       </div>
