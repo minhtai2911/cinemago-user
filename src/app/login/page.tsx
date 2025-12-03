@@ -58,7 +58,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-peach-gradient flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="relative max-w-6xl w-full rounded-3xl px-6 py-10">
-        {/* Faint popcorn on the left outside the card (decorative, under overlay) */}
         <img
           src="/popcorn.png"
           alt=""
