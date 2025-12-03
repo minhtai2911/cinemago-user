@@ -1,5 +1,5 @@
 import { fetcher } from "@/lib/fetcher";
-import { Movie, MovieStatus, MoviesResponse } from "@/types";
+import { Movie, MovieStatus, PaginatedMovieResponse } from "@/types";
 
 export const getMovies = async (
   page?: number,
@@ -9,8 +9,8 @@ export const getMovies = async (
   genresQuery?: string,
   isActive?: boolean,
   status?: MovieStatus
-): Promise<MoviesResponse> => {
-  return fetcher<MoviesResponse>(
+): Promise<PaginatedMovieResponse> => {
+  return fetcher(
     "v1/movies/public/?" +
       new URLSearchParams({
         page: page?.toString() || "1",
@@ -21,9 +21,9 @@ export const getMovies = async (
         isActive: isActive !== undefined ? isActive.toString() : "",
         status: status ? status.toString() : "",
       })
-  );
+  ) as Promise<PaginatedMovieResponse>;
 };
 
 export const getMovieById = async (movieId: string): Promise<Movie> => {
-  return fetcher<Movie>(`v1/movies/public/${movieId}`);
+  return fetcher(`v1/movies/public/${movieId}`) as Promise<Movie>;
 };

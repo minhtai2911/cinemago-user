@@ -42,6 +42,10 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
+    if (response.data?.errors) {
+      return Promise.reject(response.data.errors);
+    }
+
     return response;
   },
   async (error: AxiosError) => {

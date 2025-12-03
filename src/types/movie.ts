@@ -1,33 +1,26 @@
+import { Genre } from "./genres";
+import { PaginatedResponse } from "./pagination";
+
 export enum MovieStatus {
   COMING_SOON = "COMING_SOON",
   NOW_SHOWING = "NOW_SHOWING",
   ENDED = "ENDED",
 }
-
-export interface Genre {
-  id: string;
-  name: string;
-}
-
 export interface Movie {
   id: string;
   title: string;
-  description?: string;
-  poster?: string;
-  trailer?: string;
-  duration: number; // in minutes
-  rating: number;
+  description: string;
+  duration: number;
   releaseDate: string;
-  status: MovieStatus;
-  genres: Genre[];
+  rating: number;
+  thumbnail: string;
+  thumbnailPublicId: string;
+  trailerUrl: string;
+  trailerPublicId: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  genres: Genre[];
 }
 
-export interface MoviesResponse {
-  data: Movie[];
-  totalCount: number;
-  totalPages: number;
-  currentPage: number;
-}
+export type PaginatedMovieResponse = PaginatedResponse<Movie>;

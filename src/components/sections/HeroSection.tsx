@@ -38,15 +38,29 @@ export default function HeroSection() {
     const fetchBanners = async () => {
       try {
         setLoading(true);
-        const response = await getMovies(1, 3, undefined, undefined, undefined, true, MovieStatus.NOW_SHOWING);
+        const response = await getMovies(
+          1,
+          3,
+          undefined,
+          undefined,
+          undefined,
+          true,
+          MovieStatus.NOW_SHOWING
+        );
         if (response && response.data && response.data.length > 0) {
-          const formattedBanners = response.data.map((movie: Movie, index: number) => ({
-            id: movie.id,
-            title: movie.title,
-            subtitle: movie.genres.map(g => g.name).join(', '),
-            image: movie.poster || fallbackBanners[index % fallbackBanners.length].image,
-            releaseDate: new Date(movie.releaseDate).toLocaleDateString('vi-VN'),
-          }));
+          const formattedBanners = response.data.map(
+            (movie: Movie, index: number) => ({
+              id: movie.id,
+              title: movie.title,
+              subtitle: movie.genres.map((g) => g.name).join(", "),
+              image:
+                movie.thumbnail ||
+                fallbackBanners[index % fallbackBanners.length].image,
+              releaseDate: new Date(movie.releaseDate).toLocaleDateString(
+                "vi-VN"
+              ),
+            })
+          );
           setBanners(formattedBanners);
         } else {
           setBanners(fallbackBanners);
@@ -82,7 +96,9 @@ export default function HeroSection() {
     return (
       <section className="relative h-[70vh] bg-gray-200 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-700">Không có banner để hiển thị</h2>
+          <h2 className="text-2xl font-bold text-gray-700">
+            Không có banner để hiển thị
+          </h2>
           <p className="text-gray-500">Vui lòng thử lại sau.</p>
         </div>
       </section>
@@ -90,11 +106,19 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="relative h-[70vh] overflow-hidden bg-peach-gradient">
+    <section className="relative h-[70vh] overflow-hidden bg-peach-gradient mt-12">
       {/* Peach gradient background & popcorn image */}
-      <img src="/popcorn.png" alt="popcorn" className="hidden md:block absolute left-0 top-0 w-[40vw] opacity-20 pointer-events-none select-none" style={{zIndex:1}} />
+      <img
+        src="/popcorn.png"
+        alt="popcorn"
+        className="hidden md:block absolute left-0 top-0 w-[40vw] opacity-20 pointer-events-none select-none"
+        style={{ zIndex: 1 }}
+      />
       {/* Glass overlay */}
-      <div className="absolute inset-0 glass-overlay soft-shadow pointer-events-none" style={{zIndex:2}} />
+      <div
+        className="absolute inset-0 glass-overlay soft-shadow pointer-events-none"
+        style={{ zIndex: 2 }}
+      />
       {/* Slider */}
       <div className="relative h-full z-10 flex items-center justify-center">
         {banners.length > 0 ? (
@@ -137,7 +161,9 @@ export default function HeroSection() {
             </button>
           </div>
         ) : (
-          <div className="text-center text-gray-500">Không có phim nổi bật để hiển thị</div>
+          <div className="text-center text-gray-500">
+            Không có phim nổi bật để hiển thị
+          </div>
         )}
       </div>
     </section>

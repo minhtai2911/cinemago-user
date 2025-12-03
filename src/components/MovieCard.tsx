@@ -28,17 +28,17 @@ const MovieCard: React.FC<MovieCardProps> = ({
       : "—";
 
   const isYoutube =
-    movie.trailer?.includes("youtube.com") ||
-    movie.trailer?.includes("youtu.be");
+    movie.trailerUrl?.includes("youtube.com") ||
+    movie.trailerUrl?.includes("youtu.be");
   const youtubeVideoId = isYoutube
-    ? movie.trailer?.match(
+    ? movie.trailerUrl?.match(
         /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
       )?.[1]
     : null;
 
   const isCloudinaryVideo =
-    movie.trailer?.includes("res.cloudinary.com") &&
-    movie.trailer?.includes("/video/upload/");
+    movie.trailerUrl?.includes("res.cloudinary.com") &&
+    movie.trailerUrl?.includes("/video/upload/");
 
   return (
     <>
@@ -48,7 +48,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
       >
         <div className="relative w-full rounded-xl overflow-hidden shadow-md border border-gray-700">
           <Image
-            src={movie.poster || "/default-poster.jpg"}
+            src={movie.thumbnail} // dùng thumbnail từ dev
             alt={movie.title}
             width={400}
             height={450}
@@ -76,7 +76,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
         </h4>
 
         <div className="flex items-center justify-center gap-4 mt-2">
-          {movie.trailer && (
+          {movie.trailerUrl && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -102,7 +102,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
         </div>
       </div>
 
-      {showTrailer && movie.trailer && (
+      {showTrailer && movie.trailerUrl && (
         <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
           <div className="relative w-full max-w-4xl">
             <button
@@ -123,7 +123,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
                 />
               ) : isCloudinaryVideo ? (
                 <video
-                  src={movie.trailer}
+                  src={movie.trailerUrl} // dùng trailerUrl từ dev
                   controls
                   autoPlay
                   className="absolute top-0 left-0 w-full h-full object-contain"
