@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { FaFacebook, FaYoutube, FaTiktok } from "react-icons/fa";
 import { SiZalo } from "react-icons/si";
@@ -6,8 +8,9 @@ export default function Footer() {
   return (
     <footer className="w-full bg-white border-t border-red-100 pt-10 pb-6 mt-10">
       <div className="container mx-auto px-4">
-        {/* --- Phần Nội dung Chính (3 Cột) --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+        {/* --- Phần Nội dung Chính (4 Cột) --- */}
+        {/* ĐÃ SỬA: lg:grid-cols-3 -> lg:grid-cols-4 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* CỘT 1: THƯƠNG HIỆU & HÀNH ĐỘNG */}
           <div className="space-y-6">
             <div className="flex items-center gap-2">
@@ -125,12 +128,56 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* CỘT 3: HỆ THỐNG RẠP */}
+          {/* CỘT 3: VỀ CHÚNG TÔI (MỚI THÊM) */}
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-lg font-bold text-[#1f2937] uppercase mb-4">
+                CinemaGo
+              </h3>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li>
+                  <Link
+                    href="/about"
+                    className="hover:text-[#F25019] transition-colors"
+                  >
+                    Về chúng tôi
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="hover:text-[#F25019] transition-colors"
+                  >
+                    Liên hệ
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="hover:text-[#F25019] transition-colors"
+                  >
+                    Tuyển dụng
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="hover:text-[#F25019] transition-colors"
+                  >
+                    Điều khoản & Chính sách
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            {/* dvu khac */}
+          </div>
+
+          {/* CỘT 4: HỆ THỐNG RẠP */}
           <div>
             <h3 className="text-lg font-bold text-[#1f2937] uppercase mb-4">
               Hệ thống rạp
             </h3>
-            <ul className="space-y-2 text-sm text-gray-600 max-h-40 overflow-y-auto custom-scrollbar pr-2">
+            <ul className="space-y-2 text-sm text-gray-600 max-h-60 overflow-y-auto custom-scrollbar pr-2">
               <li>
                 <Link
                   href="#"

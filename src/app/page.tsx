@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
-import FixedMenu from "@/components/FixedMenu";
 import HeroSection from "@/components/sections/HeroSection";
 import NowShowing from "@/components/sections/NowShowing";
 import ComingSoon from "@/components/sections/ComingSoon";
@@ -21,10 +20,6 @@ export default function HomePage() {
   const [comingSoon, setComingSoon] = useState<Movie[]>([]);
   const [cinemas, setCinemas] = useState<Cinema[]>([]);
   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
-  const [selectedMovie, setSelectedMovie] = useState("");
-  const [selectedCinema, setSelectedCinema] = useState("");
-  const [selectedShowtime, setSelectedShowtime] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -78,17 +73,49 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-peach-gradient text-white flex flex-col">
-      <div className="fixed top-0 left-0 right-0 z-50 bg-black">
+    <div className="min-h-screen bg-[#FFF9F5] font-sans text-[#1f2937] overflow-x-hidden flex flex-col">
+      <div className="sticky top-0 z-50 bg-[#FFF9F5]/90 backdrop-blur-md border-b border-orange-100/50 shadow-sm">
         <Navbar />
       </div>
 
-      <main className="flex-1">
-        <HeroSection />
-        <QuickBooking />
-        <NowShowing />
-        <ComingSoon />
-        <Features />
+      <main className="flex-1 flex flex-col gap-10">
+        <section className="relative w-full pt-8 pb-4 px-4">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden max-w-[100vw]">
+            <img
+              src="/popcorn.png"
+              alt=""
+              className="hidden lg:block absolute -left-20 top-10 w-[250px] opacity-20 rotate-12 blur-[1px] z-0"
+            />
+            <img
+              src="/popcorn.png"
+              alt=""
+              className="hidden lg:block absolute -right-20 top-40 w-[300px] opacity-20 -rotate-12 blur-[1px] z-0"
+            />
+          </div>
+
+          <div className="relative z-10 max-w-7xl mx-auto">
+            <div className="rounded-3xl p-[2px] bg-white/30 backdrop-blur-sm border border-white/40 shadow-2xl">
+              <div className="rounded-2xl overflow-hidden">
+                <HeroSection />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="container mx-auto px-4 relative z-20 -mt-6">
+          <QuickBooking />
+        </div>
+
+        <div className="flex flex-col gap-16 mt-4">
+          <NowShowing />
+
+          <div className="container mx-auto px-4">
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-orange-200 to-transparent"></div>
+          </div>
+
+          <ComingSoon />
+          <Features />
+        </div>
       </main>
 
       <Footer />

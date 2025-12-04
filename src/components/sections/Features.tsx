@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Smartphone,
   CreditCard,
@@ -6,6 +8,7 @@ import {
   MapPin,
   Shield,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function Features() {
   const features = [
@@ -14,42 +17,36 @@ export default function Features() {
       title: "Đặt vé dễ dàng",
       description:
         "Giao diện thân thiện, đặt vé chỉ với vài cú click trên điện thoại hoặc máy tính",
-      color: "bg-blue-500",
     },
     {
       icon: CreditCard,
       title: "Thanh toán an toàn",
       description:
         "Hỗ trợ nhiều hình thức thanh toán: thẻ tín dụng, ví điện tử, internet banking",
-      color: "bg-green-500",
     },
     {
       icon: Users,
       title: "Chọn ghế tự do",
       description:
         "Xem sơ đồ rạp trực tuyến, tự do lựa chọn vị trí ghế ngồi yêu thích",
-      color: "bg-purple-500",
     },
     {
       icon: Star,
       title: "Chất lượng cao",
       description:
         "Âm thanh Dolby Atmos, hình ảnh 4K sắc nét, ghế ngồi cao cấp thoải mái",
-      color: "bg-yellow-500",
     },
     {
       icon: MapPin,
       title: "Nhiều rạp chiếu",
       description:
         "Hệ thống rạp chiếu hiện đại trên khắp cả nước, dễ dàng tìm rạp gần nhất",
-      color: "bg-red-500",
     },
     {
       icon: Shield,
       title: "Dịch vụ tin cậy",
       description:
         "Cam kết hoàn tiền 100% nếu có sự cố, hỗ trợ khách hàng 24/7",
-      color: "bg-indigo-500",
     },
   ];
 
@@ -78,27 +75,22 @@ export default function Features() {
             return (
               <div
                 key={index}
-                className="group relative p-8 rounded-3xl transition-all duration-500 transform hover:-translate-y-2"
+                className="group relative p-8 rounded-3xl transition-all duration-500 transform hover:-translate-y-2 bg-white shadow-lg hover:shadow-2xl border border-orange-100/50"
               >
                 <div className="relative z-10">
-                  {/* Icon */}
                   <div
                     className={`inline-flex items-center justify-center w-16 h-16 ${iconGradient} shadow-lg rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}
                   >
                     <IconComponent className="w-8 h-8 text-white" />
                   </div>
-
-                  {/* Content */}
-                  <h3 className="text-xl font-bold text-gray-800 mb-4 group-hover:text-red-500 transition-colors duration-300">
+                  <h3 className="text-xl font-bold text-gray-800 mb-4 group-hover:text-[#F25019] transition-colors duration-300">
                     {feature.title}
                   </h3>
                   <p className="text-gray-600 leading-relaxed">
                     {feature.description}
                   </p>
-
-                  {/* Hover effect */}
                   <div className="mt-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-12 h-1 bg-red-500 rounded-full"></div>
+                    <div className="w-12 h-1 bg-[#F25019] rounded-full"></div>
                   </div>
                 </div>
               </div>
@@ -106,54 +98,53 @@ export default function Features() {
           })}
         </div>
 
-        {/* CTA Section */}
-        <div className="mt-20 text-center">
-          <div className="relative w-full bg-gradient-to-r from-[#FFE5D0] to-[#FFD6C0] p-12 text-[#F25019]">
-            <div className="relative z-10 max-w-4xl mx-auto">
-              <h3 className="text-3xl md:text-4xl font-bold mb-6">
+        <div className="mt-24 text-center">
+          <div className="relative w-full bg-white rounded-3xl shadow-xl border border-orange-100 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#FFE5D0] to-[#fff0e6] opacity-50"></div>
+            <div className="relative z-10 p-12 md:p-16">
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-6 text-gray-900">
                 Sẵn sàng trải nghiệm điện ảnh đẳng cấp?
               </h3>
-              <p className="text-xl mb-8 opacity-90">
+              <p className="text-xl mb-8 text-gray-600">
                 Tham gia cộng đồng hơn 1 triệu người yêu phim tại Việt Nam
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <button className="bg-white text-[#F25019] px-8 py-4 rounded-full font-bold hover:bg-[#FFE5D0] transition-all duration-300 transform hover:scale-105">
-                  Đăng ký thành viên
-                </button>
-                <button className="border-2 border-[#F25019] text-[#F25019] px-8 py-4 rounded-full font-bold hover:bg-[#FFE5D0] hover:text-[#F25019] transition-all duration-300">
-                  Tìm hiểu thêm
-                </button>
+                {/* 1. Nút Đăng ký -> /register */}
+                <Link href="/register">
+                  <button className="bg-[#F25019] text-white px-8 py-4 rounded-full font-bold hover:bg-[#d13a0b] transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-500/30">
+                    Đăng ký thành viên
+                  </button>
+                </Link>
+
+                {/* 2. Nút Tìm hiểu thêm -> /about */}
+                <Link href="/about">
+                  <button className="bg-white border-2 border-[#F25019] text-[#F25019] px-8 py-4 rounded-full font-bold hover:bg-orange-50 transition-all duration-300">
+                    Tìm hiểu thêm
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Statistics */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div className="relative text-center p-6 rounded-2xl">
-            <div className="relative z-10">
-              <div className="text-4xl font-bold text-red-500 mb-2">1M+</div>
-              <p className="text-gray-600">Khách hàng tin tưởng</p>
+        {/* Statistics - Giữ nguyên */}
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { num: "1M+", label: "Khách hàng tin tưởng" },
+            { num: "50+", label: "Rạp chiếu toàn quốc" },
+            { num: "500+", label: "Phim đã chiếu" },
+            { num: "4.8/5", label: "Đánh giá khách hàng" },
+          ].map((stat, idx) => (
+            <div
+              key={idx}
+              className="bg-white p-6 rounded-2xl shadow-sm border border-orange-100/50 text-center hover:shadow-md transition-shadow"
+            >
+              <div className="text-4xl font-extrabold text-[#F25019] mb-2">
+                {stat.num}
+              </div>
+              <p className="text-gray-600 font-medium">{stat.label}</p>
             </div>
-          </div>
-          <div className="relative text-center p-6 rounded-2xl">
-            <div className="relative z-10">
-              <div className="text-4xl font-bold text-red-500 mb-2">50+</div>
-              <p className="text-gray-600">Rạp chiếu toàn quốc</p>
-            </div>
-          </div>
-          <div className="relative text-center p-6 rounded-2xl">
-            <div className="relative z-10">
-              <div className="text-4xl font-bold text-red-500 mb-2">500+</div>
-              <p className="text-gray-600">Phim đã chiếu</p>
-            </div>
-          </div>
-          <div className="relative text-center p-6 rounded-2xl">
-            <div className="relative z-10">
-              <div className="text-4xl font-bold text-red-500 mb-2">4.8/5</div>
-              <p className="text-gray-600">Đánh giá khách hàng</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
