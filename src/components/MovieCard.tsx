@@ -48,7 +48,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
       >
         <div className="relative w-full rounded-xl overflow-hidden shadow-md border border-gray-700">
           <Image
-            src={movie.thumbnail} // dùng thumbnail từ dev
+            src={movie.thumbnail}
             alt={movie.title}
             width={400}
             height={450}
@@ -123,7 +123,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
                 />
               ) : isCloudinaryVideo ? (
                 <video
-                  src={movie.trailerUrl} // dùng trailerUrl từ dev
+                  src={movie.trailerUrl}
                   controls
                   autoPlay
                   className="absolute top-0 left-0 w-full h-full object-contain"
