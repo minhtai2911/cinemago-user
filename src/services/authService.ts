@@ -9,15 +9,15 @@ import {
   ChangePasswordPayload,
 } from "@/types";
 
-export const signUp = async (data: SignUpPayload) => {
+export const signUp = (data: SignUpPayload) => {
   return axiosInstance.post("/v1/auth/signup", data);
 };
 
-export const login = async (data: LoginPayload) => {
+export const login = (data: LoginPayload) => {
   return axios.post("/api/auth/login", data);
 };
 
-export const logout = async () => {
+export const logout = () => {
   return axios.post(
     "/api/auth/logout",
     {},
@@ -29,18 +29,18 @@ export const logout = async () => {
   );
 };
 
-export const verifyAccount = async (data: VerifyAccountPayload) => {
+export const verifyAccount = (data: VerifyAccountPayload) => {
   return axiosInstance.post("/v1/auth/verify-account", data);
 };
 
-export const forgotPassword = async (data: ForgotPasswordPayload) => {
+export const forgotPassword = (data: ForgotPasswordPayload) => {
   return axiosInstance.post("/v1/auth/forgot-password", data);
 };
 
-export const resetPassword = async (data: ResetPasswordPayload) => {
+export const resetPassword = (data: ResetPasswordPayload) => {
   return axiosInstance.post("/v1/auth/reset-password", data);
 };
 
-export const changePassword = async (data: ChangePasswordPayload) => {
+export const changePassword = (data: ChangePasswordPayload) => {
   return axiosInstance.post("/v1/auth/change-password", data);
 };
