@@ -6,7 +6,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getMovies } from "@/services/movieService";
 import { Movie, MovieStatus } from "@/types/movie";
 
-// Fallback data
 const fallbackComingSoonMovies = [
   {
     id: "7",
@@ -87,27 +86,28 @@ export default function ComingSoon() {
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Responsive State
+  // --- THAY ĐỔI 1: Chuyển itemsPerPage thành state ---
   const [itemsPerPage, setItemsPerPage] = useState(4);
 
+  // --- THAY ĐỔI 2: Thêm logic bắt sự kiện resize màn hình ---
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
       if (width < 640) {
-        setItemsPerPage(1);
+        setItemsPerPage(1); // Mobile
       } else if (width < 1024) {
-        setItemsPerPage(2);
+        setItemsPerPage(2); // Tablet
       } else {
-        setItemsPerPage(4);
+        setItemsPerPage(4); // PC
       }
     };
 
-    handleResize();
+    handleResize(); // Gọi ngay lần đầu
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Reset index khi resize
+  // --- THAY ĐỔI 3: Reset index khi đổi kích thước màn hình để tránh lỗi hiển thị ---
   useEffect(() => {
     setCurrentIndex(0);
   }, [itemsPerPage]);
@@ -140,8 +140,7 @@ export default function ComingSoon() {
             releaseDate: movie.releaseDate
               ? new Date(movie.releaseDate).toLocaleDateString("vi-VN")
               : "N/A",
-            // Map thumbnail -> poster
-            poster: movie.thumbnail || "",
+            poster: movie.thumbnail,
             isComingSoon: true,
           }));
           setMovies(moviesData);
@@ -168,8 +167,9 @@ export default function ComingSoon() {
   };
 
   return (
-    // Đã bỏ bg-orange-50/50 để nền trong suốt ăn theo Page
-    <section className="py-10">
+    <section className="py-20 bg-orange-50/50">
+      {" "}
+      {/* Thêm chút nền nhẹ để tách biệt section */}
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-12">
@@ -180,26 +180,24 @@ export default function ComingSoon() {
             <p className="text-lg text-gray-700">
               Những bộ phim được mong đợi nhất sắp ra mắt
             </p>
-            {/* {error && (
-              <p className="text-xs text-orange-400 mt-1 italic">
-                *Đang hiển thị dữ liệu mẫu do lỗi kết nối
-              </p>
-            )} */}
+            {error && (
+              <></>
+            )}
           </div>
 
-          {/* Navigation buttons */}
+          {/* Navigation buttons - Đã chỉnh style khớp với NowShowing */}
           <div className="flex gap-2">
             <button
               onClick={prevSlide}
               disabled={currentIndex === 0 || loading}
-              className="relative p-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 group bg-white border border-[#F25019] hover:bg-[#F25019] hover:text-white"
+              className="relative p-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 group bg-white/80 border border-[#F25019] hover:bg-[#F25019] hover:text-white"
             >
               <ChevronLeft className="w-6 h-6 text-[#F25019] group-hover:text-white transition-colors" />
             </button>
             <button
               onClick={nextSlide}
               disabled={currentIndex >= maxIndex || loading}
-              className="relative p-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 group bg-white border border-[#F25019] hover:bg-[#F25019] hover:text-white"
+              className="relative p-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 group bg-white/80 border border-[#F25019] hover:bg-[#F25019] hover:text-white"
             >
               <ChevronRight className="w-6 h-6 text-[#F25019] group-hover:text-white transition-colors" />
             </button>
@@ -216,32 +214,29 @@ export default function ComingSoon() {
           </div>
         )}
 
-        {/* Slider */}
+        {/* Movies Grid (Slider) */}
         {!loading && movies.length > 0 && (
-          <div className="relative overflow-hidden py-8 -my-8 px-2">
+          // --- THAY ĐỔI 4: Sửa overflow-visible thành overflow-hidden để che phần thừa ---
+          <div className="relative overflow-hidden">
             <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{
+                // --- THAY ĐỔI 5: Tính toán vị trí trượt dựa trên itemsPerPage động ---
                 transform: `translateX(-${
                   currentIndex * (100 / itemsPerPage)
                 }%)`,
+                // Xóa phần width cứng ở đây đi, để flex tự lo
               }}
             >
               {movies.map((movie) => (
                 <div
                   key={movie.id}
+                  // --- THAY ĐỔI 6: Width động thay vì w-1/4 ---
                   style={{ width: `${100 / itemsPerPage}%` }}
                   className="flex-shrink-0 px-3"
                 >
                   <MovieCard
-                    id={movie.id}
-                    title={movie.title}
-                    genre={movie.genre}
-                    duration={movie.duration}
-                    rating={movie.rating}
-                    releaseDate={movie.releaseDate}
-                    poster={movie.poster || ""}
-                    isComingSoon={true}
+                    {...{ ...movie, poster: movie.poster ? movie.poster : "" }}
                   />
                 </div>
               ))}

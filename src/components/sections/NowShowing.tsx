@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import MovieCard from "../ui/MovieCard"; // Đảm bảo đường dẫn đúng
+import MovieCard from "../ui/MovieCard"; // Đảm bảo đường dẫn import đúng với project của bạn
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getMovies } from "@/services/movieService";
 import { Movie, MovieStatus } from "@/types/movie";
 
-// Fallback data
+// Fallback data nếu API không hoạt động
 const fallbackMovies = [
   {
     id: "1",
@@ -71,29 +71,41 @@ export default function NowShowing() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // --- THAY ĐỔI: State lưu số lượng item hiển thị ---
   const [itemsPerPage, setItemsPerPage] = useState(4);
 
-  // Logic Responsive
+  // --- THAY ĐỔI: Logic Responsive ---
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
-      if (width < 640) setItemsPerPage(1);
-      else if (width < 1024) setItemsPerPage(2);
-      else setItemsPerPage(4);
+      if (width < 640) {
+        setItemsPerPage(1); // Mobile: 1 phim
+      } else if (width < 1024) {
+        setItemsPerPage(2); // Tablet: 2 phim
+      } else {
+        setItemsPerPage(4); // Desktop: 4 phim
+      }
     };
 
+    // Gọi ngay khi load trang
     handleResize();
+
+    // Lắng nghe sự kiện resize
     window.addEventListener("resize", handleResize);
+
+    // Cleanup khi component unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const maxIndex = Math.max(0, movies.length - itemsPerPage);
 
-  // Load movies API
+  // Load movies from API
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         setLoading(true);
+        // Gọi API lấy phim đang chiếu
         const response = (await getMovies(
           1,
           10,
@@ -120,12 +132,12 @@ export default function NowShowing() {
               releaseDate: new Date(movie.releaseDate).toLocaleDateString(
                 "vi-VN"
               ),
-              // Map thumbnail từ API vào poster của Card
-              poster: movie.thumbnail || "",
+              poster: movie.thumbnail,
             })
           );
           setMovies(formattedMovies);
         } else {
+          console.log("No movies found from API, using fallback data");
           setMovies(fallbackMovies);
         }
       } catch (err) {
@@ -141,6 +153,7 @@ export default function NowShowing() {
   }, []);
 
   const nextSlide = () => {
+    // Đảm bảo không next quá số lượng cho phép
     setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
   };
 
@@ -148,12 +161,13 @@ export default function NowShowing() {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
+  // Reset currentIndex về 0 nếu itemsPerPage thay đổi (tránh lỗi hiển thị trắng)
   useEffect(() => {
     setCurrentIndex(0);
   }, [itemsPerPage]);
 
   return (
-    <section className="py-10">
+    <section className="py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-12">
@@ -164,27 +178,29 @@ export default function NowShowing() {
             <p className="text-lg text-gray-700">
               Khám phá những bộ phim hot nhất hiện tại
             </p>
+            {error && <></>}
           </div>
 
+          {/* Navigation buttons */}
           <div className="flex gap-2">
             <button
               onClick={prevSlide}
               disabled={currentIndex === 0 || loading}
-              className="relative p-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 group bg-white border border-[#F25019] hover:bg-[#F25019]"
+              className="relative p-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 group bg-white/80 border border-[#F25019] hover:bg-[#F25019] hover:text-white"
             >
               <ChevronLeft className="w-6 h-6 text-[#F25019] group-hover:text-white transition-colors" />
             </button>
             <button
               onClick={nextSlide}
               disabled={currentIndex >= maxIndex || loading}
-              className="relative p-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 group bg-white border border-[#F25019] hover:bg-[#F25019]"
+              className="relative p-3 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 group bg-white/80 border border-[#F25019] hover:bg-[#F25019] hover:text-white"
             >
               <ChevronRight className="w-6 h-6 text-[#F25019] group-hover:text-white transition-colors" />
             </button>
           </div>
         </div>
 
-        {/* Loading */}
+        {/* Loading State */}
         {loading && (
           <div className="flex justify-center items-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F25019]"></div>
@@ -192,10 +208,9 @@ export default function NowShowing() {
           </div>
         )}
 
-        {/* Slider */}
+        {/* Movies Grid (Slider) */}
         {!loading && movies.length > 0 && (
-          // ĐÃ SỬA: Thêm padding và margin âm để tránh bị xén khi scale
-          <div className="relative overflow-hidden py-8 -my-8 px-2">
+          <div className="relative overflow-hidden">
             <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{
@@ -207,17 +222,12 @@ export default function NowShowing() {
               {movies.map((movie) => (
                 <div
                   key={movie.id}
+                  // --- THAY ĐỔI: Width động theo itemsPerPage ---
                   style={{ width: `${100 / itemsPerPage}%` }}
                   className="flex-shrink-0 px-3"
                 >
                   <MovieCard
-                    id={movie.id}
-                    title={movie.title}
-                    genre={movie.genre}
-                    duration={movie.duration}
-                    rating={movie.rating}
-                    releaseDate={movie.releaseDate}
-                    poster={movie.poster || ""}
+                    {...{ ...movie, poster: movie.poster ? movie.poster : "" }}
                   />
                 </div>
               ))}
@@ -225,7 +235,7 @@ export default function NowShowing() {
           </div>
         )}
 
-        {/* View All */}
+        {/* View All Button */}
         {!loading && (
           <div className="text-center mt-12">
             <button className="bg-gradient-to-r from-[#F25019] to-[#E9391B] text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-200">
