@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Calendar, Clock, MapPin, Users } from "lucide-react";
 import { getMovies } from "@/services/movieService";
 import { getCinemas } from "@/services/cinemaService";
 import { Movie, MovieStatus } from "@/types/movie";
@@ -44,6 +45,7 @@ export default function QuickBooking() {
       try {
         setLoading(true);
 
+        // Load movies và cinemas song song
         const [moviesResponse, cinemasResponse] = await Promise.all([
           getMovies(
             1,
@@ -57,15 +59,18 @@ export default function QuickBooking() {
           getCinemas(1, 20, undefined, true) as Promise<any>,
         ]);
 
+        // Set movies
         if (moviesResponse?.data && Array.isArray(moviesResponse.data)) {
           setMovies(moviesResponse.data);
         }
 
+        // Set cinemas
         if (cinemasResponse?.data && Array.isArray(cinemasResponse.data)) {
           setCinemas(cinemasResponse.data);
         }
       } catch (err) {
         console.error("Error fetching booking data:", err);
+        // Fallback data sẽ được sử dụng trong render
       } finally {
         setLoading(false);
       }
@@ -80,7 +85,6 @@ export default function QuickBooking() {
         <h2 className="text-3xl md:text-4xl font-extrabold text-[#F25019] mb-8 text-center">
           Đặt vé nhanh
         </h2>
-        {/* GIỮ NGUYÊN CLASS GLASS-OVERLAY CỦA BẠN */}
         <div className="glass-overlay soft-shadow p-8 md:p-12 rounded-3xl border border-white/30">
           <div className="space-y-6">
             {/* Movie Selection */}
