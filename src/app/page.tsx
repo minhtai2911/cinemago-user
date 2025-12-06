@@ -1,17 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getMovies, getCinemas, getShowtimes } from "@/services";
 import Navbar from "@/components/Navbar";
-import FixedMenu from "@/components/FixedMenu";
-import HeroSection from "@/components/sections/HeroSection";
-import NowShowing from "@/components/sections/NowShowing";
-import ComingSoon from "@/components/sections/ComingSoon";
-import Features from "@/components/sections/Features";
-import QuickBooking from "@/components/sections/QuickBooking";
 import Footer from "@/components/Footer";
-import { getMovies } from "@/services/movieService";
-import { getCinemas } from "@/services/cinemaService";
-import { getShowtimes } from "@/services/showtimeService";
+import FixedMenu from "@/components/FixedMenu";
+import BannerSlider from "@/components/BannerSlider";
+import QuickBooking from "@/components/QuickBooking";
+import MovieSection from "@/components/MovieSection";
 import { Movie, Cinema, Showtime, MovieStatus } from "@/types";
 import { toast } from "sonner";
 import Loading from "@/components/ui/Loading";
@@ -31,7 +27,7 @@ export default function HomePage() {
     (async () => {
       try {
         setIsLoading(true);
-        const [nowRes, soonRes, cinemaRes, showtimesRes] = await Promise.all([
+        const [nowRes, soonRes, cinemaRes, showtimes] = await Promise.all([
           getMovies(
             undefined,
             undefined,
@@ -64,7 +60,7 @@ export default function HomePage() {
         setNowShowing(nowRes.data || []);
         setComingSoon(soonRes.data || []);
         setCinemas(cinemaRes.data || []);
-        setShowtimes(showtimesRes.data || []);
+        setShowtimes(showtimes.data || []);
       } catch {
         toast.error("Đã có lỗi xảy ra khi tải dữ liệu.");
       } finally {
@@ -78,19 +74,40 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-peach-gradient text-white flex flex-col">
+    <div className="min-h-screen bg-black text-white flex flex-col">
       <div className="fixed top-0 left-0 right-0 z-50 bg-black">
         <Navbar />
       </div>
 
-      <main className="flex-1">
-        <HeroSection />
-        <QuickBooking />
-        <NowShowing />
-        <ComingSoon />
-        <Features />
-      </main>
+      <FixedMenu />
 
+      <main className="pt-[150px]">
+        <BannerSlider />
+        <QuickBooking
+          cinemas={cinemas}
+          nowShowing={nowShowing}
+          showtimes={showtimes}
+          selectedMovie={selectedMovie}
+          selectedCinema={selectedCinema}
+          selectedShowtime={selectedShowtime}
+          selectedDate={selectedDate}
+          setSelectedMovie={setSelectedMovie}
+          setSelectedCinema={setSelectedCinema}
+          setSelectedShowtime={setSelectedShowtime}
+          setSelectedDate={setSelectedDate}
+        />
+        <MovieSection
+          title="PHIM ĐANG CHIẾU"
+          movies={nowShowing}
+          showBookingButton
+          showMoreLink="/movies/now-showing"
+        />
+        <MovieSection
+          title="PHIM SẮP CHIẾU"
+          movies={comingSoon}
+          showMoreLink="/movies/coming-soon"
+        />
+      </main>
       <Footer />
     </div>
   );
