@@ -3,6 +3,7 @@
 import { useEffect, useMemo } from "react";
 import { Cinema, Movie, Showtime } from "@/types";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface QuickBookingProps {
   cinemas: Cinema[];
@@ -31,6 +32,8 @@ export default function QuickBooking({
   setSelectedShowtime,
   setSelectedDate,
 }: QuickBookingProps) {
+  const router = useRouter();
+
   useEffect(() => {
     setSelectedDate("");
     setSelectedShowtime("");
@@ -124,6 +127,41 @@ export default function QuickBooking({
       );
   }, [showtimes, selectedMovie, selectedCinema, selectedDate, now]);
 
+  const handleBooking = () => {
+    if (!selectedMovie) {
+      toast.info("Vui lòng chọn phim trước!");
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.set("movie", selectedMovie); // ID phim
+
+    if (selectedCinema) {
+      params.set("cinema", selectedCinema); // ID rạp
+    }
+
+    if (selectedDate) {
+      // selectedDate đang có dạng "DD/MM/YYYY" (do toLocaleDateString vi-VN)
+      // Component ShowtimeList lại cần dạng "YYYY-MM-DD" để so sánh
+      // Ta cần convert lại:
+      const [day, month, year] = selectedDate.split("/");
+      if (day && month && year) {
+        params.set("date", `${year}-${month}-${day}`);
+      }
+    }
+
+    if (selectedShowtime) {
+      params.set("time", selectedShowtime);
+    }
+
+    // Lưu ý: Nếu user đã chọn showtime cụ thể, bạn có thể muốn:
+    // A. Chuyển thẳng sang trang chọn ghế (nếu có route đó, vd: /booking/seat?showtimeId=...)
+    // B. Chuyển sang trang Booking list và scroll tới rạp đó (như code hiện tại).
+
+    // Ở đây mình làm theo cách B (filter list):
+    router.push(`/booking?${params.toString()}`);
+  };
+
   return (
     <div className="bg-gray-800 p-6 mx-6 rounded-2xl shadow-lg mt-8">
       <h3 className="text-xl font-semibold mb-4">🎟️ Đặt vé nhanh</h3>
@@ -191,6 +229,7 @@ export default function QuickBooking({
           onClick={() => {
             if (!selectedShowtime) toast.info("Vui lòng chọn suất chiếu!");
             else toast.success("Đang chuyển đến trang đặt vé...");
+            handleBooking();
           }}
         >
           Đặt vé

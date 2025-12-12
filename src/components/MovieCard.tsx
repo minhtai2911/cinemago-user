@@ -92,7 +92,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                router.push(`/booking/${movie.id}`);
+                router.push(`/booking?movie=${movie.id}`);
               }}
               className="bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-bold px-6 py-1.5 rounded-lg transition"
             >
