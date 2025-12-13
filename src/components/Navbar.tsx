@@ -8,6 +8,7 @@ import { User, LogOut as LogOutIcon } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import { logout } from "@/services";
 import { useRouter, usePathname } from "next/navigation";
+import FixedMenu from "./FixedMenu";
 
 export default function Navbar() {
   const { isLogged, profile, setAccessToken, setIsLogged, setProfile } =
@@ -130,6 +131,7 @@ export default function Navbar() {
           )}
         </div>
       </nav>
+      <FixedMenu />
     </header>
   );
 }

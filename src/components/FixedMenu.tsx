@@ -32,7 +32,7 @@ export default function FixedMenu() {
   }, [isOpen, cinemas.length]);
 
   return (
-    <div className="fixed top-14 left-0 right-0 z-50 bg-black border-b border-gray-800">
+    <div className="top-14 left-0 right-0 z-50 bg-black border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between py-5">
           <div className="flex items-center gap-12">

@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { getMovies, getCinemas, getShowtimes } from "@/services";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import FixedMenu from "@/components/FixedMenu";
 import BannerSlider from "@/components/BannerSlider";
 import QuickBooking from "@/components/booking/QuickBooking";
 import MovieSection from "@/components/movie/MovieSection";
+import Features from "@/components/sections/Features";
 import { Movie, Cinema, Showtime, MovieStatus } from "@/types";
 import { toast } from "sonner";
 import Loading from "@/components/ui/Loading";
@@ -74,40 +74,46 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
-      <div className="fixed top-0 left-0 right-0 z-50 bg-black">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white text-gray-900 flex flex-col font-sans">
+      <div className="fixed top-0 left-0 right-0 z-50">
         <Navbar />
       </div>
 
-      <FixedMenu />
+      <main className="mt-20">
+        <BannerSlider movies={nowShowing} />
 
-      <main className="pt-[150px]">
-        <BannerSlider />
-        <QuickBooking
-          cinemas={cinemas}
-          nowShowing={nowShowing}
-          showtimes={showtimes}
-          selectedMovie={selectedMovie}
-          selectedCinema={selectedCinema}
-          selectedShowtime={selectedShowtime}
-          selectedDate={selectedDate}
-          setSelectedMovie={setSelectedMovie}
-          setSelectedCinema={setSelectedCinema}
-          setSelectedShowtime={setSelectedShowtime}
-          setSelectedDate={setSelectedDate}
-        />
-        <MovieSection
-          title="PHIM ĐANG CHIẾU"
-          movies={nowShowing}
-          showBookingButton
-          showMoreLink="/movies/now-showing"
-        />
-        <MovieSection
-          title="PHIM SẮP CHIẾU"
-          movies={comingSoon}
-          showMoreLink="/movies/coming-soon"
-        />
+        {/* QuickBooking */}
+        <div className="relative z-30 container mx-auto px-4 -mt-24 mb-16">
+          <QuickBooking
+            cinemas={cinemas}
+            nowShowing={nowShowing}
+            showtimes={showtimes}
+            selectedMovie={selectedMovie}
+            selectedCinema={selectedCinema}
+            selectedShowtime={selectedShowtime}
+            selectedDate={selectedDate}
+            setSelectedMovie={setSelectedMovie}
+            setSelectedCinema={setSelectedCinema}
+            setSelectedShowtime={setSelectedShowtime}
+            setSelectedDate={setSelectedDate}
+          />
+        </div>
+
+        <div className="container mx-auto px-4 pb-20 space-y-20">
+          <MovieSection
+            title="PHIM ĐANG CHIẾU"
+            movies={nowShowing}
+            showBookingButton
+          />
+
+          <div className="w-full h-px bg-gray-200" />
+
+          <MovieSection title="PHIM SẮP CHIẾU" movies={comingSoon} />
+        </div>
+
+        <Features />
       </main>
+
       <Footer />
     </div>
   );

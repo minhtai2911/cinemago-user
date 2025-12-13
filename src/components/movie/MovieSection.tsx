@@ -1,48 +1,84 @@
 "use client";
 
-import MovieCard from "./MovieCard";
-import Link from "next/link";
+import { useState, useEffect } from "react";
+import MovieCard from "@/components/movie/MovieCard";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Movie } from "@/types";
 
 interface MovieSectionProps {
   title: string;
   movies: Movie[];
   showBookingButton?: boolean;
-  showMoreLink?: string;
 }
 
 export default function MovieSection({
   title,
-  movies,
-  showBookingButton,
-  showMoreLink,
+  movies = [],
+  showBookingButton = false,
 }: MovieSectionProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(4);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) setItemsPerPage(1);
+      else if (window.innerWidth < 1024) setItemsPerPage(2);
+      else setItemsPerPage(4);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const maxIndex = Math.max(0, movies.length - itemsPerPage);
+  const nextSlide = () =>
+    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
+  const prevSlide = () => setCurrentIndex((prev) => Math.max(prev - 1, 0));
+
+  if (!movies || movies.length === 0) return null;
+
   return (
-    <section className="px-6 py-10">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">{title}</h2>
-        {showMoreLink && (
-          <Link
-            href={showMoreLink}
-            className="text-red-500 hover:text-red-400 font-medium"
+    <section className="relative w-full py-10">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 border-l-4 border-[#F25019] pl-4 uppercase">
+          {title}
+        </h2>
+        <div className="flex gap-3">
+          <button
+            onClick={prevSlide}
+            disabled={currentIndex === 0}
+            className="p-3 rounded-full bg-white border hover:bg-[#F25019] hover:text-white transition-all"
           >
-            Xem thêm
-          </Link>
-        )}
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={nextSlide}
+            disabled={currentIndex >= maxIndex}
+            className="p-3 rounded-full bg-white border hover:bg-[#F25019] hover:text-white transition-all"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
       </div>
-      {movies.length === 0 ? (
-        <p className="text-gray-400">Không có phim nào.</p>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+
+      <div className="relative overflow-hidden -mx-3 p-3">
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{
+            transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)`,
+          }}
+        >
           {movies.map((movie) => (
-            <MovieCard
+            <div
               key={movie.id}
-              movie={movie}
-              showBookingButton={showBookingButton}
-            />
+              style={{ width: `${100 / itemsPerPage}%` }}
+              className="flex-shrink-0 px-3 pb-4"
+            >
+              <MovieCard movie={movie} showBookingButton={showBookingButton} />
+            </div>
           ))}
         </div>
-      )}
+      </div>
     </section>
   );
 }
