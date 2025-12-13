@@ -8,7 +8,7 @@ import {
   Calendar,
   Ticket,
 } from "lucide-react";
-import { Movie } from "@/types";
+import { Movie, Genre } from "@/types";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -24,7 +24,7 @@ export default function BannerSlider({ movies = [] }: BannerSliderProps) {
     title: movie.title,
     subtitle:
       movie.genres && movie.genres.length > 0
-        ? movie.genres.map((g: any) => g.name).join(", ")
+        ? movie.genres.map((g: Genre) => g.name).join(", ")
         : "Phim chiếu rạp",
     image: movie.thumbnail || "",
     releaseDate: movie.releaseDate

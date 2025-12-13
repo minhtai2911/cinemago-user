@@ -15,8 +15,6 @@ const MovieCard: React.FC<MovieCardProps> = ({
   movie,
   showBookingButton = false,
 }) => {
-  if (!movie) return null;
-
   const [showTrailer, setShowTrailer] = useState(false);
   const router = useRouter();
 
@@ -30,6 +28,8 @@ const MovieCard: React.FC<MovieCardProps> = ({
       document.body.style.overflow = "unset";
     };
   }, [showTrailer]);
+
+  if (!movie) return null;
 
   const handleGoToDetail = () => {
     router.push(`/movies/${movie.id}`);
@@ -103,7 +103,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
             </div>
             <span className="text-gray-300">|</span>
             <span className="truncate max-w-[150px] text-gray-500">
-              {genreNames.split(",")[0]}
+              {genreNames}
             </span>
           </div>
           <div className="mt-auto">
