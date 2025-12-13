@@ -4,20 +4,17 @@ import { useState, useEffect } from "react";
 import MovieCard from "@/components/ui/MovieCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Movie } from "@/types";
-import Link from "next/link";
 
 interface MovieSectionProps {
   title: string;
   movies: Movie[];
   showBookingButton?: boolean;
-  showMoreLink: string;
 }
 
 export default function MovieSection({
   title,
   movies = [],
   showBookingButton = false,
-  showMoreLink,
 }: MovieSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);
@@ -81,14 +78,6 @@ export default function MovieSection({
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="text-center mt-8">
-        <Link href={showMoreLink}>
-          <button className="px-8 py-2.5 rounded-full border border-[#F25019] text-[#F25019] font-semibold hover:bg-[#F25019] hover:text-white transition-all">
-            Xem tất cả
-          </button>
-        </Link>
       </div>
     </section>
   );

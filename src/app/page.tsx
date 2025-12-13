@@ -104,16 +104,11 @@ export default function HomePage() {
             title="PHIM ĐANG CHIẾU"
             movies={nowShowing}
             showBookingButton
-            showMoreLink="/movies/now-showing"
           />
 
           <div className="w-full h-px bg-gray-200" />
 
-          <MovieSection
-            title="PHIM SẮP CHIẾU"
-            movies={comingSoon}
-            showMoreLink="/movies/coming-soon"
-          />
+          <MovieSection title="PHIM SẮP CHIẾU" movies={comingSoon} />
         </div>
 
         <Features />
