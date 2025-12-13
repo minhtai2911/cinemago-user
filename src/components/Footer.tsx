@@ -1,179 +1,220 @@
 import Link from "next/link";
+import Image from "next/image";
 import { FaFacebookF, FaYoutube, FaTiktok } from "react-icons/fa6";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#181818] text-gray-300 mt-12 border-t border-gray-700">
-      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-5 gap-8">
-        {/* CINEMAGO text + Hotline + Social - Column 1 */}
-        <div>
-          <Link
-            href="/"
-            className="text-2xl font-bold text-red-500 mb-4 inline-block"
-          >
-            CinemaGo
+    <footer className="bg-white border-t border-gray-200 pt-12 pb-8 mt-12 text-gray-600">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="lg:col-span-1">
+          <Link href="/" className="inline-block mb-4">
+            <Image
+              src="/CinemaGo.svg"
+              alt="CinemaGo"
+              width={160}
+              height={45}
+              className="object-contain"
+            />
           </Link>
 
-          {/* Slogan */}
-          <p className="text-sm mb-4">BE HAPPY. BE A STAR.</p>
+          <p className="text-sm font-medium text-gray-500 mb-6 tracking-wider">
+            BE HAPPY. BE A STAR.
+          </p>
 
-          <div className="flex flex-col space-y-4 mb-6">
-            {/* Nút ĐẶT VÉ PHIM (ĐẶT VÉ) */}
+          <div className="flex flex-col space-y-3 mb-6">
             <Link
               href="/booking"
-              className="relative w-44 text-center px-6 py-2.5 rounded-xl bg-gradient-to-r from-black via-black to-black border-2 border-red-500 text-red-500 font-medium transition-all duration-300 
-              before:absolute before:inset-0 before:bg-gradient-to-r before:from-red-500/20 before:via-transparent before:to-red-500/20 before:rounded-xl before:opacity-0
-              hover:before:opacity-100 hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:border-red-400 hover:text-red-400"
+              className="relative w-full max-w-[200px] text-center px-6 py-2.5 rounded-xl border border-[#F25019] text-[#F25019] font-bold text-sm transition-all duration-300 hover:bg-[#F25019] hover:text-white hover:shadow-[0_4px_15px_rgba(242,80,25,0.3)]"
             >
-              <span className="relative">ĐẶT VÉ PHIM</span>
+              ĐẶT VÉ PHIM
             </Link>
 
-            {/* Nút ĐẶT BẮP NƯỚC */}
             <Link
               href="/food-drinks"
-              className="relative w-44 text-center px-6 py-2.5 rounded-xl bg-gradient-to-r from-black via-black to-black border-2 border-red-500 text-red-500 font-medium transition-all duration-300 
-              before:absolute before:inset-0 before:bg-gradient-to-r before:from-red-500/20 before:via-transparent before:to-red-500/20 before:rounded-xl before:opacity-0
-              hover:before:opacity-100 hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] hover:border-red-400 hover:text-red-400"
+              className="relative w-full max-w-[200px] text-center px-6 py-2.5 rounded-xl border border-[#F25019] text-[#F25019] font-bold text-sm transition-all duration-300 hover:bg-[#F25019] hover:text-white hover:shadow-[0_4px_15px_rgba(242,80,25,0.3)]"
             >
-              <span className="relative">ĐẶT BẮP NƯỚC</span>
+              ĐẶT BẮP NƯỚC
             </Link>
           </div>
 
-          <p className="text-sm mb-2">
-            Hotline:{" "}
-            <a href="tel:19001234" className="text-yellow-400 hover:underline">
-              1900 1234
+          <div className="text-sm space-y-2">
+            <p>
+              Hotline:{" "}
+              <a
+                href="tel:19001234"
+                className="font-semibold text-gray-800 hover:text-[#F25019] transition"
+              >
+                1900 1234
+              </a>
+            </p>
+            <p>
+              Email:{" "}
+              <a
+                href="mailto:info@cinemago.vn"
+                className="font-semibold text-gray-800 hover:text-[#F25019] transition"
+              >
+                info@cinemago.vn
+              </a>
+            </p>
+          </div>
+
+          <div className="flex gap-4 mt-5">
+            <a
+              href="#"
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-[#1877F2] hover:text-white transition-all"
+              aria-label="Facebook"
+            >
+              <FaFacebookF size={14} />
             </a>
-          </p>
-          <p className="text-sm mb-2">
-            Email:{" "}
-            <a href="mailto:info@cinemago.vn" className="hover:underline">
-              info@cinemago.vn
+            <a
+              href="#"
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-[#FF0000] hover:text-white transition-all"
+              aria-label="YouTube"
+            >
+              <FaYoutube size={14} />
             </a>
-          </p>
-          <div className="flex gap-4 mt-4 text-2xl">
-            <a href="#" className="hover:text-blue-400" aria-label="Facebook">
-              <FaFacebookF />
-            </a>
-            <a href="#" className="hover:text-red-400" aria-label="YouTube">
-              <FaYoutube />
-            </a>
-            <a href="#" className="hover:text-pink-400" aria-label="TikTok">
-              <FaTiktok />
+            <a
+              href="#"
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-black hover:text-white transition-all"
+              aria-label="TikTok"
+            >
+              <FaTiktok size={14} />
             </a>
           </div>
         </div>
 
-        {/* Tài khoản - Column 2 */}
         <div>
-          <h3 className="text-white font-semibold mb-3">Tài khoản</h3>
-          <ul className="space-y-2 text-sm">
+          <h3 className="text-gray-900 font-bold mb-4 uppercase text-sm tracking-wide">
+            Tài khoản
+          </h3>
+          <ul className="space-y-2.5 text-sm">
             <li>
-              <Link href="#" className="hover:text-yellow-400">
+              <Link
+                href="/login"
+                className="hover:text-[#F25019] transition-colors"
+              >
                 Đăng nhập
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-yellow-400">
+              <Link
+                href="/register"
+                className="hover:text-[#F25019] transition-colors"
+              >
                 Đăng ký
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-yellow-400">
+              <Link href="#" className="hover:text-[#F25019] transition-colors">
                 Membership
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Xem phim - Column 3 */}
         <div>
-          <h3 className="text-white font-semibold mb-3">Xem phim</h3>
-          <ul className="space-y-2 text-sm">
+          <h3 className="text-gray-900 font-bold mb-4 uppercase text-sm tracking-wide">
+            Xem phim
+          </h3>
+          <ul className="space-y-2.5 text-sm">
             <li>
-              <Link href="#" className="hover:text-yellow-400">
+              <Link
+                href="/movies/now-showing"
+                className="hover:text-[#F25019] transition-colors"
+              >
                 Phim đang chiếu
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-yellow-400">
+              <Link
+                href="/movies/coming-soon"
+                className="hover:text-[#F25019] transition-colors"
+              >
                 Phim sắp chiếu
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-yellow-400">
+              <Link href="#" className="hover:text-[#F25019] transition-colors">
                 Suất chiếu đặc biệt
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-yellow-400">
+              <Link href="#" className="hover:text-[#F25019] transition-colors">
                 Tin tức & Ưu đãi
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Thông tin & Chính sách - Column 4 */}
         <div>
-          <h3 className="text-white font-semibold mb-3">Thông tin & Hỗ trợ</h3>
-          <ul className="space-y-2 text-sm">
+          <h3 className="text-gray-900 font-bold mb-4 uppercase text-sm tracking-wide">
+            Thông tin
+          </h3>
+          <ul className="space-y-2.5 text-sm">
             <li>
-              <Link href="#" className="hover:text-yellow-400">
+              <Link href="#" className="hover:text-[#F25019] transition-colors">
                 Giới thiệu CinemaGo
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-yellow-400">
+              <Link href="#" className="hover:text-[#F25019] transition-colors">
                 Tuyển dụng
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-yellow-400">
+              <Link href="#" className="hover:text-[#F25019] transition-colors">
                 Liên hệ
               </Link>
             </li>
-            <li className="pt-2 border-t border-gray-700 mt-2">
-              <Link href="#" className="hover:text-yellow-400">
+            <li className="pt-2 mt-2 border-t border-gray-100">
+              <Link href="#" className="hover:text-[#F25019] transition-colors">
                 Điều khoản & Chính sách
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:text-yellow-400">
-                Hướng dẫn đặt vé
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Cụm rạp - Column 5 */}
         <div>
-          <h3 className="text-white font-semibold mb-3">Cụm rạp</h3>
-          <ul className="space-y-2 text-sm">
+          <h3 className="text-gray-900 font-bold mb-4 uppercase text-sm tracking-wide">
+            Hệ thống rạp
+          </h3>
+          <ul className="space-y-2.5 text-sm">
             <li>
-              <Link href="#" className="hover:text-yellow-400">
-                CinemaGo Quốc Thanh (TPHCM)
+              <Link href="#" className="hover:text-[#F25019] transition-colors">
+                CinemaGo Quốc Thanh
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-yellow-400">
-                CinemaGo Hai Bà Trưng (TPHCM)
+              <Link href="#" className="hover:text-[#F25019] transition-colors">
+                CinemaGo Hai Bà Trưng
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-yellow-400">
+              <Link href="#" className="hover:text-[#F25019] transition-colors">
                 CinemaGo Bình Dương
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-yellow-400">
-                CinemaGo Đà Lạt (Lâm Đồng)
+              <Link href="#" className="hover:text-[#F25019] transition-colors">
+                CinemaGo Đà Lạt
               </Link>
             </li>
           </ul>
         </div>
       </div>
-      <div className="text-center text-gray-500 text-xs py-4 border-t border-gray-700">
-        © 2025 CINEMAGO. All rights reserved.
+
+      <div className="border-t border-gray-100 mt-10 pt-6">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
+          <p>© 2025 CINEMAGO. All rights reserved.</p>
+          <div className="flex gap-4 mt-2 md:mt-0">
+            <Link href="#" className="hover:text-[#F25019]">
+              Chính sách bảo mật
+            </Link>
+            <Link href="#" className="hover:text-[#F25019]">
+              Điều khoản sử dụng
+            </Link>
+          </div>
+        </div>
       </div>
     </footer>
   );
