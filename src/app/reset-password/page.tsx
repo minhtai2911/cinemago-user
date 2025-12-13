@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { resetPassword, forgotPassword } from "@/services";
 import axios from "axios";
 import useAuth from "@/hooks/useAuth";
+import Image from "next/image";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -101,7 +102,9 @@ export default function ResetPasswordPage() {
     <div className="min-h-screen bg-peach-gradient flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="relative max-w-6xl w-full rounded-3xl px-6 py-10">
         {/* Faint popcorn on the left outside the card (decorative, under overlay) */}
-        <img
+        <Image
+          width={500}
+          height={500}
           src="/popcorn.png"
           alt=""
           aria-hidden
@@ -113,7 +116,9 @@ export default function ResetPasswordPage() {
           <div className="flex items-center justify-center">
             <div className="w-full max-w-md space-y-6 bg-white/90 p-8 rounded-xl border border-white/30 shadow-xl">
               <div>
-                <img
+                <Image
+                  width={50}
+                  height={50}
                   src="/CinemaGo.svg"
                   alt="CinemaGO"
                   className="h-8 w-auto mb-2"
@@ -224,7 +229,9 @@ export default function ResetPasswordPage() {
           </div>
 
           <div className="hidden md:flex items-center justify-center">
-            <img
+            <Image
+              width={400}
+              height={400}
               src="/popcorn.png"
               alt="popcorn"
               className="w-[70%] h-auto object-contain drop-shadow-2xl"
