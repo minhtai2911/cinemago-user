@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import MovieCard from "@/components/ui/MovieCard";
+import MovieCard from "@/components/movie/MovieCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Movie } from "@/types";
 

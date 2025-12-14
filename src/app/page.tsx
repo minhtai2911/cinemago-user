@@ -5,8 +5,8 @@ import { getMovies, getCinemas, getShowtimes } from "@/services";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BannerSlider from "@/components/BannerSlider";
-import QuickBooking from "@/components/QuickBooking";
-import MovieSection from "@/components/MovieSection";
+import QuickBooking from "@/components/booking/QuickBooking";
+import MovieSection from "@/components/movie/MovieSection";
 import Features from "@/components/sections/Features";
 import { Movie, Cinema, Showtime, MovieStatus } from "@/types";
 import { toast } from "sonner";
@@ -79,7 +79,7 @@ export default function HomePage() {
         <Navbar />
       </div>
 
-      <main>
+      <main className="mt-20">
         <BannerSlider movies={nowShowing} />
 
         {/* QuickBooking */}

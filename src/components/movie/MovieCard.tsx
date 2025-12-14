@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Movie, Genre } from "@/types";
 import Image from "next/image";
-import { Clock, Play, X } from "lucide-react";
+import { Clock, Play } from "lucide-react";
 import { useRouter } from "next/navigation";
+import TrailerModal from "@/components/movie/TrailerModal";
+import { createPortal } from "react-dom";
 
 interface MovieCardProps {
   movie: Movie;
@@ -18,18 +20,9 @@ const MovieCard: React.FC<MovieCardProps> = ({
   const [showTrailer, setShowTrailer] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (showTrailer) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [showTrailer]);
-
-  if (!movie) return null;
+  if (!movie) {
+    return null;
+  }
 
   const handleGoToDetail = () => {
     router.push(`/movies/${movie.id}`);
@@ -39,20 +32,6 @@ const MovieCard: React.FC<MovieCardProps> = ({
     movie.genres && Array.isArray(movie.genres)
       ? movie.genres.map((g: Genre) => g.name).join(", ")
       : "—";
-
-  const isYoutube =
-    movie.trailerUrl?.includes("youtube.com") ||
-    movie.trailerUrl?.includes("youtu.be");
-
-  const youtubeVideoId = isYoutube
-    ? movie.trailerUrl?.match(
-        /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
-      )?.[1]
-    : null;
-
-  const isCloudinaryVideo =
-    movie.trailerUrl?.includes("res.cloudinary.com") &&
-    movie.trailerUrl?.includes("/video/upload/");
 
   return (
     <>
@@ -85,7 +64,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
               className="absolute bottom-3 left-3 z-20 flex items-center gap-1.5 bg-black/60 hover:bg-[#F25019] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full backdrop-blur-sm transition-colors duration-300"
             >
               <Play size={10} fill="currentColor" />
-              Trailer
+              Xem Trailer
             </button>
           )}
         </div>
@@ -129,48 +108,15 @@ const MovieCard: React.FC<MovieCardProps> = ({
         </div>
       </div>
 
-      {showTrailer && movie.trailerUrl && (
-        <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4 animate-in fade-in duration-200"
-          onClick={() => setShowTrailer(false)}
-        >
-          <button
-            onClick={() => setShowTrailer(false)}
-            className="absolute top-5 right-5 z-50 p-2 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all"
-          >
-            <X size={28} />
-          </button>
-
-          {/* Container Video */}
-          <div
-            className="w-full max-w-5xl bg-black rounded-xl overflow-hidden shadow-2xl relative outline-none"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {isYoutube ? (
-              <div className="relative w-full pt-[56.25%]">
-                <iframe
-                  src={`https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&rel=0&fs=1`}
-                  title="Trailer"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                  allowFullScreen
-                  className="absolute top-0 left-0 w-full h-full border-0"
-                />
-              </div>
-            ) : isCloudinaryVideo ? (
-              <video
-                src={movie.trailerUrl}
-                controls
-                autoPlay
-                className="w-full h-auto max-h-[80vh] mx-auto object-contain"
-              />
-            ) : (
-              <div className="text-white text-center py-20">
-                <p>Định dạng video không hỗ trợ</p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {showTrailer &&
+        createPortal(
+          <TrailerModal
+            videoOpen={showTrailer}
+            setVideoOpen={setShowTrailer}
+            videoUrl={movie.trailerUrl}
+          />,
+          document.body
+        )}
     </>
   );
 };
