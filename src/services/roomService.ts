@@ -36,3 +36,7 @@ export const holdSeat = async (data: HoldSeatPayload) => {
 export const getHeldSeats = async (showtimeId: string) => {
   return axiosInstance.get(`v1/rooms/${showtimeId}/hold-seat`);
 };
+
+export const releaseSeat = async (data: HoldSeatPayload) => {
+  return axiosInstance.post(`v1/rooms/release-seat`, data);
+};

@@ -16,5 +16,5 @@ export const getBookingById = async (bookingId: string) => {
 };
 
 export const getBookingSeatsByShowTimeId = async (showtimeId: string) => {
-  return fetcher(`/v1/bookings/public/${showtimeId}/booking-seat`);
+  return fetcher(`v1/bookings/public/${showtimeId}/booking-seat`);
 };
