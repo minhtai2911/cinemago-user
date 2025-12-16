@@ -7,3 +7,4 @@ export * from "./genresService";
 export * from "./showtimeService";
 export * from "./bookingService";
 export * from "./reviewService";
+export * from "./foodService";

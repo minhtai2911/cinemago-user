@@ -133,7 +133,7 @@ export default function BannerSlider({ movies = [] }: BannerSliderProps) {
 
               <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <Link
-                  href={`/booking/${currentBanner.id}`}
+                  href={`/booking?movie=${currentBanner.id}`}
                   className="w-full sm:w-auto"
                 >
                   <button className="w-full sm:w-auto bg-[#F25019] text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg shadow-orange-500/40 hover:bg-[#d14012] hover:scale-105 transition-all flex items-center justify-center gap-2">

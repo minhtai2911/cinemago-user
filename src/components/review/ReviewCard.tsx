@@ -93,13 +93,13 @@ export default function ReviewCard({
                 className="w-full h-full object-cover"
                 unoptimized
                 onError={(e) => {
-                  e.currentTarget.src = "/default-avatar.jpg";
+                  e.currentTarget.src = "/default-avatar.png";
                 }}
               />
             ) : (
               <>
                 <Image
-                  src="/default-avatar.jpg"
+                  src="/default-avatar.png"
                   alt="Avatar"
                   width={48}
                   height={48}

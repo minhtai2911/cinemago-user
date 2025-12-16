@@ -90,7 +90,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
               onClick={(e) => {
                 e.stopPropagation();
                 if (showBookingButton) {
-                  router.push(`/booking/${movie.id}`);
+                  router.push(`/booking?movie=${movie.id}`);
                 } else {
                   handleGoToDetail();
                 }

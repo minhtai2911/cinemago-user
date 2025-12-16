@@ -5,3 +5,4 @@ export * from "./genres";
 export * from "./cinema";
 export * from "./showtime";
 export * from "./review";
+export * from "./food";

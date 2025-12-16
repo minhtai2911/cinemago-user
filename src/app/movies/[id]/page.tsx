@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, Ticket } from "lucide-react"; // Thêm Ticket icon
 import { getMovieById, getReviews, getReviewOverview } from "@/services";
 import { Review } from "@/types";
 import ReviewCard from "@/components/review/ReviewCard";
 import Navbar from "@/components/Navbar";
 import ReviewModal from "@/components/review/ReviewModal";
-import MovieInfoSection from "@/components/movie/MovieInfoSection";
+import MovieDetail from "@/components/movie/MovieDetail";
 
 export default async function MovieDetailPage({
   params,
@@ -56,7 +56,21 @@ export default async function MovieDetailPage({
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-6 py-10 pt-[120px]">
-        <MovieInfoSection movie={movie} />
+        <MovieDetail movie={movie} />
+
+        <div className="my-12 text-center">
+          <Link
+            href={`/booking?movie=${id}`}
+            className="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-xl font-bold rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300 uppercase tracking-wider"
+          >
+            <Ticket size={32} className="fill-white" />
+            Mua vé ngay
+          </Link>
+
+          <p className="mt-4 text-gray-400 text-sm">
+            Đặt vé nhanh chóng • Ghế VIP • Ưu đãi thành viên
+          </p>
+        </div>
 
         <div className="space-y-16">
           <div className="bg-gray-900/60 backdrop-blur-md border border-gray-800 rounded-3xl p-10 text-center">
@@ -127,26 +141,28 @@ export default async function MovieDetailPage({
             <div className="flex justify-center gap-4 mt-12">
               <Link
                 href={{ query: { page: currentPage - 1 } }}
-                className={`px-4 py-3 rounded-xl ${
+                className={`px-4 py-3 rounded-xl flex items-center ${
                   hasPrevPage
                     ? "bg-gray-800 hover:bg-gray-700"
-                    : "bg-gray-900 text-gray-600"
+                    : "bg-gray-900 text-gray-600 cursor-not-allowed"
                 } transition`}
+                prefetch={hasPrevPage}
               >
-                <ChevronLeft />
+                <ChevronLeft size={24} />
               </Link>
               <span className="px-6 py-3 bg-yellow-400 text-black font-bold rounded-xl">
                 {currentPage} / {totalPages}
               </span>
               <Link
                 href={{ query: { page: currentPage + 1 } }}
-                className={`px-4 py-3 rounded-xl ${
+                className={`px-4 py-3 rounded-xl flex items-center ${
                   hasNextPage
                     ? "bg-gray-800 hover:bg-gray-700"
-                    : "bg-gray-900 text-gray-600"
+                    : "bg-gray-900 text-gray-600 cursor-not-allowed"
                 } transition`}
+                prefetch={hasNextPage}
               >
-                <ChevronRight />
+                <ChevronRight size={24} />
               </Link>
             </div>
           )}

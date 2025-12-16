@@ -5,6 +5,7 @@ import { Cinema, Movie, Showtime } from "@/types";
 import { toast } from "sonner";
 import { ChevronDown, Calendar, Clock, MapPin, Film } from "lucide-react";
 import { useRouter } from "next/navigation";
+
 interface QuickBookingProps {
   cinemas: Cinema[];
   nowShowing: Movie[];
@@ -128,12 +129,30 @@ export default function QuickBooking({
   }, [showtimes, selectedMovie, selectedCinema, selectedDate, now]);
 
   const handleBooking = () => {
-    if (!selectedShowtime) {
-      toast.error("Vui lòng chọn đầy đủ thông tin!");
+    if (!selectedMovie) {
+      toast.info("Vui lòng chọn phim trước!");
       return;
     }
-    toast.success("Đang chuyển đến trang đặt vé...");
-    router.push(`/booking/${selectedShowtime}`);
+
+    const params = new URLSearchParams();
+    params.set("movie", selectedMovie);
+
+    if (selectedCinema) {
+      params.set("cinema", selectedCinema);
+    }
+
+    if (selectedDate) {
+      const [day, month, year] = selectedDate.split("/");
+      if (day && month && year) {
+        params.set("date", `${year}-${month}-${day}`);
+      }
+    }
+
+    if (selectedShowtime) {
+      params.set("showtime", selectedShowtime);
+    }
+
+    router.push(`/booking?${params.toString()}`);
   };
 
   return (
