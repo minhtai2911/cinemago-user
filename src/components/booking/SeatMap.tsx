@@ -8,9 +8,12 @@ import { TicketSelection } from "./TicketSelector";
 import { RenderSeat } from "@/utils/seat-helper";
 
 const SEAT_STYLES: Record<SeatType, string> = {
-  NORMAL: "border-purple-500 text-purple-200 hover:bg-purple-900 h-9 w-9",
-  VIP: "border-red-500 text-red-200 hover:bg-red-900 h-9 w-9",
-  COUPLE: "border-pink-500 text-pink-200 hover:bg-pink-900 h-9 w-20",
+  // Unselected seats: solid white background, colored border & text, gentle hover tint
+  NORMAL:
+    "border-orange-500 text-orange-600 bg-white hover:bg-orange-50 h-9 w-9 transition-colors duration-150",
+  VIP: "border-red-500 text-red-600 bg-white hover:bg-red-50 h-9 w-9 transition-colors duration-150",
+  COUPLE:
+    "border-pink-500 text-pink-600 bg-white hover:bg-pink-50 h-9 w-20 transition-colors duration-150",
   EMPTY: "invisible border-none h-9 w-9",
 };
 
@@ -151,17 +154,26 @@ export default function SeatMap({
   }, [seatLayout]);
 
   return (
-    <div className="w-full bg-[#1e293b] p-8 rounded-xl shadow-2xl border border-gray-700 mt-12 mb-24 animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="w-full bg-white/60 backdrop-blur-sm p-8 rounded-xl shadow-[0_40px_80px_rgba(255,110,70,0.08)] border border-white/10 mt-12 mb-24 animate-in fade-in slide-in-from-bottom-8 duration-700">
       <h3
-        className="text-3xl font-bold text-center text-white mb-4 uppercase"
+        className="text-3xl font-bold text-center text-[#1f2937] mb-4 uppercase"
         style={{ fontFamily: "Oswald, sans-serif" }}
       >
         Chọn Ghế
       </h3>
 
-      <div className="w-full max-w-3xl mx-auto mb-12 relative">
-        <div className="h-2 bg-white/20 rounded-[50%] mb-2 shadow-[0_10px_20px_rgba(255,255,255,0.2)]"></div>
-        <p className="text-center text-gray-500 text-sm uppercase tracking-widest mt-4">
+      <div className="w-full max-w-3xl mx-auto mb-12 relative flex flex-col items-center">
+        {/* Single white screen with stronger orange glow and expanded shadow */}
+        <div className="relative w-[85%] mb-2">
+          {/* blurred orange glow behind the screen */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-full h-3 rounded-full bg-gradient-to-r from-transparent via-[#FFB07A]/40 to-transparent filter blur-[18px] opacity-95"></div>
+          </div>
+
+          {/* white screen on top */}
+          <div className="relative z-10 h-3 bg-white rounded-full w-full shadow-[0_20px_80px_rgba(255,120,60,0.28)]"></div>
+        </div>
+        <p className="text-center text-gray-600 text-sm uppercase tracking-widest mt-4">
           Màn hình
         </p>
       </div>
@@ -170,7 +182,7 @@ export default function SeatMap({
         <div className="min-w-fit mx-auto flex flex-col gap-3 items-center">
           {rows.map((rowSeats, rowIndex) => (
             <div key={rowIndex} className="flex items-center gap-4">
-              <span className="text-gray-500 font-bold w-6 text-center text-lg">
+              <span className="text-gray-700 font-bold w-6 text-center text-lg">
                 {rowSeats[0].row}
               </span>
               <div className="flex gap-2">
@@ -201,13 +213,22 @@ export default function SeatMap({
                   if (seat.type === "EMPTY") {
                     seatClass = `invisible border-none h-9 ${widthClass}`;
                   } else if (isBooked) {
-                    seatClass = `bg-gray-700 border-gray-700 text-gray-500 cursor-not-allowed h-9 ${widthClass}`;
+                    seatClass = `bg-gray-200 border-gray-700 text-gray-400 cursor-not-allowed h-9 ${widthClass}`;
                   } else if (isHeld) {
-                    seatClass = `bg-gray-600 border-gray-600 text-gray-400 cursor-not-allowed opacity-90 h-9 ${widthClass}`;
+                    seatClass = `bg-gray-400 border-gray-600 text-gray-700 cursor-not-allowed opacity-90 h-9 ${widthClass}`;
                   } else if (isSelected) {
-                    seatClass = `bg-yellow-400 border-yellow-400 text-black font-bold shadow-[0_0_10px_#facc15] scale-110 z-10 h-9 ${widthClass} cursor-pointer`;
+                    // Selected gradients per seat type as requested
+                    if (seat.type === "NORMAL") {
+                      seatClass = `bg-gradient-to-r from-[#FFE089] to-[#FFAE57] border-transparent text-black font-bold shadow-[0_6px_20px_rgba(255,174,87,0.35)] scale-110 z-10 h-9 ${widthClass} cursor-pointer`;
+                    } else if (seat.type === "VIP") {
+                      seatClass = `bg-gradient-to-r from-[#FF894E] to-[#FC2727] border-transparent text-black font-bold shadow-[0_6px_20px_rgba(252,39,39,0.35)] scale-110 z-10 h-9 ${widthClass} cursor-pointer`;
+                    } else if (seat.type === "COUPLE") {
+                      seatClass = `bg-gradient-to-r from-[#FFD2EF] to-[#FF9E9E] border-transparent text-black font-bold shadow-[0_6px_20px_rgba(255,159,159,0.30)] scale-110 z-10 h-9 ${widthClass} cursor-pointer`;
+                    } else {
+                      seatClass = `bg-gradient-to-r from-[#FFE089] to-[#FFAE57] border-transparent text-black font-bold shadow-[0_6px_20px_rgba(255,174,87,0.35)] scale-110 z-10 h-9 ${widthClass} cursor-pointer`;
+                    }
                   } else {
-                    seatClass = `${baseStyle} h-9 ${widthClass} cursor-pointer`;
+                    seatClass = `${baseStyle} ${widthClass} cursor-pointer`;
                   }
 
                   return (
@@ -227,7 +248,7 @@ export default function SeatMap({
                           </span>
 
                           {!isBooked && !isHeld && seat.type === "VIP" && (
-                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20">
+                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#FF894E] to-[#FC2727] text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20">
                               +10k
                             </span>
                           )}
@@ -242,21 +263,27 @@ export default function SeatMap({
         </div>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-6 mt-12 border-t border-gray-700 pt-6">
+      <div className="flex flex-wrap justify-center gap-6 mt-12 border-t border-gray-200/20 pt-6">
         <LegendItem
-          color="border-purple-500 text-purple-200"
+          color="border-orange-500 text-orange-500 bg-white/5"
           label="Ghế Thường"
         />
 
-        <LegendItem color="border-red-500 text-red-200" label="Ghế VIP" />
+        <LegendItem
+          color="border-red-500 text-red-500 bg-white/5"
+          label="Ghế VIP"
+        />
 
         <LegendItem
-          color="border-pink-500 text-pink-200"
+          color="border-pink-500 text-pink-500 bg-white/5"
           label="Ghế Đôi"
           w="w-10"
         />
 
-        <LegendItem color="bg-yellow-400 border-yellow-400" label="Đang chọn" />
+        <LegendItem
+          color="bg-gradient-to-r from-[#FFE089] to-[#FFAE57] border-transparent"
+          label="Đang chọn"
+        />
 
         <LegendItem color="bg-gray-700 border-gray-700" label="Đã bán" />
       </div>
@@ -275,9 +302,11 @@ function LegendItem({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <div className={`${w} h-6 rounded-t-lg border ${color}`}></div>
+      <div
+        className={`${w} h-6 rounded-md border ${color} flex items-center justify-center`}
+      />
 
-      <span className="text-gray-400 text-sm">{label}</span>
+      <span className="text-gray-700 text-sm">{label}</span>
     </div>
   );
 }
