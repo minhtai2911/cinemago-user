@@ -94,13 +94,15 @@ export default function BookingBottomBar({
             <span className="text-white font-medium">{ticketSummary}</span>
           </p>
 
-          <p className="text-sm md:text-base text-yellow-400 font-bold mt-1 truncate">
-            {roomName ? `Phòng chiếu: ${roomName}` : ""}
-            {seatString ? ` | Ghế: ${seatString}` : ""}
-            {` | ${format(new Date(showtime.startTime), "HH:mm")} - ${format(
-              new Date(showtime.startTime),
-              "dd/MM"
-            )}`}
+          <p className="text-sm md:text-base font-bold mt-1 truncate">
+            <span className="bg-gradient-to-r from-[#FF7C61] to-[#FFB464] bg-clip-text text-transparent">
+              {roomName ? `Phòng chiếu: ${roomName}` : ""}
+              {seatString ? ` | Ghế: ${seatString}` : ""}
+              {` | ${format(new Date(showtime.startTime), "HH:mm")} - ${format(
+                new Date(showtime.startTime),
+                "dd/MM"
+              )}`}
+            </span>
           </p>
 
           {foodSummary && (
@@ -113,7 +115,7 @@ export default function BookingBottomBar({
         <div className="flex items-center gap-6 shrink-0">
           <div className="text-right hidden md:block">
             <p className="text-sm text-gray-400">Tạm tính</p>
-            <p className="text-2xl font-bold text-yellow-400">
+            <p className="text-2xl font-bold bg-gradient-to-r from-[#FF7C61] to-[#FFB464] bg-clip-text text-transparent">
               {formatCurrency(totalPrice)}
             </p>
           </div>
@@ -121,7 +123,7 @@ export default function BookingBottomBar({
           <Button
             onClick={onBook}
             disabled={selectedTickets.length === 0}
-            className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold h-12 px-8 text-lg uppercase rounded-md transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-gradient-to-r from-[#FF6E3D] to-[#E9391B] hover:from-[#fc632f] hover:to-[#d42e11] text-white font-bold h-12 px-8 text-lg uppercase rounded-md transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_6px_18px_rgba(255,124,97,0.14)] hover:shadow-[0_10px_30px_rgba(255,124,97,0.18)]"
           >
             Đặt Vé
           </Button>
