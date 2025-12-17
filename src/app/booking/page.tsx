@@ -18,7 +18,6 @@ import {
 import type {
   Movie,
   Showtime,
-  PaginatedShowtimeResponse,
   Room,
   Cinema,
   FoodDrink,
@@ -37,6 +36,8 @@ import FoodDrinkSelector from "@/components/booking/FoodSelector";
 import { io, Socket } from "socket.io-client";
 import { RenderSeat, mergeSeatData } from "@/utils/seat-helper";
 import { toast } from "sonner";
+import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 const SOCKET_URL =
   process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:8000";
@@ -48,11 +49,13 @@ const TICKET_TO_SEAT_MAP: Record<TicketType, string> = {
 };
 
 export default function BookingPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const movieId = searchParams.get("movie");
   const dateParam = searchParams.get("date");
   const cinemaParam = searchParams.get("cinema");
   const showtimeParam = searchParams.get("showtime");
+  const { isLogged, profile } = useAuth();
 
   const [enrichedLayout, setEnrichedLayout] = useState<RenderSeat[]>([]);
   const [movie, setMovie] = useState<Movie | null>(null);
@@ -69,6 +72,7 @@ export default function BookingPage() {
   const [chosenSeats, setChosenSeats] = useState<RenderSeat[]>([]);
   const [bookedSeats, setBookedSeats] = useState<string[]>([]);
   const [heldSeats, setHeldSeats] = useState<string[]>([]);
+  const [holdTimer, setHoldTimer] = useState<number | null>(null);
 
   const [foods, setFoods] = useState<FoodDrink[]>([]);
   const [selectedFoods, setSelectedFoods] = useState<FoodSelection[]>([]);
@@ -83,11 +87,14 @@ export default function BookingPage() {
   }, [chosenSeats]);
 
   useEffect(() => {
-    if (!selectedShowtime) return;
+    if (!selectedShowtime) {
+      return;
+    }
 
     const fetchInitialStatus = async () => {
       try {
-        const showtimeId = String(selectedShowtime.id);
+        const showtimeId = selectedShowtime.id;
+
         const [holdRes, bookRes] = await Promise.all([
           getHeldSeats(showtimeId),
           getBookingSeatsByShowTimeId(showtimeId),
@@ -100,15 +107,132 @@ export default function BookingPage() {
 
         const heldData = holdRes.data.data || [];
 
-        const heldIds = Array.isArray(heldData)
-          ? heldData.map((i: HeldSeatResponse) => i.seatId)
-          : [];
+        let earliestExpiresAt: Date | null = null;
+        const myChosenSeatsToRestore: RenderSeat[] = [];
+
+        for (const heldSeat of heldData) {
+          if (heldSeat.userId === profile?.id) {
+            const seatId = heldSeat.seatId;
+
+            // Tìm ghế trong layout (hỗ trợ cả ghế chính và ghế phụ của COUPLE)
+            const seatInLayout = enrichedLayout.find(
+              (s) => s.id === seatId || s.secondId === seatId
+            );
+
+            if (seatInLayout) {
+              // Nếu là ghế phụ của COUPLE → dùng ghế chính để tránh duplicate
+              const mainSeat =
+                seatInLayout.secondId === seatId ? seatInLayout : seatInLayout;
+
+              // Chỉ thêm 1 lần
+              if (!myChosenSeatsToRestore.some((s) => s.id === mainSeat.id)) {
+                myChosenSeatsToRestore.push(mainSeat);
+              }
+            }
+
+            // Cập nhật thời gian hết hạn sớm nhất
+            const expiresAt = new Date(heldSeat.expiresAt);
+            if (!earliestExpiresAt || expiresAt < earliestExpiresAt) {
+              earliestExpiresAt = expiresAt;
+            }
+          }
+        }
+
+        // Khôi phục ghế đã chọn từ session trước
+        if (myChosenSeatsToRestore.length > 0) {
+          setChosenSeats(myChosenSeatsToRestore);
+        } else {
+          setChosenSeats([]); // đảm bảo reset nếu không có
+        }
+
+        if (myChosenSeatsToRestore.length > 0 && selectedRoom) {
+          const ticketCount: Record<TicketType, number> = {
+            STANDARD: 0,
+            VIP: 0,
+            COUPLE: 0,
+          };
+
+          myChosenSeatsToRestore.forEach((seat) => {
+            if (seat.type === "COUPLE") {
+              ticketCount.COUPLE += 1;
+            } else if (seat.type === "VIP") {
+              ticketCount.VIP += 1;
+            } else {
+              ticketCount.STANDARD += 1;
+            }
+          });
+
+          const basePrice = selectedShowtime.price;
+          const vipExtra = selectedRoom.VIP || 0;
+          const coupleExtra = selectedRoom.COUPLE || 0;
+
+          const restoredTickets: TicketSelection[] = [];
+
+          if (ticketCount.STANDARD > 0) {
+            restoredTickets.push({
+              type: "STANDARD",
+              quantity: ticketCount.STANDARD,
+              price: basePrice,
+              name: "Người lớn",
+            });
+          }
+          if (ticketCount.VIP > 0) {
+            restoredTickets.push({
+              type: "VIP",
+              quantity: ticketCount.VIP,
+              price: basePrice + vipExtra,
+              name: "Ghế VIP",
+            });
+          }
+          if (ticketCount.COUPLE > 0) {
+            restoredTickets.push({
+              type: "COUPLE",
+              quantity: ticketCount.COUPLE,
+              price: (basePrice + coupleExtra) * 2,
+              name: "Ghế Đôi",
+            });
+          }
+
+          setSelectedTickets(restoredTickets);
+        } else {
+          setSelectedTickets([]);
+        }
+
+        // === 2. Chỉ lấy ghế người khác hold ===
+        const othersHeldIds = heldData
+          .filter((i: HeldSeatResponse) => i.userId !== profile?.id)
+          .map((i: HeldSeatResponse) => i.seatId);
+
+        setHeldSeats(othersHeldIds);
         setBookedSeats(bookedIds);
-        setHeldSeats(heldIds);
+
+        // === 3. Xử lý countdown dựa trên thời gian nhỏ nhất ===
+        if (earliestExpiresAt && myChosenSeatsToRestore.length > 0) {
+          const now = Date.now();
+          const remainingSeconds = Math.max(
+            0,
+            Math.floor((earliestExpiresAt.getTime() - now) / 1000)
+          );
+
+          if (remainingSeconds === 0) {
+            // Đã hết hạn → thông báo và không giữ ghế
+            toast.error("Thời gian giữ ghế đã hết! Vui lòng chọn lại.");
+            setChosenSeats([]);
+            setHeldSeats(othersHeldIds); // giữ nguyên ghế người khác
+          } else {
+            // Bắt đầu đếm ngược từ thời gian còn lại thực tế
+            setHoldTimer(remainingSeconds);
+          }
+        } else {
+          // Không có ghế nào → reset timer
+          setHoldTimer(null);
+        }
       } catch (e) {
         console.error("Failed to fetch initial seat status", e);
+        toast.error("Không thể tải trạng thái ghế");
       }
     };
+
     fetchInitialStatus();
 
     socketRef.current = io(SOCKET_URL, {
@@ -152,28 +276,8 @@ export default function BookingPage() {
         socketRef.current.emit("leave-showtime", selectedShowtime.id);
         socketRef.current.disconnect();
       }
-
-      if (chosenSeatsRef.current.length > 0) {
-        const showtimeIdStr = String(selectedShowtime.id);
-
-        chosenSeatsRef.current.forEach((seat) => {
-          if (!seat.id) return;
-
-          const ids =
-            seat.type === "COUPLE" && seat.secondId
-              ? [seat.id, seat.secondId]
-              : [seat.id];
-
-          ids.forEach((id) => {
-            releaseSeat({
-              showtimeId: showtimeIdStr,
-              seatId: id,
-            }).catch(() => {});
-          });
-        });
-      }
     };
-  }, [selectedShowtime]);
+  }, [selectedShowtime, profile, enrichedLayout, selectedRoom]);
 
   useEffect(() => {
     const fetchMovieDetail = async () => {
@@ -200,53 +304,28 @@ export default function BookingPage() {
 
   useEffect(() => {
     const fetchAllShowtimes = async () => {
-      if (!movieId) return;
+      if (!movieId) {
+        return;
+      }
 
       setLoading(true);
 
-      let allShowtimes: Showtime[] = [];
-      let currentPage = 1;
-      let hasNextPage = true;
-      const pageSize = 20;
       const startTime = new Date();
       startTime.setHours(0, 0, 0, 0);
 
-      const endTime = new Date(startTime);
-      endTime.setDate(endTime.getDate() + 3);
-      endTime.setHours(23, 59, 59, 999);
-
       try {
-        while (hasNextPage) {
-          const res = await getShowtimes(
-            currentPage,
-            pageSize,
-            movieId,
-            undefined,
-            true,
-            startTime,
-            endTime
-          );
+        const res = await getShowtimes(
+          undefined,
+          undefined,
+          movieId,
+          undefined,
+          true,
+          startTime
+        );
 
-          const payload = res as unknown as PaginatedShowtimeResponse;
-
-          if (payload && payload.data) {
-            allShowtimes = [...allShowtimes, ...payload.data];
-
-            if (payload.pagination.hasNextPage) {
-              currentPage++;
-            } else {
-              hasNextPage = false;
-            }
-          } else {
-            hasNextPage = false;
-          }
-        }
-
-        setShowtimes(allShowtimes);
-
-        console.log("Tổng số suất chiếu lấy được:", allShowtimes.length);
-      } catch (error) {
-        console.error("Lỗi khi lấy lịch chiếu:", error);
+        setShowtimes(res.data || []);
+      } catch {
+        toast.error("Lỗi tải suất chiếu phim");
       } finally {
         setLoading(false);
       }
@@ -272,8 +351,6 @@ export default function BookingPage() {
   }, [cinemaParam]);
 
   const handleSelectShowtime = async (st: Showtime, cinema: Cinema | null) => {
-    console.log("User đã chọn suất chiếu:", st);
-
     setSelectedShowtime(st);
     if (cinema) {
       setSelectedCinema(cinema);
@@ -289,7 +366,7 @@ export default function BookingPage() {
       const res = await getRoomById(st.roomId);
       if (res.data) {
         setSelectedRoom(res.data);
-        console.log(res.data);
+
         const merged = mergeSeatData(
           res.data.seatLayout || [],
           res.data.seats || []
@@ -335,12 +412,12 @@ export default function BookingPage() {
         const seatsOfType = chosenSeats.filter((s) => s.type === seatType);
 
         if (seatsOfType.length > newQty) {
-          const seatsToRemoveCount = seatsOfType.length - newQty;
-          const seatsToRemove = seatsOfType.slice(-seatsToRemoveCount);
-
-          setChosenSeats((current) =>
-            current.filter((s) => !seatsToRemove.includes(s))
+          toast.warning(
+            `Vui lòng bỏ chọn ${
+              seatsOfType.length - newQty
+            } ghế trước khi giảm số lượng vé.`
           );
+          return prev;
         }
       }
 
@@ -383,8 +460,6 @@ export default function BookingPage() {
         setChosenSeats((prev) => prev.filter((s) => s.id !== seat.id));
 
         setHeldSeats((prev) => prev.filter((id) => !idsToToggle.includes(id)));
-
-        console.log("Đã bỏ chọn ghế:", seat.displayLabel || seat.seatNumber);
       } else {
         await Promise.all(
           idsToToggle.map((id) =>
@@ -398,8 +473,6 @@ export default function BookingPage() {
         setChosenSeats((prev) => [...prev, seat]);
 
         setHeldSeats((prev) => Array.from(new Set([...prev, ...idsToToggle])));
-
-        console.log("Đã chọn ghế:", seat.displayLabel || seat.seatNumber);
       }
     } catch (error) {
       console.error("Lỗi giữ ghế:", error);
@@ -411,8 +484,8 @@ export default function BookingPage() {
     const fetchFoods = async () => {
       try {
         const res = await getFoodDrinks({
-          page: 1,
-          limit: 100,
+          page: undefined,
+          limit: undefined,
           isAvailable: true,
         });
         const data: FoodDrink[] = res.data || [];
@@ -466,19 +539,34 @@ export default function BookingPage() {
     alert("Chuyển sang trang chọn ghế...");
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center">
-        <div className="animate-pulse">Đang tải dữ liệu phim...</div>
-      </div>
-    );
-  }
-
-  if (!movieId || !movie) {
+  if (!movieId || !movie || loading) {
     return (
       <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold">Đang tải dữ liệu phim...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLogged === false) {
+    return (
+      <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center">
+        <div className="text-center px-4">
+          <h2 className="text-2xl font-bold mb-4">
+            Vui lòng đăng nhập để đặt vé xem phim
+          </h2>
+          <p className="text-gray-400 mb-8">
+            Bạn cần có tài khoản để tiếp tục quá trình đặt vé.
+          </p>
+          <button
+            onClick={() => {
+              router.push("/login");
+            }}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
+          >
+            Đăng nhập
+          </button>
         </div>
       </div>
     );
