@@ -37,6 +37,7 @@ import FoodDrinkSelector from "@/components/booking/FoodSelector";
 import { io, Socket } from "socket.io-client";
 import { RenderSeat, mergeSeatData } from "@/utils/seat-helper";
 import { toast } from "sonner";
+import Image from "next/image";
 
 const SOCKET_URL =
   process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:8000";
@@ -468,7 +469,16 @@ export default function BookingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-peach-gradient text-white flex items-center justify-center relative overflow-hidden">
+        <Image
+          width={1000}
+          height={1000}
+          src="/popcorn.png"
+          alt=""
+          aria-hidden
+          className="hidden lg:block pointer-events-none select-none absolute -left-40 -top-8 w-[180%] opacity-40 -z-20"
+          style={{ transform: "scaleX(-1) rotate(-6deg)" }}
+        />
         <div className="animate-pulse">Đang tải dữ liệu phim...</div>
       </div>
     );
@@ -476,7 +486,16 @@ export default function BookingPage() {
 
   if (!movieId || !movie) {
     return (
-      <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-peach-gradient text-white flex items-center justify-center relative overflow-hidden">
+        <Image
+          width={1000}
+          height={1000}
+          src="/popcorn.png"
+          alt=""
+          aria-hidden
+          className="hidden lg:block pointer-events-none select-none absolute -left-40 -top-8 w-[180%] opacity-40 -z-20"
+          style={{ transform: "scaleX(-1) rotate(-6deg)" }}
+        />
         <div className="text-center">
           <h2 className="text-2xl font-bold">Đang tải dữ liệu phim...</h2>
         </div>
@@ -485,7 +504,16 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white">
+    <div className="min-h-screen bg-peach-gradient text-white relative overflow-hidden">
+      <Image
+        width={1000}
+        height={1000}
+        src="/popcorn.png"
+        alt=""
+        aria-hidden
+        className="hidden lg:block pointer-events-none select-none absolute -left-40 -top-8 w-[180%] opacity-40 -z-20"
+        style={{ transform: "scaleX(-1) rotate(-6deg)" }}
+      />
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 pt-[120px]">
         <MovieDetail movie={movie} />
