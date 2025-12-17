@@ -202,8 +202,8 @@ export default function ShowtimeList({
             onClick={() => setSelectedDate(date)}
             className={`flex flex-col items-center justify-center w-[100px] h-[80px] rounded-lg border-2 transition-all ${
               isActive
-                ? "bg-yellow-400 border-yellow-400 text-[#0f172a]"
-                : "border-yellow-400 text-yellow-400 bg-transparent hover:bg-yellow-400/10"
+                ? "bg-gradient-to-r from-[#FF6E3D] to-[#E9391B] border-orange-500 text-[white]"
+                : "border-orange-400 text-orange-400 bg-transparent hover:bg-orange-400/10"
             }`}
           >
             <span className="text-xl font-bold">{dayMonth}</span>
@@ -243,20 +243,24 @@ export default function ShowtimeList({
         </h3>
         {cities.length > 0 && (
           <div className="relative mt-4 md:mt-0">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-yellow-400 w-4 h-4" />
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-600 w-4 h-4" />
             <select
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
-              className="appearance-none bg-transparent border border-yellow-400 text-yellow-400 font-bold py-2 pl-10 pr-10 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-400 cursor-pointer uppercase text-sm"
+              className="appearance-none bg-transparent border border-orange-400 text-orange-600 font-bold py-2 pl-10 pr-10 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-400 cursor-pointer uppercase text-sm"
             >
               {cities.map((c) => (
-                <option key={c} value={c} className="bg-[#0f172a] text-white">
+                <option
+                  key={c}
+                  value={c}
+                  className="bg-[#0f172a] text-orange-600"
+                >
                   {c}
                 </option>
               ))}
             </select>
             <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-              <ChevronDown className="w-4 h-4 text-yellow-400" />
+              <ChevronDown className="w-4 h-4 text-orange-500" />
             </div>
           </div>
         )}
@@ -279,16 +283,16 @@ export default function ShowtimeList({
                 ref={(el) => {
                   cinemaRefs.current[cinemaId] = el;
                 }}
-                className={`bg-[#60368c] rounded-lg overflow-hidden shadow-lg transition-all duration-300 ${
+                className={`bg-gradient-to-r from-[#FF6E3D] to-[#E9391B] rounded-lg overflow-hidden shadow-lg transition-all duration-300 ${
                   isHighlighted ? "ring-2 ring-yellow-400" : ""
                 }`}
               >
                 <div
                   onClick={() => toggleCinema(cinemaId)}
-                  className="p-4 cursor-pointer hover:bg-[#6d409e] transition-colors flex justify-between items-center select-none"
+                  className="p-4 cursor-pointer hover:bg-[#da3e00] transition-colors flex justify-between items-center select-none"
                 >
                   <div>
-                    <h4 className="text-lg font-bold text-yellow-400 uppercase">
+                    <h4 className="text-lg font-bold text-yellow-200 uppercase">
                       {cinemaData.cinemaName}
                     </h4>
                     <p className="text-sm text-white/80 mt-1">
@@ -329,8 +333,8 @@ export default function ShowtimeList({
                                 key={st.id}
                                 className={`px-4 py-2 border rounded transition-all text-sm font-bold min-w-[80px] ${
                                   isSelectedSlot
-                                    ? "bg-yellow-400 border-yellow-400 text-black scale-110 shadow-[0_0_10px_rgba(250,204,21,0.5)]"
-                                    : "border-white/30 text-white hover:bg-white hover:text-[#60368c]"
+                                    ? "bg-gradient-to-r from-[#ffd445] to-[#ffe881] border-yellow-400 text-black scale-110 shadow-[0_0_10px_rgba(250,204,21,0.5)]"
+                                    : "border-white/30 text-white hover:bg-white hover:text-[#d74f15]"
                                 }`}
                                 onClick={(e) => {
                                   e.stopPropagation();

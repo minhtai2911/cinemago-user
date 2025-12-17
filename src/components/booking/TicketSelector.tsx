@@ -63,7 +63,7 @@ export default function TicketSelector({
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="border border-gray-600 rounded-lg p-6 bg-[#0f172a] hover:border-yellow-400 transition-colors">
+        <div className="border border-gray-600 rounded-lg p-6 bg-[#0f172a] hover:border-orange-400 transition-colors">
           <h4 className="text-lg font-bold text-white uppercase">Người lớn</h4>
           <p className="text-sm text-gray-400 mb-2">ĐƠN</p>
           <p className="text-xl font-bold text-yellow-400 mb-4">
