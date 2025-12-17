@@ -35,14 +35,21 @@ const MovieDetail: React.FC<MovieDetailProps> = ({ movie }) => {
               className="object-cover transition-transform duration-700 group-hover:scale-105"
               priority
             />
-            {movie.trailerUrl && (
+            {movie.trailerUrl ? (
               <button
                 onClick={() => setVideoOpen(true)}
-                className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all opacity-0 group-hover:opacity-100"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-gray-700 border border-gray-300 hover:border-[#F25019] hover:text-[#F25019] rounded-lg font-semibold text-sm transition-all shadow-sm hover:shadow-md"
               >
-                <div className="w-14 h-14 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center border border-white hover:scale-110 transition-transform shadow-lg">
-                  <PlayCircle size={32} className="text-white fill-white/20" />
-                </div>
+                <PlayCircle size={18} />
+                Xem Trailer
+              </button>
+            ) : (
+              <button
+                disabled
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-100 text-gray-400 border border-gray-200 rounded-lg font-semibold text-sm cursor-not-allowed"
+              >
+                <PlayCircle size={18} />
+                Chưa có Trailer
               </button>
             )}
           </div>
@@ -80,7 +87,7 @@ const MovieDetail: React.FC<MovieDetailProps> = ({ movie }) => {
 
             <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium">
               <Calendar size={16} />
-              <span>{formattedDate}</span>
+              <span className="capitalize">{formattedDate}</span>
             </div>
           </div>
 

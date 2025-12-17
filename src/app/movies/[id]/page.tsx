@@ -71,7 +71,7 @@ export default async function MovieDetailPage({
           alt=""
           width={1000}
           height={1000}
-          className="hidden lg:block absolute top-32 right--10 w-[45%] max-w-[800px] opacity-20 select-none"
+          className="hidden lg:block absolute top-32 -right-10 w-[45%] max-w-[800px] opacity-20 select-none"
           style={{ transform: "scaleX(-1) rotate(-6deg)" }}
         />
       </div>
