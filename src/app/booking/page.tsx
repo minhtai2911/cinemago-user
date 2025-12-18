@@ -3,7 +3,7 @@
 import { notFound, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import Navbar from "@/components/Navbar";
-import MovieDetail from "@/components/movie/MovieDetail";
+import MovieInfo from "@/components/movie/MovieInfo";
 import {
   getMovieById,
   getShowtimes,
@@ -114,23 +114,19 @@ export default function BookingPage() {
           if (heldSeat.userId === profile?.id) {
             const seatId = heldSeat.seatId;
 
-            // Tìm ghế trong layout (hỗ trợ cả ghế chính và ghế phụ của COUPLE)
             const seatInLayout = enrichedLayout.find(
               (s) => s.id === seatId || s.secondId === seatId
             );
 
             if (seatInLayout) {
-              // Nếu là ghế phụ của COUPLE → dùng ghế chính để tránh duplicate
               const mainSeat =
                 seatInLayout.secondId === seatId ? seatInLayout : seatInLayout;
 
-              // Chỉ thêm 1 lần
               if (!myChosenSeatsToRestore.some((s) => s.id === mainSeat.id)) {
                 myChosenSeatsToRestore.push(mainSeat);
               }
             }
 
-            // Cập nhật thời gian hết hạn sớm nhất
             const expiresAt = new Date(heldSeat.expiresAt);
             if (!earliestExpiresAt || expiresAt < earliestExpiresAt) {
               earliestExpiresAt = expiresAt;
@@ -138,11 +134,10 @@ export default function BookingPage() {
           }
         }
 
-        // Khôi phục ghế đã chọn từ session trước
         if (myChosenSeatsToRestore.length > 0) {
           setChosenSeats(myChosenSeatsToRestore);
         } else {
-          setChosenSeats([]); // đảm bảo reset nếu không có
+          setChosenSeats([]);
         }
 
         if (myChosenSeatsToRestore.length > 0 && selectedRoom) {
@@ -198,7 +193,6 @@ export default function BookingPage() {
           setSelectedTickets([]);
         }
 
-        // === 2. Chỉ lấy ghế người khác hold ===
         const othersHeldIds = heldData
           .filter((i: HeldSeatResponse) => i.userId !== profile?.id)
           .map((i: HeldSeatResponse) => i.seatId);
@@ -206,7 +200,6 @@ export default function BookingPage() {
         setHeldSeats(othersHeldIds);
         setBookedSeats(bookedIds);
 
-        // === 3. Xử lý countdown dựa trên thời gian nhỏ nhất ===
         if (earliestExpiresAt && myChosenSeatsToRestore.length > 0) {
           const now = Date.now();
           const remainingSeconds = Math.max(
@@ -215,16 +208,12 @@ export default function BookingPage() {
           );
 
           if (remainingSeconds === 0) {
-            // Đã hết hạn → thông báo và không giữ ghế
-            toast.error("Thời gian giữ ghế đã hết! Vui lòng chọn lại.");
             setChosenSeats([]);
-            setHeldSeats(othersHeldIds); // giữ nguyên ghế người khác
+            setHeldSeats(othersHeldIds);
           } else {
-            // Bắt đầu đếm ngược từ thời gian còn lại thực tế
-            setHoldTimer(remainingSeconds - 5);
+            setHoldTimer(remainingSeconds - 30);
           }
         } else {
-          // Không có ghế nào → reset timer
           setHoldTimer(null);
         }
       } catch (e) {
@@ -247,8 +236,18 @@ export default function BookingPage() {
       (data: { showtimeId: string; seatId: string; status: string }) => {
         if (data.showtimeId !== selectedShowtime.id) return;
 
-        if (chosenSeatsRef.current.some((s) => s.id === data.seatId)) {
-          return;
+        if (data.status === "released") {
+          const isMySeat = chosenSeatsRef.current.some(
+            (s) => s.id === data.seatId || s.secondId === data.seatId
+          );
+
+          if (isMySeat) {
+            setChosenSeats((prev) =>
+              prev.filter(
+                (s) => s.id !== data.seatId && s.secondId !== data.seatId
+              )
+            );
+          }
         }
 
         setHeldSeats((prev) => {
@@ -284,7 +283,7 @@ export default function BookingPage() {
       setLoading(true);
       try {
         if (!movieId) return;
-        await new Promise((resolve) => setTimeout(resolve, 500));
+
         const movieRes = await getMovieById(movieId);
         const movieData: Movie | null = movieRes.data || null;
 
@@ -482,11 +481,10 @@ export default function BookingPage() {
 
   useEffect(() => {
     if (chosenSeats.length === 1 && holdTimer === null) {
-      setHoldTimer(295);
+      setHoldTimer(300);
     }
   }, [chosenSeats.length, holdTimer]);
 
-  // === Đếm ngược và tự động release khi hết 5 phút ===
   useEffect(() => {
     if (holdTimer === null || holdTimer <= 0 || !selectedShowtime) return;
 
@@ -504,22 +502,19 @@ export default function BookingPage() {
                   ? [seat.id, seat.secondId]
                   : [seat.id];
 
-              ids.forEach((id) => {
-                releaseSeat({
+              ids.forEach(async (id) => {
+                await releaseSeat({
                   showtimeId: showtimeIdStr,
                   seatId: id,
                 }).catch(() => {});
               });
             });
           }
-          toast.error(
-            "Hết thời gian giữ ghế (5 phút)! Ghế đã được giải phóng."
-          );
           return null;
         }
         return prev - 1;
       });
-    }, 1000);
+    }, 800);
 
     return () => clearInterval(interval);
   }, [holdTimer, selectedShowtime]);
@@ -527,7 +522,6 @@ export default function BookingPage() {
   useEffect(() => {
     if (chosenSeats.length === 0 && holdTimer !== null) {
       setHoldTimer(null);
-      toast.info("Đã hủy giữ ghế.");
     }
   }, [chosenSeats.length, holdTimer]);
 
@@ -627,7 +621,7 @@ export default function BookingPage() {
     <div className="min-h-screen bg-[#0f172a] text-white">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 pt-[120px]">
-        <MovieDetail movie={movie} />
+        <MovieInfo movie={movie} />
 
         <div className="mt-12">
           <ShowtimeList
