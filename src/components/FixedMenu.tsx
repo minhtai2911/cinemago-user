@@ -32,20 +32,21 @@ export default function FixedMenu() {
   }, [isOpen, cinemas.length]);
 
   return (
-    <div className="top-14 left-0 right-0 z-50 bg-black border-b border-gray-800">
+    <div className="w-full bg-white border-t border-gray-100 shadow-sm z-40 relative">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between py-5">
+        <div className="flex items-center justify-between py-3">
+          {" "}
           <div className="flex items-center gap-12">
             <div className="relative">
               <div
                 ref={triggerRef}
                 onMouseEnter={() => setIsOpen(true)}
-                className="flex items-center gap-3 text-white hover:text-yellow-400 font-bold text-lg cursor-pointer select-none transition-all"
+                className="flex items-center gap-2 text-gray-700 hover:text-[#F25019] font-bold text-base cursor-pointer select-none transition-all"
               >
-                <MapPin size={24} strokeWidth={2.5} />
+                <MapPin size={20} strokeWidth={2.5} />
                 <span>Chọn rạp</span>
                 <ChevronDown
-                  size={20}
+                  size={16}
                   className={`transition-transform duration-300 ${
                     isOpen ? "rotate-180" : ""
                   }`}
@@ -56,36 +57,36 @@ export default function FixedMenu() {
                 ref={dropdownRef}
                 onMouseEnter={() => setIsOpen(true)}
                 onMouseLeave={() => setIsOpen(false)}
-                className={`absolute top-full left-0 mt-4 w-[960px] bg-gray-950 rounded-3xl shadow-2xl border border-gray-700 overflow-hidden transition-all duration-300 ${
+                className={`absolute top-full left-0 mt-2 w-[900px] bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 z-50 ${
                   isOpen
                     ? "opacity-100 translate-y-0 visible"
                     : "opacity-0 -translate-y-3 invisible pointer-events-none"
                 }`}
               >
-                <div className="p-6 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600">
+                <div className="p-6 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                   {loading ? (
-                    <div className="flex flex-col items-center py-20">
-                      <Loader2 className="w-12 h-12 text-yellow-400 animate-spin" />
-                      <p className="text-gray-400 mt-4">
+                    <div className="flex flex-col items-center py-10">
+                      <Loader2 className="w-8 h-8 text-[#F25019] animate-spin" />
+                      <p className="text-gray-500 mt-3 text-sm">
                         Đang tải danh sách rạp...
                       </p>
                     </div>
                   ) : cinemas.length === 0 ? (
-                    <p className="text-center text-gray-500 py-20 text-xl">
+                    <p className="text-center text-gray-500 py-10 text-sm">
                       Chưa có rạp nào
                     </p>
                   ) : (
-                    <div className="grid grid-cols-3 gap-x-16 gap-y-8">
+                    <div className="grid grid-cols-3 gap-x-8 gap-y-6">
                       {cinemas.map((cinema) => (
                         <Link
                           key={cinema.id}
                           href={`/cinemas/${cinema.id}`}
-                          className="block p-4 -m-4 rounded-xl hover:bg-gray-900/70 transition-all group"
+                          className="block p-3 -m-3 rounded-lg hover:bg-[#fff4ee] transition-all group"
                         >
-                          <div className="font-bold text-white group-hover:text-yellow-400 text-lg leading-tight">
+                          <div className="font-bold text-gray-800 group-hover:text-[#F25019] text-sm leading-tight">
                             {cinema.name}
                           </div>
-                          <div className="text-gray-400 text-sm mt-1.5 line-clamp-2">
+                          <div className="text-gray-500 text-xs mt-1 line-clamp-1">
                             {cinema.address}, {cinema.city}
                           </div>
                         </Link>
@@ -98,23 +99,22 @@ export default function FixedMenu() {
 
             <Link
               href="/showtimes"
-              className="flex items-center gap-3 text-white hover:text-yellow-400 font-bold text-lg transition-all"
+              className="flex items-center gap-2 text-gray-700 hover:text-[#F25019] font-bold text-base transition-all"
             >
-              <CalendarDays size={24} strokeWidth={2.5} />
+              <CalendarDays size={20} strokeWidth={2.5} />
               <span>Lịch chiếu</span>
             </Link>
           </div>
-
-          <div className="flex items-center gap-10 text-lg font-medium">
+          <div className="flex items-center gap-8 text-base font-medium">
             <Link
               href="/promotions"
-              className="text-white hover:text-red-400 transition relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-red-400 hover:after:w-full after:transition-all"
+              className="text-gray-600 hover:text-[#F25019] transition relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-[#F25019] hover:after:w-full after:transition-all"
             >
               Khuyến mãi
             </Link>
             <Link
               href="/about"
-              className="text-white hover:text-red-400 transition relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-red-400 hover:after:w-full after:transition-all"
+              className="text-gray-600 hover:text-[#F25019] transition relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-[#F25019] hover:after:w-full after:transition-all"
             >
               Giới thiệu
             </Link>
