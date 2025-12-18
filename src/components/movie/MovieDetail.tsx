@@ -5,6 +5,7 @@ import { Clock, Calendar, Tag, Star, PlayCircle } from "lucide-react";
 import { Movie } from "@/types";
 import Image from "next/image";
 import TrailerModal from "@/components/movie/TrailerModal";
+import { createPortal } from "react-dom";
 
 interface MovieDetailProps {
   movie: Movie;
@@ -68,7 +69,7 @@ const MovieDetail: React.FC<MovieDetailProps> = ({ movie }) => {
                   ? movie.rating.toFixed(1)
                   : movie.rating}
               </span>
-              <span className="text-gray-400 text-sm">/ 5 điểm</span>
+              <span className="text-gray-400 text-sm">/ 5 sao</span>
             </div>
           </div>
 
@@ -115,11 +116,15 @@ const MovieDetail: React.FC<MovieDetailProps> = ({ movie }) => {
         </div>
       </div>
 
-      <TrailerModal
-        videoOpen={videoOpen}
-        setVideoOpen={setVideoOpen}
-        videoUrl={movie.trailerUrl}
-      />
+      {videoOpen &&
+        createPortal(
+          <TrailerModal
+            videoOpen={videoOpen}
+            setVideoOpen={setVideoOpen}
+            videoUrl={movie.trailerUrl}
+          />,
+          document.body
+        )}
     </>
   );
 };
