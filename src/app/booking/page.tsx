@@ -221,7 +221,7 @@ export default function BookingPage() {
             setHeldSeats(othersHeldIds); // giữ nguyên ghế người khác
           } else {
             // Bắt đầu đếm ngược từ thời gian còn lại thực tế
-            setHoldTimer(remainingSeconds);
+            setHoldTimer(remainingSeconds - 5);
           }
         } else {
           // Không có ghế nào → reset timer
@@ -481,6 +481,57 @@ export default function BookingPage() {
   };
 
   useEffect(() => {
+    if (chosenSeats.length === 1 && holdTimer === null) {
+      setHoldTimer(295);
+    }
+  }, [chosenSeats.length, holdTimer]);
+
+  // === Đếm ngược và tự động release khi hết 5 phút ===
+  useEffect(() => {
+    if (holdTimer === null || holdTimer <= 0 || !selectedShowtime) return;
+
+    const interval = setInterval(() => {
+      setHoldTimer((prev) => {
+        if (prev === null || prev <= 1) {
+          if (chosenSeatsRef.current.length > 0) {
+            const showtimeIdStr = String(selectedShowtime.id);
+
+            chosenSeatsRef.current.forEach((seat) => {
+              if (!seat.id) return;
+
+              const ids =
+                seat.type === "COUPLE" && seat.secondId
+                  ? [seat.id, seat.secondId]
+                  : [seat.id];
+
+              ids.forEach((id) => {
+                releaseSeat({
+                  showtimeId: showtimeIdStr,
+                  seatId: id,
+                }).catch(() => {});
+              });
+            });
+          }
+          toast.error(
+            "Hết thời gian giữ ghế (5 phút)! Ghế đã được giải phóng."
+          );
+          return null;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [holdTimer, selectedShowtime]);
+
+  useEffect(() => {
+    if (chosenSeats.length === 0 && holdTimer !== null) {
+      setHoldTimer(null);
+      toast.info("Đã hủy giữ ghế.");
+    }
+  }, [chosenSeats.length, holdTimer]);
+
+  useEffect(() => {
     const fetchFoods = async () => {
       try {
         const res = await getFoodDrinks({
@@ -634,6 +685,7 @@ export default function BookingPage() {
           selectedTickets={selectedTickets}
           roomName={selectedRoom?.name}
           selectedSeats={chosenSeats}
+          holdTimer={holdTimer}
           selectedFoods={selectedFoods}
           onBook={handleBookTickets}
         />
