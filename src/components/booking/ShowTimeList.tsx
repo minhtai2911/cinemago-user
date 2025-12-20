@@ -48,7 +48,6 @@ export default function ShowtimeList({
 
   const cinemaRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // ... (useEffect Fetch Cinema giữ nguyên) ...
   useEffect(() => {
     const allCinemaIds = Array.from(
       new Set(showtimes.map((st) => st.cinemaId))
@@ -62,7 +61,7 @@ export default function ShowtimeList({
         try {
           const res = await getCinemaById(id);
           return res.data ? { id, data: res.data } : null;
-        } catch (error) {
+        } catch {
           return null;
         }
       });
@@ -79,7 +78,6 @@ export default function ShowtimeList({
     fetchMissingCinemas();
   }, [showtimes, cinemasMap]);
 
-  // ... (useMemo Group Data giữ nguyên) ...
   const { groupedData, uniqueDates, cities } = useMemo(() => {
     const groups: GroupedByDate = {};
     const dateSet = new Set<string>();

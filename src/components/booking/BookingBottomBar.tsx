@@ -15,6 +15,7 @@ type Props = {
   roomName?: string;
   selectedSeats: SeatCell[];
   selectedFoods: FoodSelection[];
+  holdTimer: number | null;
   onBook: () => void;
 };
 
@@ -26,6 +27,7 @@ export default function BookingBottomBar({
   roomName,
   selectedSeats,
   selectedFoods,
+  holdTimer,
   onBook,
 }: Props) {
   const totalPrice = useMemo(() => {
@@ -81,6 +83,17 @@ export default function BookingBottomBar({
       currency: "VND",
     }).format(val);
 
+  const formatTimer = (seconds: number | null) => {
+    if (seconds === null || seconds <= 0) return null;
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  const timerDisplay = formatTimer(holdTimer);
+
   return (
     <div className="fixed bottom-0 left-0 w-full bg-[#0f172a] border-t border-gray-700 shadow-[0_-4px_10px_rgba(0,0,0,0.5)] z-50 p-4 animate-in slide-in-from-bottom duration-300">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
@@ -107,6 +120,21 @@ export default function BookingBottomBar({
             <p className="text-sm md:text-base font-bold text-white mt-1 animate-in fade-in line-clamp-2 leading-snug">
               {foodSummary}
             </p>
+          )}
+
+          {timerDisplay && (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-xs text-gray-400">Thời gian giữ ghế:</span>
+              <span
+                className={`text-lg font-bold animate-pulse ${
+                  holdTimer && holdTimer <= 60
+                    ? "text-red-500"
+                    : "text-orange-400"
+                }`}
+              >
+                {timerDisplay}
+              </span>
+            </div>
           )}
         </div>
 
