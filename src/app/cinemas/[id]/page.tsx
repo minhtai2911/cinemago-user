@@ -30,7 +30,6 @@ export default async function CinemaDetailPage({
 
   const isNowTab = tab === "now";
   const isSoonTab = tab === "soon";
-  // -----------------------------
 
   return (
     <div className="relative min-h-screen bg-peach-gradient font-sans selection:bg-[#F25019] selection:text-white flex flex-col">
