@@ -58,11 +58,12 @@ export default async function CinemaDetailPage({
 
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="text-center md:text-left">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-50 text-[#F25019] rounded-lg text-sm font-bold border border-orange-100 mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-50 text-[#F25019] rounded-lg text-sm font-bold border border-orange-100/50 mb-4">
                   <Film size={16} />
                   <span>Rạp chiếu phim</span>
                 </div>
-                <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-gray-900 mb-4 leading-tight">
+
+                <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-4 leading-tight tracking-tight">
                   {cinema.name}
                 </h1>
                 <div className="inline-flex items-center gap-2 text-gray-500 font-medium text-lg bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
