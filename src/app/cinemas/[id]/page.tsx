@@ -33,7 +33,7 @@ export default async function CinemaDetailPage({
   // -----------------------------
 
   return (
-    <div className="relative min-h-screen bg-[#FFF8F3] font-sans selection:bg-[#F25019] selection:text-white flex flex-col">
+    <div className="relative min-h-screen bg-peach-gradient font-sans selection:bg-[#F25019] selection:text-white flex flex-col">
       <div className="absolute inset-0 bg-white/20 pointer-events-none"></div>
       <div className="fixed top-0 left-0 right-0 h-screen overflow-hidden pointer-events-none z-0">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-200/20 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3"></div>
@@ -48,11 +48,9 @@ export default async function CinemaDetailPage({
           style={{ transform: "scaleX(-1) rotate(-6deg)" }}
         />
       </div>
-
       <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-white/30">
         <Navbar />
       </div>
-
       <main className="relative z-10 flex-grow pt-10 pb-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="bg-white rounded-2xl shadow-xl border border-white/50 p-8 md:p-12 relative overflow-hidden group">
