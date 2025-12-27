@@ -1,6 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, ChevronDown, Film, Globe, Star } from "lucide-react";
+import {
+  Clock,
+  ChevronDown,
+  Film,
+  Globe,
+  Star,
+  CalendarDays,
+} from "lucide-react";
 import { getShowtimes } from "@/services";
 import type { Movie, Showtime } from "@/types";
 
@@ -68,9 +75,10 @@ export default async function MovieScheduleCard({
   const hasShowtime = Object.keys(grouped).length > 0;
 
   return (
-    <div className="bg-gradient-to-br from-purple-900/30 via-blue-900/30 to-black/70 rounded-2xl overflow-hidden shadow-2xl border border-purple-600/30 backdrop-blur-sm">
+    <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 transition-shadow hover:shadow-md">
       <div className="flex flex-col lg:flex-row">
-        <div className="relative w-full lg:w-96 h-96 lg:h-auto shrink-0">
+        {/* Ảnh Poster */}
+        <div className="relative w-full lg:w-72 h-96 lg:h-auto shrink-0 border-r border-gray-100">
           <Image
             src={movie.thumbnail}
             alt={movie.title}
@@ -79,28 +87,32 @@ export default async function MovieScheduleCard({
             priority
           />
           {movie.rating > 0 && (
-            <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-sm text-yellow-400 font-bold px-4 py-2 rounded-lg flex items-center gap-2 shadow-xl">
-              <Star className="w-5 h-5 fill-yellow-400" />
-              <span className="text-lg">{movie.rating.toFixed(1)}</span>
+            <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-lg">
+              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              <span className="text-base font-bold">
+                {movie.rating.toFixed(1)}
+              </span>
             </div>
           )}
         </div>
 
-        <div className="flex-1 p-6 lg:p-10">
-          <h3 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-4 uppercase tracking-wider">
-            {movie.title}
-          </h3>
+        <div className="flex-1 p-6 lg:p-8">
+          <Link href={`/movie/${movie.id}`}>
+            <h3 className="text-2xl md:text-3xl font-black text-gray-900 hover:text-[#F25019] mb-3 uppercase tracking-tight transition-colors">
+              {movie.title}
+            </h3>
+          </Link>
 
-          <div className="flex flex-wrap gap-6 text-sm text-gray-300 mb-6">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500 font-medium mb-6">
             <div className="flex items-center gap-2">
-              <Film className="w-4 h-4 text-yellow-500" />
+              <Film className="w-4 h-4 text-gray-400" />
               <span>
                 {movie.genres.map((g) => g.name).join(" • ") || "Đang cập nhật"}
               </span>
             </div>
-            
+
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-yellow-500" />
+              <Clock className="w-4 h-4 text-gray-400" />
               <span>
                 {Math.floor(movie.duration / 60)}h{" "}
                 {movie.duration % 60 === 0 ? "" : `${movie.duration % 60}p`}
@@ -108,13 +120,13 @@ export default async function MovieScheduleCard({
             </div>
 
             <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-yellow-500" />
+              <Globe className="w-4 h-4 text-gray-400" />
               <span>Việt Nam</span>
             </div>
           </div>
 
           {hasShowtime ? (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {days.map((dateKey) => {
                 const formats = grouped[dateKey];
                 if (!formats) return null;
@@ -122,25 +134,25 @@ export default async function MovieScheduleCard({
                 return Object.entries(formats).map(([format, times]) => (
                   <div
                     key={`${dateKey}-${format}`}
-                    className="bg-black/50 rounded-xl p-6 border border-purple-600/40"
+                    className="bg-gray-50 rounded-xl p-5 border border-gray-100"
                   >
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <Clock className="w-6 h-6 text-yellow-400" />
-                        <span className="font-bold text-xl text-white">
+                    <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 border-dashed">
+                      <div className="flex items-center gap-2">
+                        <CalendarDays className="w-5 h-5 text-[#F25019]" />
+                        <span className="font-bold text-lg text-gray-800 capitalize">
                           {formatDateVN(dateKey)}
                         </span>
                       </div>
-                      <span className="text-sm font-medium uppercase tracking-wider text-gray-300 bg-purple-800/60 px-4 py-1 rounded-full">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#F25019] bg-[#F25019]/10 px-3 py-1 rounded-md border border-[#F25019]/20">
                         {format}
                       </span>
                     </div>
 
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-3">
                       {times.sort().map((time) => (
                         <button
                           key={time}
-                          className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-bold px-6 py-4 rounded-xl text-lg transition transform hover:scale-105 shadow-lg"
+                          className="min-w-[80px] py-2 px-4 rounded-lg text-base font-bold border border-gray-300 bg-white text-gray-700 hover:border-[#F25019] hover:text-[#F25019] hover:shadow-md transition-all active:scale-95"
                         >
                           {time}
                         </button>
@@ -151,17 +163,19 @@ export default async function MovieScheduleCard({
               })}
             </div>
           ) : (
-            <p className="text-gray-500 italic text-lg">
-              Chưa có suất chiếu trong 2 ngày tới
-            </p>
+            <div className="py-8 text-center bg-gray-50 rounded-xl border border-dashed border-gray-300">
+              <p className="text-gray-500 italic">
+                Chưa có suất chiếu nào trong 2 ngày tới
+              </p>
+            </div>
           )}
 
           <Link
             href={`/movie/${movie.id}`}
-            className="mt-8 inline-flex items-center gap-3 text-yellow-400 hover:text-yellow-300 font-bold text-lg transition group"
+            className="mt-6 inline-flex items-center gap-2 text-[#F25019] hover:text-[#d14015] font-bold text-sm uppercase tracking-wide transition group"
           >
-            <span>Xem thêm lịch chiếu</span>
-            <ChevronDown className="w-6 h-6 group-hover:translate-y-1 transition" />
+            <span>Xem chi tiết phim & lịch chiếu</span>
+            <ChevronDown className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
           </Link>
         </div>
       </div>
