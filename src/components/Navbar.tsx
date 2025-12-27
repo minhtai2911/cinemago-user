@@ -47,7 +47,6 @@ export default function Navbar() {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto flex items-center px-6 py-3 text-gray-800 relative z-50">
-        {" "}
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center">
             <Image
