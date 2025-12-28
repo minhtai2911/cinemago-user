@@ -185,7 +185,7 @@ export default async function MovieScheduleCard({
           <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end">
             <Link
               href={`/booking?movie=${movie.id}`}
-              className="inline-flex items-center gap-1 text-sm font-bold text-[#F25019] hover:text-[#d14015] hover:underline transition-all group/link"
+              className="inline-flex items-center gap-1 text-sm font-bold text-[#F25019] hover:text-[#d14015] transition-all group/link"
             >
               Xem thêm lịch chiếu
               <ChevronRight
