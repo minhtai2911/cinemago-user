@@ -1,6 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, Film, Globe, Star, CalendarDays } from "lucide-react";
+import {
+  Clock,
+  Film,
+  Globe,
+  Star,
+  CalendarDays,
+  ChevronRight,
+} from "lucide-react";
 import { getShowtimes } from "@/services";
 import type { Movie, Showtime } from "@/types";
 
@@ -173,6 +180,19 @@ export default async function MovieScheduleCard({
                 <span>Hiện chưa có lịch chiếu nào trong hai ngày tới</span>
               </div>
             )}
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end">
+            <Link
+              href={`/booking?movie=${movie.id}`}
+              className="inline-flex items-center gap-1 text-sm font-bold text-[#F25019] hover:text-[#d14015] hover:underline transition-all group/link"
+            >
+              Xem thêm lịch chiếu
+              <ChevronRight
+                size={16}
+                className="group-hover/link:translate-x-1 transition-transform"
+              />
+            </Link>
           </div>
         </div>
       </div>
