@@ -101,13 +101,6 @@ export default async function CinemaDetailPage({
                   Phim sắp chiếu
                 </Link>
               </div>
-
-              <div className="hidden md:block pb-2">
-                <button className="flex items-center gap-2 text-gray-400 hover:text-[#F25019] transition font-bold text-sm uppercase tracking-wider">
-                  <Ticket className="w-5 h-5" />
-                  Bảng giá vé
-                </button>
-              </div>
             </div>
 
             <div className="min-h-[400px]">
