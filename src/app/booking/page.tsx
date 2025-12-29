@@ -3,6 +3,7 @@
 import { notFound, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import Navbar from "@/components/Navbar";
+import MovieDetailCard from "@/components/booking/MovieDetailCard";
 import MovieInfo from "@/components/movie/MovieInfo";
 import {
   getMovieById,
@@ -595,7 +596,7 @@ export default function BookingPage() {
 
   if (!movieId || !movie) {
     return (
-      <div className="min-h-screen bg-peach-gradient text-white flex items-center justify-center relative overflow-hidden">
+      <div className="min-h-screen bg-gradient-to-b from-[#0b1220] via-[#0f172a] to-[#060714] text-white flex items-center justify-center relative overflow-hidden">
         <Image
           width={1000}
           height={1000}
@@ -636,7 +637,7 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-peach-gradient text-white relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-[#0b1220] via-[#0f172a] to-[#060714] text-white relative overflow-hidden">
       <Image
         width={1000}
         height={1000}
@@ -648,8 +649,9 @@ export default function BookingPage() {
       />
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 pt-[120px]">
-        <MovieInfo movie={movie} />
-
+        <div className="bg-white rounded-2xl shadow-xl border border-white/30 p-6 md:p-8">
+          <MovieDetailCard movie={movie} />
+        </div>
         <div className="mt-12">
           <ShowtimeList
             showtimes={showtimes}
