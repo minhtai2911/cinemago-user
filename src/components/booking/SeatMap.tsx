@@ -246,12 +246,6 @@ export default function SeatMap({
                           <span className={seat.isMerged ? "text-[10px]" : ""}>
                             {seat.displayLabel}
                           </span>
-
-                          {!isBooked && !isHeld && seat.type === "VIP" && (
-                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#FF894E] to-[#FC2727] text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-20">
-                              +10k
-                            </span>
-                          )}
                         </>
                       )}
                     </button>
@@ -285,7 +279,10 @@ export default function SeatMap({
           label="Đang chọn"
         />
 
-        <LegendItem color="bg-gray-700 border-gray-700" label="Đã bán" />
+        <LegendItem
+          color="bg-gray-700 border-gray-700"
+          label="Đã đặt/Đang giữ"
+        />
       </div>
     </div>
   );

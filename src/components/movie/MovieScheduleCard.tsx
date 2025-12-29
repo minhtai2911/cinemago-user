@@ -1,6 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, ChevronDown, Film, Globe, Star } from "lucide-react";
+import {
+  Clock,
+  Film,
+  Globe,
+  Star,
+  CalendarDays,
+  ChevronRight,
+} from "lucide-react";
 import { getShowtimes } from "@/services";
 import type { Movie, Showtime } from "@/types";
 
@@ -25,15 +32,14 @@ const getNext2Days = () => {
   return days;
 };
 
-const formatDateVN = (dateStr: string) => {
+const getDateParts = (dateStr: string) => {
   const date = new Date(dateStr);
   const weekday = date.toLocaleDateString("vi-VN", { weekday: "long" });
-  const dayMonthYear = date.toLocaleDateString("vi-VN", {
+  const dayMonth = date.toLocaleDateString("vi-VN", {
     day: "2-digit",
     month: "2-digit",
-    year: "numeric",
   });
-  return `${weekday}, ${dayMonthYear}`;
+  return { weekday, dayMonth };
 };
 
 export default async function MovieScheduleCard({
@@ -68,101 +74,126 @@ export default async function MovieScheduleCard({
   const hasShowtime = Object.keys(grouped).length > 0;
 
   return (
-    <div className="bg-gradient-to-br from-purple-900/30 via-blue-900/30 to-black/70 rounded-2xl overflow-hidden shadow-2xl border border-purple-600/30 backdrop-blur-sm">
-      <div className="flex flex-col lg:flex-row">
-        <div className="relative w-full lg:w-96 h-96 lg:h-auto shrink-0">
-          <Image
-            src={movie.thumbnail}
-            alt={movie.title}
-            fill
-            className="object-cover"
-            priority
-          />
-          {movie.rating > 0 && (
-            <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-sm text-yellow-400 font-bold px-4 py-2 rounded-lg flex items-center gap-2 shadow-xl">
-              <Star className="w-5 h-5 fill-yellow-400" />
-              <span className="text-lg">{movie.rating.toFixed(1)}</span>
-            </div>
-          )}
+    <div className="group bg-white rounded-3xl p-5 md:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 hover:border-orange-200 transition-all duration-300">
+      <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+        <div className="shrink-0 w-full md:w-[180px] lg:w-[200px]">
+          <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden shadow-md group-hover:shadow-lg transition-all">
+            <Image
+              src={movie.thumbnail}
+              alt={movie.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 768px) 100vw, 200px"
+            />
+            {movie.rating > 0 && (
+              <div className="absolute top-2 right-2 bg-white/95 backdrop-blur shadow-sm px-2 py-1 rounded-lg flex flex-col items-center justify-center min-w-[40px]">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mb-0.5" />
+                <span className="text-xs font-black text-gray-900 leading-none">
+                  {movie.rating.toFixed(1)}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="flex-1 p-6 lg:p-10">
-          <h3 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-4 uppercase tracking-wider">
-            {movie.title}
-          </h3>
+        <div className="flex-1 flex flex-col min-w-0">
+          <div className="mb-6">
+            <Link href={`/movie/${movie.id}`}>
+              <h3 className="text-2xl font-black text-gray-900 group-hover:text-[#F25019] mb-3 uppercase tracking-tight transition-colors truncate">
+                {movie.title}
+              </h3>
+            </Link>
 
-          <div className="flex flex-wrap gap-6 text-sm text-gray-300 mb-6">
-            <div className="flex items-center gap-2">
-              <Film className="w-4 h-4 text-yellow-500" />
-              <span>
-                {movie.genres.map((g) => g.name).join(" • ") || "Đang cập nhật"}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500 font-medium">
+              <span className="flex items-center gap-1.5">
+                <Film className="w-4 h-4 text-orange-400" />
+                {movie.genres?.[0]?.name || "Phim điện ảnh"}
               </span>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-yellow-500" />
-              <span>
-                {Math.floor(movie.duration / 60)}h{" "}
-                {movie.duration % 60 === 0 ? "" : `${movie.duration % 60}p`}
+              <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-4 h-4 text-orange-400" />
+                {Math.floor(movie.duration / 60)}h {movie.duration % 60}p
               </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-yellow-500" />
-              <span>Việt Nam</span>
+              <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+              <span className="flex items-center gap-1.5">
+                <Globe className="w-4 h-4 text-orange-400" />
+                Việt Nam
+              </span>
             </div>
           </div>
 
-          {hasShowtime ? (
-            <div className="space-y-6">
-              {days.map((dateKey) => {
-                const formats = grouped[dateKey];
-                if (!formats) return null;
+          <div className="h-px bg-gray-100 w-full mb-6"></div>
 
-                return Object.entries(formats).map(([format, times]) => (
-                  <div
-                    key={`${dateKey}-${format}`}
-                    className="bg-black/50 rounded-xl p-6 border border-purple-600/40"
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <Clock className="w-6 h-6 text-yellow-400" />
-                        <span className="font-bold text-xl text-white">
-                          {formatDateVN(dateKey)}
-                        </span>
+          <div className="flex-grow">
+            {hasShowtime ? (
+              <div className="space-y-6">
+                {days.map((dateKey) => {
+                  const formats = grouped[dateKey];
+                  if (!formats) return null;
+
+                  const { weekday, dayMonth } = getDateParts(dateKey);
+
+                  return (
+                    <div
+                      key={dateKey}
+                      className="flex flex-col sm:flex-row gap-4 sm:gap-8 animate-fadeIn"
+                    >
+                      <div className="shrink-0 w-24 pt-1">
+                        <p className="text-sm text-gray-400 font-medium capitalize mb-0.5">
+                          {weekday}
+                        </p>
+                        <p className="text-xl font-black text-gray-800">
+                          {dayMonth}
+                        </p>
                       </div>
-                      <span className="text-sm font-medium uppercase tracking-wider text-gray-300 bg-purple-800/60 px-4 py-1 rounded-full">
-                        {format}
-                      </span>
-                    </div>
 
-                    <div className="flex flex-wrap gap-4">
-                      {times.sort().map((time) => (
-                        <button
-                          key={time}
-                          className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-bold px-6 py-4 rounded-xl text-lg transition transform hover:scale-105 shadow-lg"
-                        >
-                          {time}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ));
-              })}
-            </div>
-          ) : (
-            <p className="text-gray-500 italic text-lg">
-              Chưa có suất chiếu trong 2 ngày tới
-            </p>
-          )}
+                      <div className="flex-1 space-y-4">
+                        {Object.entries(formats).map(([format, times]) => (
+                          <div
+                            key={format}
+                            className="flex flex-wrap items-center gap-3"
+                          >
+                            <span className="shrink-0 px-2.5 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-bold border border-gray-200">
+                              {format}
+                            </span>
 
-          <Link
-            href={`/movie/${movie.id}`}
-            className="mt-8 inline-flex items-center gap-3 text-yellow-400 hover:text-yellow-300 font-bold text-lg transition group"
-          >
-            <span>Xem thêm lịch chiếu</span>
-            <ChevronDown className="w-6 h-6 group-hover:translate-y-1 transition" />
-          </Link>
+                            <div className="flex flex-wrap gap-2">
+                              {times.sort().map((time) => (
+                                <button
+                                  key={time}
+                                  className="px-4 py-1.5 rounded-lg border border-gray-200 text-sm font-bold text-gray-700 hover:border-[#F25019] hover:bg-[#F25019] hover:text-white transition-all active:scale-95"
+                                >
+                                  {time}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 text-gray-400 italic py-2">
+                <CalendarDays className="w-5 h-5" />
+                <span>Hiện chưa có lịch chiếu nào trong hai ngày tới</span>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-gray-100 flex justify-end">
+            <Link
+              href={`/booking?movie=${movie.id}`}
+              className="inline-flex items-center gap-1 text-sm font-bold text-[#F25019] hover:text-[#d14015] transition-all group/link"
+            >
+              Xem thêm lịch chiếu
+              <ChevronRight
+                size={16}
+                className="group-hover/link:translate-x-1 transition-transform"
+              />
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -40,6 +40,7 @@ export type HeldSeatResponse = {
   extraPrice: number;
   showtimeId?: string;
   userId: string;
+  expiresAt: number;
 };
 
 export interface BookingSeat {

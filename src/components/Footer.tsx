@@ -1,11 +1,41 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaFacebookF, FaYoutube, FaTiktok } from "react-icons/fa6";
+import { getCinemas } from "@/services/cinemaService";
+
+interface CinemaFooter {
+  id: number;
+  name: string;
+}
 
 export default function Footer() {
+  const [footerCinemas, setFooterCinemas] = useState<CinemaFooter[]>([]);
+
+  useEffect(() => {
+    const fetchCinemas = async () => {
+      try {
+        const res = await getCinemas(1, 5, "", true);
+
+        if (res?.data && Array.isArray(res.data)) {
+          setFooterCinemas(res.data);
+        } else if (Array.isArray(res)) {
+          setFooterCinemas(res.slice(0, 5));
+        }
+      } catch (error) {
+        console.error("Lỗi tải footer:", error);
+      }
+    };
+
+    fetchCinemas();
+  }, []);
+
   return (
     <footer className="bg-white border-t border-gray-200 pt-12 pb-8 mt-12 text-gray-600">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        {/* CỘT 1 */}
         <div className="lg:col-span-1">
           <Link href="/" className="inline-block mb-4">
             <Image
@@ -62,27 +92,25 @@ export default function Footer() {
             <a
               href="#"
               className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-[#1877F2] hover:text-white transition-all"
-              aria-label="Facebook"
             >
               <FaFacebookF size={14} />
             </a>
             <a
               href="#"
               className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-[#FF0000] hover:text-white transition-all"
-              aria-label="YouTube"
             >
               <FaYoutube size={14} />
             </a>
             <a
               href="#"
               className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-black hover:text-white transition-all"
-              aria-label="TikTok"
             >
               <FaTiktok size={14} />
             </a>
           </div>
         </div>
 
+        {/* CỘT 2 */}
         <div>
           <h3 className="text-gray-900 font-bold mb-4 uppercase text-sm tracking-wide">
             Tài khoản
@@ -105,7 +133,10 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-[#F25019] transition-colors">
+              <Link
+                href="/profile"
+                className="hover:text-[#F25019] transition-colors"
+              >
                 Membership
               </Link>
             </li>
@@ -134,12 +165,18 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-[#F25019] transition-colors">
+              <Link
+                href="/showtimes"
+                className="hover:text-[#F25019] transition-colors"
+              >
                 Suất chiếu đặc biệt
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-[#F25019] transition-colors">
+              <Link
+                href="/news"
+                className="hover:text-[#F25019] transition-colors"
+              >
                 Tin tức & Ưu đãi
               </Link>
             </li>
@@ -152,22 +189,34 @@ export default function Footer() {
           </h3>
           <ul className="space-y-2.5 text-sm">
             <li>
-              <Link href="#" className="hover:text-[#F25019] transition-colors">
+              <Link
+                href="/about"
+                className="hover:text-[#F25019] transition-colors"
+              >
                 Giới thiệu CinemaGo
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-[#F25019] transition-colors">
+              <Link
+                href="/recruitment"
+                className="hover:text-[#F25019] transition-colors"
+              >
                 Tuyển dụng
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-[#F25019] transition-colors">
+              <Link
+                href="/contact"
+                className="hover:text-[#F25019] transition-colors"
+              >
                 Liên hệ
               </Link>
             </li>
             <li className="pt-2 mt-2 border-t border-gray-100">
-              <Link href="#" className="hover:text-[#F25019] transition-colors">
+              <Link
+                href="/policy"
+                className="hover:text-[#F25019] transition-colors"
+              >
                 Điều khoản & Chính sách
               </Link>
             </li>
@@ -179,26 +228,20 @@ export default function Footer() {
             Hệ thống rạp
           </h3>
           <ul className="space-y-2.5 text-sm">
-            <li>
-              <Link href="#" className="hover:text-[#F25019] transition-colors">
-                CinemaGo Quốc Thanh
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:text-[#F25019] transition-colors">
-                CinemaGo Hai Bà Trưng
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:text-[#F25019] transition-colors">
-                CinemaGo Bình Dương
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:text-[#F25019] transition-colors">
-                CinemaGo Đà Lạt
-              </Link>
-            </li>
+            {footerCinemas.length > 0 ? (
+              footerCinemas.map((cinema) => (
+                <li key={cinema.id}>
+                  <Link
+                    href={`/cinema/${cinema.id}`}
+                    className="hover:text-[#F25019] transition-colors block py-0.5"
+                  >
+                    {cinema.name}
+                  </Link>
+                </li>
+              ))
+            ) : (
+              <li className="text-gray-400 italic text-xs">Đang cập nhật...</li>
+            )}
           </ul>
         </div>
       </div>
@@ -207,10 +250,10 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
           <p>© 2025 CINEMAGO. All rights reserved.</p>
           <div className="flex gap-4 mt-2 md:mt-0">
-            <Link href="#" className="hover:text-[#F25019]">
+            <Link href="/privacy" className="hover:text-[#F25019]">
               Chính sách bảo mật
             </Link>
-            <Link href="#" className="hover:text-[#F25019]">
+            <Link href="/terms" className="hover:text-[#F25019]">
               Điều khoản sử dụng
             </Link>
           </div>
