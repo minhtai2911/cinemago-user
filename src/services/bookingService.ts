@@ -18,3 +18,20 @@ export const getBookingById = async (bookingId: string) => {
 export const getBookingSeatsByShowTimeId = async (showtimeId: string) => {
   return fetcher(`v1/bookings/public/${showtimeId}/booking-seat`);
 };
+
+export const createBooking = async (
+  showtimeId: string,
+  seatIds: string[],
+  foodDrinks: {
+    foodDrinkId: string;
+    quantity: number;
+  }[],
+  cinemaId: string
+) => {
+  return axiosInstance.post("/v1/bookings/", {
+    showtimeId,
+    seatIds,
+    foodDrinks,
+    cinemaId,
+  });
+};
