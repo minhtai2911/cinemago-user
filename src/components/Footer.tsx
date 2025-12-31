@@ -33,7 +33,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-white border-t border-gray-200 pt-12 pb-8 mt-12 text-gray-600">
+    <footer className="bg-white border-t border-gray-200 pt-12 pb-8 text-gray-600">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
         {/* CỘT 1 */}
         <div className="lg:col-span-1">
@@ -245,7 +245,6 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-
       <div className="border-t border-gray-100 mt-10 pt-6">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
           <p>© 2025 CINEMAGO. All rights reserved.</p>
