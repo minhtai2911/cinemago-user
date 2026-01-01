@@ -27,3 +27,10 @@ export const getMovies = async (
 export const getMovieById = async (movieId: string) => {
   return fetcher(`v1/movies/public/${movieId}`);
 };
+
+export const getTopRatedMovies = async (limit: number) => {
+  return fetcher(
+    "v1/movies/public/top-rated?" +
+      new URLSearchParams({ limit: limit.toString() })
+  );
+};
