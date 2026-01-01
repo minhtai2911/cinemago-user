@@ -40,7 +40,7 @@ export default function MovieSection({
   return (
     <section className="relative w-full py-10">
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 border-l-4 border-[#F25019] pl-4 uppercase">
+        <h2 className="text-2xl md:text-3xl font-black text-gray-900 border-l-4 border-[#F25019] pl-4 uppercase">
           {title}
         </h2>
         <div className="flex gap-3">

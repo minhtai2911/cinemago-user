@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { getMovies, getCinemas, getShowtimes } from "@/services";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -74,44 +75,59 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-white text-gray-900 flex flex-col font-sans">
-      <div className="fixed top-0 left-0 right-0 z-50">
+    <div className="min-h-screen bg-white text-gray-900 flex flex-col font-sans selection:bg-[#F25019] selection:text-white">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
         <Navbar />
       </div>
 
-      <main className="mt-20">
-        <BannerSlider movies={nowShowing} />
+      <main className="mt-20 relative bg-gradient-to-br from-[#FFF8F3] via-white to-[#FFF0EC] overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-orange-200/20 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/4"></div>
+          <div className="absolute top-[40%] left-0 w-[600px] h-[600px] bg-orange-100/30 rounded-full blur-[100px] -translate-x-1/3"></div>
 
-        {/* QuickBooking */}
-        <div className="relative z-30 container mx-auto px-4 -mt-24 mb-16">
-          <QuickBooking
-            cinemas={cinemas}
-            nowShowing={nowShowing}
-            showtimes={showtimes}
-            selectedMovie={selectedMovie}
-            selectedCinema={selectedCinema}
-            selectedShowtime={selectedShowtime}
-            selectedDate={selectedDate}
-            setSelectedMovie={setSelectedMovie}
-            setSelectedCinema={setSelectedCinema}
-            setSelectedShowtime={setSelectedShowtime}
-            setSelectedDate={setSelectedDate}
+          <Image
+            src="/corn.png"
+            alt=""
+            width={600}
+            height={600}
+            className="hidden 2xl:block absolute top-[15%] -left-20 w-[15%] max-w-[300px] opacity-10 select-none object-contain animate-float"
+            style={{ transform: "rotate(15deg)" }}
           />
         </div>
 
-        <div className="container mx-auto px-4 pb-20 space-y-20">
-          <MovieSection
-            title="PHIM ĐANG CHIẾU"
-            movies={nowShowing}
-            showBookingButton
-          />
+        <div className="relative z-10">
+          <BannerSlider movies={nowShowing} />
 
-          <div className="w-full h-px bg-gray-200" />
+          <div className="container mx-auto px-4 -mt-24 mb-20 relative z-30">
+            <QuickBooking
+              cinemas={cinemas}
+              nowShowing={nowShowing}
+              showtimes={showtimes}
+              selectedMovie={selectedMovie}
+              selectedCinema={selectedCinema}
+              selectedShowtime={selectedShowtime}
+              selectedDate={selectedDate}
+              setSelectedMovie={setSelectedMovie}
+              setSelectedCinema={setSelectedCinema}
+              setSelectedShowtime={setSelectedShowtime}
+              setSelectedDate={setSelectedDate}
+            />
+          </div>
 
-          <MovieSection title="PHIM SẮP CHIẾU" movies={comingSoon} />
+          <div className="container mx-auto px-4 pb-20 space-y-24">
+            <MovieSection
+              title="PHIM ĐANG CHIẾU"
+              movies={nowShowing}
+              showBookingButton
+            />
+
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-orange-200 to-transparent opacity-60" />
+
+            <MovieSection title="PHIM SẮP CHIẾU" movies={comingSoon} />
+          </div>
+
+          <Features />
         </div>
-
-        <Features />
       </main>
 
       <Footer />
