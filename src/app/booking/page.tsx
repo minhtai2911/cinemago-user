@@ -14,6 +14,10 @@ import {
   getHeldSeats,
   releaseSeat,
   holdSeat,
+  checkoutWithMoMo,
+  checkoutWithVNPay,
+  checkoutWithZaloPay,
+  createBooking,
 } from "@/services";
 import type {
   Movie,
@@ -38,7 +42,7 @@ import { RenderSeat, mergeSeatData } from "@/utils/seat-helper";
 import { toast } from "sonner";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import PaymentMethodModal from "@/components/booking/PaymentMethodModal";
 
 const SOCKET_URL =
   process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:8000";
@@ -48,6 +52,8 @@ const TICKET_TO_SEAT_MAP: Record<TicketType, string> = {
   VIP: "VIP",
   COUPLE: "COUPLE",
 };
+
+type PaymentMethod = "MOMO" | "VNPAY" | "ZALOPAY";
 
 export default function BookingPage() {
   const router = useRouter();
@@ -77,6 +83,9 @@ export default function BookingPage() {
 
   const [foods, setFoods] = useState<FoodDrink[]>([]);
   const [selectedFoods, setSelectedFoods] = useState<FoodSelection[]>([]);
+
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const ticketSectionRef = useRef<HTMLDivElement>(null);
 
@@ -533,6 +542,7 @@ export default function BookingPage() {
           page: undefined,
           limit: undefined,
           isAvailable: true,
+          cinemaId: selectedCinema ? String(selectedCinema.id) : undefined,
         });
         const data: FoodDrink[] = res.data || [];
 
@@ -555,7 +565,7 @@ export default function BookingPage() {
     };
 
     fetchFoods();
-  }, []);
+  }, [selectedCinema]);
 
   const handleFoodDrinkUpdate = (item: FoodDrink, delta: number) => {
     setSelectedFoods((prev) => {
@@ -571,18 +581,74 @@ export default function BookingPage() {
     });
   };
 
-  const handleBookTickets = () => {
-    console.log("Tiến hành đặt vé:", {
-      movie: movie?.title,
-      showtime: selectedShowtime?.id,
-      tickets: selectedTickets,
-      seats: chosenSeats,
-      foods: selectedFoods,
-    });
+  const handleBookTickets = async (paymentMethod?: PaymentMethod) => {
+    if (!selectedShowtime || !profile?.id || chosenSeats.length === 0) {
+      toast.error("Vui lòng chọn suất chiếu và ghế ngồi");
+      return;
+    }
 
-    // Chuyển hướng sang trang chọn ghế hoặc thanh toán
-    // Ví dụ: router.push(`/booking/seat?showtimeId=${selectedShowtime?.id}&tickets=${JSON.stringify(selectedTickets)}`)
-    alert("Chuyển sang trang chọn ghế...");
+    if (!paymentMethod) {
+      setPaymentModalOpen(true);
+      return;
+    }
+
+    setIsProcessingPayment(true);
+
+    try {
+      const seatIds = chosenSeats
+        .flatMap((seat) =>
+          seat.secondId ? [seat.id, seat.secondId] : [seat.id]
+        )
+        .filter(Boolean) as string[];
+
+      const foodDrinks = selectedFoods.map((food) => ({
+        foodDrinkId: food.id,
+        quantity: food.quantity,
+      }));
+
+      const totalAmount =
+        selectedTickets.reduce((sum, t) => sum + t.price * t.quantity, 0) +
+        selectedFoods.reduce((sum, f) => sum + f.price * f.quantity, 0);
+
+      if (totalAmount <= 0) {
+        toast.error("Số tiền thanh toán không hợp lệ");
+        return;
+      }
+
+      const bookingResponse = await createBooking(
+        String(selectedShowtime.id),
+        seatIds,
+        foodDrinks,
+        String(selectedShowtime.cinemaId)
+      );
+
+      const bookingId = bookingResponse.data.data.id;
+
+      if (!bookingId) {
+        throw new Error("Không tạo được đơn đặt vé");
+      }
+
+      let paymentUrl: string;
+
+      if (paymentMethod === "MOMO") {
+        const res = await checkoutWithMoMo(totalAmount, bookingId);
+        paymentUrl = res.data.URL;
+      } else if (paymentMethod === "VNPAY") {
+        const res = await checkoutWithVNPay(totalAmount, bookingId);
+        paymentUrl = res.data.URL;
+      } else if (paymentMethod === "ZALOPAY") {
+        const res = await checkoutWithZaloPay(totalAmount, bookingId);
+        paymentUrl = res.data.URL;
+      } else {
+        throw new Error("Phương thức thanh toán không hỗ trợ");
+      }
+
+      toast.success("Đang chuyển đến cổng thanh toán...");
+      window.location.href = paymentUrl;
+    } catch {
+      toast.error("Đặt vé thất bại. Vui lòng thử lại.");
+      setIsProcessingPayment(false);
+    }
   };
 
   if (loading) {
@@ -709,9 +775,16 @@ export default function BookingPage() {
           selectedSeats={chosenSeats}
           holdTimer={holdTimer}
           selectedFoods={selectedFoods}
-          onBook={handleBookTickets}
+          onBook={() => handleBookTickets()}
+          isLoading={isRoomLoading || isProcessingPayment}
         />
       )}
+
+      <PaymentMethodModal
+        isOpen={paymentModalOpen}
+        onClose={() => setPaymentModalOpen(false)}
+        onSelect={(method) => handleBookTickets(method)}
+      />
     </div>
   );
 }

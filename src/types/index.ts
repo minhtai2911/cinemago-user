@@ -6,3 +6,4 @@ export * from "./cinema";
 export * from "./showtime";
 export * from "./review";
 export * from "./food";
+export * from "./booking";
