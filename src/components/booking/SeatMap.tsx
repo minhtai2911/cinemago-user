@@ -10,8 +10,8 @@ import { RenderSeat } from "@/utils/seat-helper";
 const SEAT_STYLES: Record<SeatType, string> = {
   // Unselected seats: solid white background, colored border & text, gentle hover tint
   NORMAL:
-    "border-orange-500 text-orange-600 bg-white hover:bg-orange-50 h-9 w-9 transition-colors duration-150",
-  VIP: "border-red-500 text-red-600 bg-white hover:bg-red-50 h-9 w-9 transition-colors duration-150",
+    "border-green-500 text-green-600 bg-white hover:bg-green-50 h-9 w-9 transition-colors duration-150",
+  VIP: "border-orange-500 text-orange-600 bg-white hover:bg-orange-50 h-9 w-9 transition-colors duration-150",
   COUPLE:
     "border-pink-500 text-pink-600 bg-white hover:bg-pink-50 h-9 w-20 transition-colors duration-150",
   EMPTY: "invisible border-none h-9 w-9",
@@ -154,7 +154,7 @@ export default function SeatMap({
   }, [seatLayout]);
 
   return (
-    <div className="w-full bg-white/60 backdrop-blur-sm p-8 rounded-xl shadow-[0_40px_80px_rgba(255,110,70,0.08)] border border-white/10 mt-12 mb-24 animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="w-full bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-[0_40px_80px_rgba(255,110,70,0.08)] border border-white/10 mt-12 mb-24 animate-in fade-in slide-in-from-bottom-8 duration-700">
       <h3
         className="text-3xl font-bold text-center text-[#1f2937] mb-4 uppercase"
         style={{ fontFamily: "Oswald, sans-serif" }}
@@ -217,16 +217,17 @@ export default function SeatMap({
                   } else if (isHeld) {
                     seatClass = `bg-gray-400 border-gray-600 text-gray-700 cursor-not-allowed opacity-90 h-9 ${widthClass}`;
                   } else if (isSelected) {
+                    seatClass = `bg-gradient-to-r from-[#FFE089] to-[#FFAE57] border-transparent text-white font-bold scale-100 z-10 h-9 ${widthClass} cursor-pointer`;
                     // Selected gradients per seat type as requested
-                    if (seat.type === "NORMAL") {
-                      seatClass = `bg-gradient-to-r from-[#FFE089] to-[#FFAE57] border-transparent text-black font-bold shadow-[0_6px_20px_rgba(255,174,87,0.35)] scale-110 z-10 h-9 ${widthClass} cursor-pointer`;
+                    /*if (seat.type === "NORMAL") {
+                      seatClass = `bg-gradient-to-r from-[#FFE089] to-[#FFAE57] border-transparent text-white font-bold scale-100 z-10 h-9 ${widthClass} cursor-pointer`;
                     } else if (seat.type === "VIP") {
-                      seatClass = `bg-gradient-to-r from-[#FF894E] to-[#FC2727] border-transparent text-black font-bold shadow-[0_6px_20px_rgba(252,39,39,0.35)] scale-110 z-10 h-9 ${widthClass} cursor-pointer`;
+                      seatClass = `bg-gradient-to-r from-[#FF894E] to-[#FC2727] border-transparent text-black font-bold shadow-[0_6px_20px_rgba(252,39,39,0.35)] scale-100 z-10 h-9 ${widthClass} cursor-pointer`;
                     } else if (seat.type === "COUPLE") {
-                      seatClass = `bg-gradient-to-r from-[#FFD2EF] to-[#FF9E9E] border-transparent text-black font-bold shadow-[0_6px_20px_rgba(255,159,159,0.30)] scale-110 z-10 h-9 ${widthClass} cursor-pointer`;
+                      seatClass = `bg-gradient-to-r from-[#FFD2EF] to-[#FF9E9E] border-transparent text-black font-bold shadow-[0_6px_20px_rgba(255,159,159,0.30)] scale-100 z-10 h-9 ${widthClass} cursor-pointer`;
                     } else {
-                      seatClass = `bg-gradient-to-r from-[#FFE089] to-[#FFAE57] border-transparent text-black font-bold shadow-[0_6px_20px_rgba(255,174,87,0.35)] scale-110 z-10 h-9 ${widthClass} cursor-pointer`;
-                    }
+                      seatClass = `bg-gradient-to-r from-[#FFE089] to-[#FFAE57] border-transparent text-black font-bold shadow-[0_6px_20px_rgba(255,174,87,0.35)] scale-100 z-10 h-9 ${widthClass} cursor-pointer`;
+                    }*/
                   } else {
                     seatClass = `${baseStyle} ${widthClass} cursor-pointer`;
                   }
