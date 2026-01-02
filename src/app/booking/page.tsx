@@ -749,7 +749,7 @@ export default function BookingPage() {
           holdTimer={holdTimer}
           selectedFoods={selectedFoods}
           onBook={() => handleBookTickets()}
-          isLoading={isRoomLoading || isProcessingPayment}
+          isLoading={isProcessingPayment}
         />
       )}
 

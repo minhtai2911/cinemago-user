@@ -16,19 +16,34 @@ type MovieScheduleCardProps = {
   cinemaId: string;
 };
 
+const getLocalDateKey = (iso: string) => {
+  return new Date(iso).toLocaleDateString("sv-SE");
+};
+
+const toUtcFromVN = (dateStr: string, endOfDay = false) => {
+  const d = new Date(`${dateStr}T00:00:00`);
+  if (endOfDay) {
+    d.setHours(23, 59, 59, 999);
+  }
+  return d;
+};
+
 const formatTime = (iso: string) =>
   new Date(iso).toLocaleTimeString("vi-VN", {
     hour: "2-digit",
     minute: "2-digit",
   });
 
-const getNext2Days = () => {
+const getNext3Days = () => {
   const days: string[] = [];
-  for (let i = 0; i < 2; i++) {
-    const d = new Date();
+  const now = new Date();
+
+  for (let i = 0; i < 3; i++) {
+    const d = new Date(now);
     d.setDate(d.getDate() + i);
-    days.push(d.toISOString().split("T")[0]);
+    days.push(d.toLocaleDateString("sv-SE"));
   }
+
   return days;
 };
 
@@ -46,7 +61,7 @@ export default async function MovieScheduleCard({
   movie,
   cinemaId,
 }: MovieScheduleCardProps) {
-  const days = getNext2Days();
+  const days = getNext3Days();
 
   const showtimesRes = await getShowtimes(
     undefined,
@@ -54,21 +69,29 @@ export default async function MovieScheduleCard({
     movie.id,
     cinemaId,
     true,
-    new Date(days[0]),
-    new Date(new Date(days[1]).setHours(23, 59, 59, 999))
+    toUtcFromVN(days[0]),
+    toUtcFromVN(days[2], true)
   );
 
   const showtimes: Showtime[] = showtimesRes.data || [];
 
-  const grouped: Record<string, Record<string, string[]>> = {};
+  const grouped: Record<
+    string,
+    Record<string, { time: string; showtimeId: string }[]>
+  > = {};
+
   showtimes.forEach((st) => {
-    const dateKey = st.startTime.split("T")[0];
+    const dateKey = getLocalDateKey(st.startTime);
     if (!days.includes(dateKey)) return;
 
     const formatKey = st.format || "2D";
     if (!grouped[dateKey]) grouped[dateKey] = {};
     if (!grouped[dateKey][formatKey]) grouped[dateKey][formatKey] = [];
-    grouped[dateKey][formatKey].push(formatTime(st.startTime));
+
+    grouped[dateKey][formatKey].push({
+      time: formatTime(st.startTime),
+      showtimeId: st.id,
+    });
   });
 
   const hasShowtime = Object.keys(grouped).length > 0;
@@ -98,7 +121,7 @@ export default async function MovieScheduleCard({
 
         <div className="flex-1 flex flex-col min-w-0">
           <div className="mb-6">
-            <Link href={`/movie/${movie.id}`}>
+            <Link href={`/movies/${movie.id}`}>
               <h3 className="text-2xl font-black text-gray-900 group-hover:text-[#F25019] mb-3 uppercase tracking-tight transition-colors truncate">
                 {movie.title}
               </h3>
@@ -148,7 +171,7 @@ export default async function MovieScheduleCard({
                       </div>
 
                       <div className="flex-1 space-y-4">
-                        {Object.entries(formats).map(([format, times]) => (
+                        {Object.entries(formats).map(([format, sessions]) => (
                           <div
                             key={format}
                             className="flex flex-wrap items-center gap-3"
@@ -158,14 +181,17 @@ export default async function MovieScheduleCard({
                             </span>
 
                             <div className="flex flex-wrap gap-2">
-                              {times.sort().map((time) => (
-                                <button
-                                  key={time}
-                                  className="px-4 py-1.5 rounded-lg border border-gray-200 text-sm font-bold text-gray-700 hover:border-[#F25019] hover:bg-[#F25019] hover:text-white transition-all active:scale-95"
-                                >
-                                  {time}
-                                </button>
-                              ))}
+                              {sessions
+                                .sort((a, b) => a.time.localeCompare(b.time))
+                                .map(({ time, showtimeId }) => (
+                                  <Link
+                                    key={showtimeId}
+                                    href={`/booking?movie=${movie.id}&showtime=${showtimeId}`}
+                                    className="px-4 py-1.5 rounded-lg border border-gray-200 text-sm font-bold text-gray-700 hover:border-[#F25019] hover:bg-[#F25019] hover:text-white transition-all active:scale-95"
+                                  >
+                                    {time}
+                                  </Link>
+                                ))}
                             </div>
                           </div>
                         ))}
