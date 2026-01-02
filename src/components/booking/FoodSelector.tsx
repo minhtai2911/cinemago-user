@@ -96,7 +96,7 @@ export default function FoodDrinkSelector({
                 </div>
 
                 <div className="flex items-center justify-between mt-3">
-                  <span className="text-base font-bold text-yellow-400">
+                  <span className="text-base font-bold bg-gradient-to-r from-[#FF7C61] to-[#FFB464] bg-clip-text text-transparent">
                     {formatCurrency(item.price)}
                   </span>
 
