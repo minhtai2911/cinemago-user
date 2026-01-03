@@ -43,6 +43,8 @@ export default function ShowtimeList({
   const [cinemasMap, setCinemasMap] = useState<CinemasMap>({});
   const [expandedCinemas, setExpandedCinemas] = useState<string[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
+  const didAutoSelectShowtimeRef = useRef(false);
+  const didExpandCinemaRef = useRef(false);
 
   const [activeShowtimeId, setActiveShowtimeId] = useState<string | null>(null);
 
@@ -152,43 +154,52 @@ export default function ShowtimeList({
   );
 
   useEffect(() => {
-    if (preSelectedShowtimeId) {
-      setActiveShowtimeId(preSelectedShowtimeId);
-
-      const targetShowtime = showtimes.find(
-        (s) => s.id === preSelectedShowtimeId
-      );
-      if (targetShowtime && onSelectShowtime) {
-        const targetCinema = cinemasMap[targetShowtime.cinemaId] || null;
-        onSelectShowtime(targetShowtime, targetCinema);
-      }
+    if (
+      !preSelectedShowtimeId ||
+      didAutoSelectShowtimeRef.current ||
+      showtimes.length === 0
+    ) {
+      return;
     }
 
-    if (filteredCinemaIds.length > 0) {
-      if (
-        preSelectedCinemaId &&
-        filteredCinemaIds.includes(preSelectedCinemaId)
-      ) {
-        setExpandedCinemas([preSelectedCinemaId]);
-        setTimeout(() => {
-          const element = cinemaRefs.current[preSelectedCinemaId];
-          if (element) {
-            element.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
-        }, 500);
-      } else {
-        setExpandedCinemas(filteredCinemaIds);
-      }
+    const targetShowtime = showtimes.find(
+      (s) => s.id === preSelectedShowtimeId
+    );
+
+    if (!targetShowtime) return;
+
+    didAutoSelectShowtimeRef.current = true;
+
+    setActiveShowtimeId(targetShowtime.id);
+
+    if (onSelectShowtime) {
+      const targetCinema = cinemasMap[targetShowtime.cinemaId] || null;
+      onSelectShowtime(targetShowtime, targetCinema);
     }
-  }, [
-    filteredCinemaIds.length,
-    preSelectedCinemaId,
-    preSelectedShowtimeId,
-    showtimes,
-    cinemasMap,
-    onSelectShowtime,
-    filteredCinemaIds,
-  ]);
+  }, [preSelectedShowtimeId, showtimes, cinemasMap, onSelectShowtime]);
+
+  useEffect(() => {
+    if (didExpandCinemaRef.current) return;
+    if (filteredCinemaIds.length === 0) return;
+
+    didExpandCinemaRef.current = true;
+
+    if (
+      preSelectedCinemaId &&
+      filteredCinemaIds.includes(preSelectedCinemaId)
+    ) {
+      setExpandedCinemas([preSelectedCinemaId]);
+
+      setTimeout(() => {
+        const element = cinemaRefs.current[preSelectedCinemaId];
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 500);
+    } else {
+      setExpandedCinemas(filteredCinemaIds);
+    }
+  }, [filteredCinemaIds, preSelectedCinemaId]);
 
   const toggleCinema = (cinemaId: string) => {
     setExpandedCinemas((prev) =>
