@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { getMovies, getCinemas, getShowtimes } from "@/services";
+import {
+  getMovies,
+  getCinemas,
+  getShowtimes,
+  getTopRatedMovies,
+} from "@/services";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BannerSlider from "@/components/BannerSlider";
@@ -23,45 +28,49 @@ export default function HomePage() {
   const [selectedShowtime, setSelectedShowtime] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [topRatedMovies, setTopRatedMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
     (async () => {
       try {
         setIsLoading(true);
-        const [nowRes, soonRes, cinemaRes, showtimes] = await Promise.all([
-          getMovies(
-            undefined,
-            undefined,
-            "",
-            undefined,
-            "",
-            true,
-            MovieStatus.NOW_SHOWING
-          ),
-          getMovies(
-            undefined,
-            undefined,
-            "",
-            undefined,
-            "",
-            true,
-            MovieStatus.COMING_SOON
-          ),
-          getCinemas(undefined, undefined, "", true),
-          getShowtimes(
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            true,
-            new Date()
-          ),
-        ]);
+        const [nowRes, soonRes, cinemaRes, showtimes, topRatedRes] =
+          await Promise.all([
+            getMovies(
+              undefined,
+              undefined,
+              "",
+              undefined,
+              "",
+              true,
+              MovieStatus.NOW_SHOWING
+            ),
+            getMovies(
+              undefined,
+              undefined,
+              "",
+              undefined,
+              "",
+              true,
+              MovieStatus.COMING_SOON
+            ),
+            getCinemas(undefined, undefined, "", true),
+            getShowtimes(
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              true,
+              new Date()
+            ),
+            getTopRatedMovies(10),
+          ]);
 
         setNowShowing(nowRes.data || []);
         setComingSoon(soonRes.data || []);
         setCinemas(cinemaRes.data || []);
         setShowtimes(showtimes.data || []);
+        setTopRatedMovies(topRatedRes.data || []);
       } catch {
         toast.error("Đã có lỗi xảy ra khi tải dữ liệu.");
       } finally {
@@ -96,7 +105,7 @@ export default function HomePage() {
         </div>
 
         <div className="relative z-10">
-          <BannerSlider movies={nowShowing} />
+          <BannerSlider movies={topRatedMovies} />
 
           <div className="container mx-auto px-4 -mt-24 mb-20 relative z-30">
             <QuickBooking
@@ -115,6 +124,14 @@ export default function HomePage() {
           </div>
 
           <div className="container mx-auto px-4 pb-20 space-y-24">
+            <MovieSection
+              title="PHIM ĐƯỢC ĐÁNH GIÁ CAO"
+              movies={topRatedMovies}
+              showBookingButton
+            />
+
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-orange-200 to-transparent opacity-60" />
+
             <MovieSection
               title="PHIM ĐANG CHIẾU"
               movies={nowShowing}
