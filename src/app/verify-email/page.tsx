@@ -51,8 +51,8 @@ export default function VerifyEmailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center text-white px-4">
-      <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md w-full text-center">
+    <div className="min-h-screen bg-orange-30 flex items-center justify-center text-black px-4">
+      <div className="bg-white-700 p-8 rounded-lg shadow-lg max-w-md w-full text-center">
         {status === "loading" && (
           <>
             <h2 className="text-2xl font-bold text-red-500 mb-4">
