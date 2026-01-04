@@ -13,6 +13,21 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "cinemago-user-one.vercel.app",
+          },
+        ],
+        destination: "https://cinema-go-vn.vercel.app/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
