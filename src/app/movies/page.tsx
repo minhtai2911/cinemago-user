@@ -18,6 +18,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { toast } from "sonner";
 import debounce from "lodash/debounce";
+import MovieCard from "@/components/movie/MovieCard";
 
 export default function MoviesPage() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -346,7 +347,6 @@ export default function MoviesPage() {
                 </div>
               </div>
 
-              {/* Thể loại - Dropdown với dấu tick khi chọn */}
               <div ref={genreDropdownRef}>
                 <label className="text-sm font-bold text-gray-800 mb-4 block">
                   Thể loại
@@ -535,67 +535,13 @@ export default function MoviesPage() {
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
                   {movies.map((movie) => (
-                    <div
+                    <MovieCard
                       key={movie.id}
-                      className="group relative bg-white rounded-3xl overflow-hidden shadow-xl transition-all duration-500 hover:shadow-2xl hover:-translate-y-4"
-                    >
-                      <Link href={`/movies/${movie.id}`}>
-                        <div className="aspect-[2/3] relative overflow-hidden">
-                          <Image
-                            src={movie.thumbnail}
-                            alt={movie.title}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-115"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                          <div className="absolute bottom-0 left-0 right-0 p-6 text-white translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Star className="w-6 h-6 fill-yellow-400 text-yellow-400" />
-                              <span className="text-2xl font-bold">
-                                {movie.rating.toFixed(1)}
-                              </span>
-                            </div>
-                            <p className="text-lg font-semibold opacity-90 flex items-center gap-2">
-                              <Clock className="w-5 h-5" /> {movie.duration}{" "}
-                              phút
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="p-6 bg-gradient-to-b from-white to-orange-50">
-                          <h3 className="text-xl font-bold text-[#F25019] line-clamp-2 mb-3">
-                            {movie.title}
-                          </h3>
-
-                          <div className="flex flex-wrap gap-2 mb-6">
-                            {movie.genres.slice(0, 3).map((g) => (
-                              <span
-                                key={g.id}
-                                className="px-4 py-2 bg-orange-100 text-[#F25019] text-sm font-semibold rounded-full"
-                              >
-                                {g.name}
-                              </span>
-                            ))}
-                          </div>
-
-                          {movie.status === MovieStatus.NOW_SHOWING && (
-                            <button className="w-full py-4 bg-gradient-to-r from-[#F25019] to-[#E9391B] text-white text-lg font-bold rounded-2xl hover:brightness-110 transition shadow-lg">
-                              Đặt vé ngay
-                            </button>
-                          )}
-
-                          {(movie.status === MovieStatus.COMING_SOON ||
-                            movie.status === MovieStatus.ENDED) && (
-                            <div className="w-full py-4 bg-gray-200 text-gray-600 text-center text-lg font-bold rounded-2xl">
-                              {movie.status === MovieStatus.COMING_SOON
-                                ? "Sắp chiếu"
-                                : "Đã chiếu"}
-                            </div>
-                          )}
-                        </div>
-                      </Link>
-                    </div>
+                      movie={movie}
+                      showBookingButton={
+                        movie.status === MovieStatus.NOW_SHOWING
+                      }
+                    />
                   ))}
                 </div>
 
