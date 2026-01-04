@@ -13,6 +13,7 @@ export interface Movie {
   duration: number;
   releaseDate: string;
   rating: number;
+  status: MovieStatus;
   thumbnail: string;
   thumbnailPublicId: string;
   trailerUrl: string;
