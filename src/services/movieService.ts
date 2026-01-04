@@ -8,7 +8,9 @@ export const getMovies = async (
   rating?: number,
   genresQuery?: string,
   isActive?: boolean,
-  status?: MovieStatus
+  status?: MovieStatus,
+  sortBy?: "releaseDate" | "rating" | "title",
+  sortOrder?: "asc" | "desc"
 ) => {
   return fetcher(
     "v1/movies/public/?" +
@@ -20,6 +22,8 @@ export const getMovies = async (
         genres: genresQuery || "",
         isActive: isActive !== undefined ? isActive.toString() : "",
         status: status ? status.toString() : "",
+        sortBy: sortBy || "",
+        sortOrder: sortOrder || "",
       })
   );
 };
