@@ -105,8 +105,7 @@ export default function HomePage() {
         </div>
 
         <div className="relative z-10">
-          <BannerSlider movies={topRatedMovies} />
-
+          <BannerSlider movies={nowShowing} />
           <div className="container mx-auto px-4 -mt-24 mb-20 relative z-30">
             <QuickBooking
               cinemas={cinemas}
