@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://cinema-go-vn.vercel.app";
+  const baseUrl = "https://cinemago-user-one.vercel.app";
 
   return [
     {
