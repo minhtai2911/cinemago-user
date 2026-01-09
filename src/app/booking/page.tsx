@@ -637,8 +637,8 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0b1220] via-[#0f172a] to-[#060714] text-white relative overflow-hidden">
-      <Image
+    <div className="min-h-screen bg-orange-50 text-white relative overflow-hidden">
+      {/* <Image
         width={1000}
         height={1000}
         src="/popcorn.png"
@@ -646,7 +646,7 @@ export default function BookingPage() {
         aria-hidden
         className="hidden lg:block pointer-events-none select-none absolute -left-40 -top-8 w-[180%] opacity-40 -z-20"
         style={{ transform: "scaleX(-1) rotate(-6deg)" }}
-      />
+      /> */}
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 pt-[120px]">
         <div className="bg-white rounded-2xl shadow-xl border border-white/30 p-6 md:p-8">
