@@ -253,7 +253,7 @@ export default function ShowtimeList({
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-6 border-b border-gray-700 pb-2">
-        <h3 className="text-3xl font-bold uppercase tracking-tight text-orange-600">
+        <h3 className="text-3xl font-black uppercase tracking-tight text-orange-600">
           DANH SÁCH RẠP
         </h3>
         {cities.length > 0 && (
