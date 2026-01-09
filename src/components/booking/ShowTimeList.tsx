@@ -224,7 +224,7 @@ export default function ShowtimeList({
     <div className="w-full font-sans">
       <div className="text-center mb-12">
         <h2
-          className="text-4xl md:text-5xl font-bold uppercase text-white mb-8 tracking-tighter"
+          className="text-4xl md:text-5xl font-bold uppercase text-orange-600 mb-8 tracking-tighter"
           style={{ fontFamily: "Oswald, sans-serif" }}
         >
           Lịch Chiếu
@@ -234,7 +234,7 @@ export default function ShowtimeList({
 
       <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-6 border-b border-gray-700 pb-2">
         <h3
-          className="text-3xl font-bold uppercase text-white tracking-tighter"
+          className="text-3xl font-bold uppercase text-orange-600 tracking-tighter"
           style={{ fontFamily: "Oswald, sans-serif" }}
         >
           Danh Sách Rạp
