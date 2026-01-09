@@ -45,10 +45,7 @@ export default function FoodDrinkSelector({
       <div className="absolute inset-0 bg-black/80 pointer-events-none" />
 
       <div className="relative z-10 p-6">
-        <h3
-          className="text-3xl font-bold text-center text-white mb-8 uppercase"
-          style={{ fontFamily: "Oswald, sans-serif" }}
-        >
+        <h3 className="text-3xl font-black text-center text-white mb-8 uppercase">
           Chọn Bắp Nước
         </h3>
 
