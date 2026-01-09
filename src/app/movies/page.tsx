@@ -336,14 +336,21 @@ export default function MoviesPage() {
                   }}
                   className="w-full h-2 bg-stone-200 rounded-full appearance-none cursor-pointer accent-[#E65100] mt-3 hover:accent-[#FF6D00]"
                 />
-                <div className="flex justify-between mt-2 text-xs font-bold text-stone-400">
-                  <span className={minRating === 0 ? "text-[#E65100]" : ""}>
+                <div className="relative mt-2 h-4 text-xs font-bold text-stone-400 select-none">
+                  <span
+                    className={`absolute left-0 ${
+                      minRating === 0 ? "text-[#E65100]" : ""
+                    }`}
+                  >
                     Tất cả
                   </span>
                   {[1, 2, 3, 4, 5].map((i) => (
                     <span
                       key={i}
-                      className={minRating >= i ? "text-[#E65100]" : ""}
+                      className={`absolute top-0 ${
+                        i === 5 ? "right-0" : "-translate-x-1/2"
+                      } ${minRating >= i ? "text-[#E65100]" : ""}`}
+                      style={i !== 5 ? { left: `${i * 20}%` } : undefined}
                     >
                       {i}
                     </span>
