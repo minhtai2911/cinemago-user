@@ -155,10 +155,7 @@ export default function SeatMap({
 
   return (
     <div className="w-full bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-[0_40px_80px_rgba(255,110,70,0.08)] border border-white/10 mt-12 mb-24 animate-in fade-in slide-in-from-bottom-8 duration-700">
-      <h3
-        className="text-3xl font-bold text-center text-[#1f2937] mb-4 uppercase"
-        style={{ fontFamily: "Oswald, sans-serif" }}
-      >
+      <h3 className="text-3xl font-black text-center text-[#1f2937] mb-4 uppercase">
         Chọn Ghế
       </h3>
 
