@@ -260,7 +260,7 @@ export default function SeatMap({
 
       <div className="flex flex-wrap justify-center gap-6 mt-12 border-t border-gray-200/20 pt-6">
         <LegendItem
-          color="border-orange-500 text-orange-500 bg-white/5"
+          color="border-green-500 text-green-500 bg-white/5"
           label="Ghế Thường"
         />
 
