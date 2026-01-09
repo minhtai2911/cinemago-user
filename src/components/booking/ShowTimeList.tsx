@@ -246,21 +246,15 @@ export default function ShowtimeList({
   return (
     <div className="w-full font-sans">
       <div className="text-center mb-12">
-        <h2
-          className="text-4xl md:text-5xl font-bold uppercase text-orange-600 mb-8 tracking-tighter"
-          style={{ fontFamily: "Oswald, sans-serif" }}
-        >
-          Lịch Chiếu
+        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-orange-600 mb-8">
+          LỊCH CHIẾU
         </h2>
         <div>{renderDateTabs()}</div>
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-6 border-b border-gray-700 pb-2">
-        <h3
-          className="text-3xl font-bold uppercase text-orange-600 tracking-tighter"
-          style={{ fontFamily: "Oswald, sans-serif" }}
-        >
-          Danh Sách Rạp
+        <h3 className="text-3xl font-bold uppercase tracking-tight text-orange-600">
+          DANH SÁCH RẠP
         </h3>
         {cities.length > 0 && (
           <div className="relative mt-4 md:mt-0">
@@ -304,7 +298,7 @@ export default function ShowtimeList({
                 ref={(el) => {
                   cinemaRefs.current[cinemaId] = el;
                 }}
-                className={`bg-gradient-to-r from-orange-100 to-amber-50 rounded-lg overflow-hidden shadow-md transition-all duration-300 border border-orange-200 hover:shadow-lg ${
+                className={`relative rounded-lg overflow-hidden shadow-md transition-all duration-300 border border-orange-200 hover:shadow-lg cinema-card ${
                   isHighlighted ? "ring-2 ring-orange-400" : ""
                 }`}
               >
