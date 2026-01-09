@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://cinema-go-vn.vercel.app/sitemap.xml",
+    sitemap: "https://cinemago-user-one.vercel.app/sitemap.xml",
   };
 }

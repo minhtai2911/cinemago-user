@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 import { MapPin, ChevronDown } from "lucide-react";
@@ -39,10 +39,12 @@ export default function ShowtimeList({
   onSelectShowtime,
 }: Props) {
   const [selectedDate, setSelectedDate] = useState<string>("");
-  const [selectedCity, setSelectedCity] = useState<string>("Hồ Chí Minh");
+  const [selectedCity, setSelectedCity] = useState<string>("");
   const [cinemasMap, setCinemasMap] = useState<CinemasMap>({});
   const [expandedCinemas, setExpandedCinemas] = useState<string[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
+  const didAutoSelectShowtimeRef = useRef(false);
+  const didExpandCinemaRef = useRef(false);
 
   const [activeShowtimeId, setActiveShowtimeId] = useState<string | null>(null);
 
@@ -91,10 +93,11 @@ export default function ShowtimeList({
       const cinemaName = cinemaData?.name || "Đang tải tên rạp...";
       const cinemaAddress = cinemaData?.address || "Đang tải địa chỉ...";
       const cinemaId = st.cinemaId;
-      const city = cinemaData?.city || "Hồ Chí Minh";
+      const city = cinemaData?.city;
+
       if (cinemaData?.city) citySet.add(city);
 
-      const formatKey = st.format || "2D"; // Fallback format
+      const formatKey = st.format || "2D";
 
       if (!groups[dateKey]) groups[dateKey] = {};
       if (!groups[dateKey][cinemaId]) {
@@ -111,7 +114,6 @@ export default function ShowtimeList({
       groups[dateKey][cinemaId].groups[formatKey].push(st);
     });
 
-    // Sort time inside groups
     Object.keys(groups).forEach((d) => {
       Object.keys(groups[d]).forEach((c) => {
         Object.keys(groups[d][c].groups).forEach((f) => {
@@ -123,6 +125,11 @@ export default function ShowtimeList({
       });
     });
 
+    setSelectedCity((prev) => {
+      if (prev && citySet.has(prev)) return prev;
+      return citySet.size > 0 ? Array.from(citySet)[0] : "";
+    });
+
     return {
       groupedData: groups,
       uniqueDates: Array.from(dateSet).sort(),
@@ -130,7 +137,6 @@ export default function ShowtimeList({
     };
   }, [showtimes, cinemasMap]);
 
-  // --- Logic Tự động chọn ngày ---
   useEffect(() => {
     if (!isInitialized && uniqueDates.length > 0) {
       if (preSelectedDate && uniqueDates.includes(preSelectedDate)) {
@@ -148,35 +154,52 @@ export default function ShowtimeList({
   );
 
   useEffect(() => {
-    if (preSelectedShowtimeId) {
-      setActiveShowtimeId(preSelectedShowtimeId);
-
-      const targetShowtime = showtimes.find(
-        (s) => s.id === preSelectedShowtimeId
-      );
-      if (targetShowtime && onSelectShowtime) {
-        const targetCinema = cinemasMap[targetShowtime.cinemaId] || null;
-        onSelectShowtime(targetShowtime, targetCinema);
-      }
+    if (
+      !preSelectedShowtimeId ||
+      didAutoSelectShowtimeRef.current ||
+      showtimes.length === 0
+    ) {
+      return;
     }
 
-    if (filteredCinemaIds.length > 0) {
-      if (
-        preSelectedCinemaId &&
-        filteredCinemaIds.includes(preSelectedCinemaId)
-      ) {
-        setExpandedCinemas([preSelectedCinemaId]);
-        setTimeout(() => {
-          const element = cinemaRefs.current[preSelectedCinemaId];
-          if (element) {
-            element.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
-        }, 500);
-      } else {
-        setExpandedCinemas(filteredCinemaIds);
-      }
+    const targetShowtime = showtimes.find(
+      (s) => s.id === preSelectedShowtimeId
+    );
+
+    if (!targetShowtime) return;
+
+    didAutoSelectShowtimeRef.current = true;
+
+    setActiveShowtimeId(targetShowtime.id);
+
+    if (onSelectShowtime) {
+      const targetCinema = cinemasMap[targetShowtime.cinemaId] || null;
+      onSelectShowtime(targetShowtime, targetCinema);
     }
-  }, [filteredCinemaIds.length, preSelectedCinemaId, preSelectedShowtimeId]);
+  }, [preSelectedShowtimeId, showtimes, cinemasMap, onSelectShowtime]);
+
+  useEffect(() => {
+    if (didExpandCinemaRef.current) return;
+    if (filteredCinemaIds.length === 0) return;
+
+    didExpandCinemaRef.current = true;
+
+    if (
+      preSelectedCinemaId &&
+      filteredCinemaIds.includes(preSelectedCinemaId)
+    ) {
+      setExpandedCinemas([preSelectedCinemaId]);
+
+      setTimeout(() => {
+        const element = cinemaRefs.current[preSelectedCinemaId];
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 500);
+    } else {
+      setExpandedCinemas(filteredCinemaIds);
+    }
+  }, [filteredCinemaIds, preSelectedCinemaId]);
 
   const toggleCinema = (cinemaId: string) => {
     setExpandedCinemas((prev) =>
@@ -343,7 +366,6 @@ export default function ShowtimeList({
                                     const selectedCinema =
                                       cinemasMap[st.cinemaId] || null;
 
-                                    // Truyền cả 2 ra ngoài: Suất chiếu + Rạp
                                     onSelectShowtime(st, selectedCinema);
                                   }
                                 }}

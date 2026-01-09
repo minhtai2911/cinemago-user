@@ -17,6 +17,7 @@ type Props = {
   selectedFoods: FoodSelection[];
   holdTimer: number | null;
   onBook: () => void;
+  isLoading?: boolean;
 };
 
 export default function BookingBottomBar({
@@ -29,6 +30,7 @@ export default function BookingBottomBar({
   selectedFoods,
   holdTimer,
   onBook,
+  isLoading,
 }: Props) {
   const totalPrice = useMemo(() => {
     const ticketTotal = selectedTickets.reduce(
@@ -93,6 +95,16 @@ export default function BookingBottomBar({
   };
 
   const timerDisplay = formatTimer(holdTimer);
+
+  if (isLoading) {
+    return (
+      <div className="fixed bottom-0 left-0 w-full bg-[#0f172a] border-t border-gray-700 shadow-[0_-4px_10px_rgba(0,0,0,0.5)] z-50 p-4 animate-in slide-in-from-bottom duration-300">
+        <div className="max-w-7xl mx-auto flex justify-center items-center">
+          <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-8 w-8"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed bottom-0 left-0 w-full bg-[#0f172a] border-t border-gray-700 shadow-[0_-4px_10px_rgba(0,0,0,0.5)] z-50 p-4 animate-in slide-in-from-bottom duration-300">
