@@ -681,7 +681,7 @@ export default function BookingPage() {
 
   if (isLogged === false) {
     return (
-      <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#fff4ef] text-black flex items-center justify-center">
         <div className="text-center px-4">
           <h2 className="text-2xl font-bold mb-4">
             Vui lòng đăng nhập để đặt vé xem phim
@@ -693,7 +693,7 @@ export default function BookingPage() {
             onClick={() => {
               router.push("/login");
             }}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
+            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
           >
             Đăng nhập
           </button>
