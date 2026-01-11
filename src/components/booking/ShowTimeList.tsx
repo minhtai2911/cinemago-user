@@ -268,7 +268,7 @@ export default function ShowtimeList({
                 <option
                   key={c}
                   value={c}
-                  className="bg-[#0f172a] text-orange-600"
+                  className="bg-[#fff7f0] text-orange-600"
                 >
                   {c}
                 </option>
