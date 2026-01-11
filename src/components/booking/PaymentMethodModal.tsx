@@ -16,7 +16,9 @@ export default function PaymentMethodModal({
   onClose,
   onSelect,
 }: PaymentMethodModalProps) {
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(
+    null
+  );
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -54,48 +56,78 @@ export default function PaymentMethodModal({
   return (
     <>
       <div
-        className="fixed inset-0 bg-black bg-opacity-60 z-40"
+        className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-40 transition-opacity"
         onClick={onClose}
       />
 
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-6">
-          <h3 className="text-xl font-bold text-white mb-6 text-center">
+        <div className="bg-[#fffbf5] rounded-2xl shadow-2xl w-full max-w-[500px] aspect-square p-5 sm:p-8 flex flex-col justify-between animate-in fade-in zoom-in-95 duration-300 relative border border-white">
+          {/* THAY ĐỔI Ở ĐÂY: Thêm 'mb-4 sm:mb-8' */}
+          <h3 className="text-lg sm:text-2xl font-black text-gray-800 text-center uppercase whitespace-nowrap shrink-0 mb-4 sm:mb-8">
             Chọn phương thức thanh toán
           </h3>
 
-          <div className="space-y-3">
+          <div className="flex-1 flex flex-col justify-center gap-3 sm:gap-4 py-2">
             {methods.map((method) => (
               <button
                 key={method.id}
                 onClick={() => handleSelect(method.id as PaymentMethod)}
-                className={`w-full flex items-center gap-4 p-4 rounded-lg transition-all border ${
+                className={`w-full flex items-center gap-4 p-3 sm:p-4 rounded-xl transition-all duration-300 border relative overflow-hidden group ${
                   selectedMethod === method.id
-                    ? "bg-purple-600 border-purple-400 shadow-lg shadow-purple-500/20"
-                    : "bg-slate-700 border-slate-600 hover:bg-slate-600 hover:border-purple-500"
+                    ? "bg-white border-orange-500 shadow-[0_4px_20px_rgba(249,115,22,0.15)] scale-[1.02]"
+                    : "bg-white/50 hover:bg-white border-gray-200/60 hover:border-orange-300 hover:shadow-md backdrop-blur-sm"
                 }`}
               >
-                <div className="w-12 h-12 relative">
+                {selectedMethod === method.id && (
+                  <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#FF7C61] to-[#FFB464]" />
+                )}
+
+                <div className="w-10 h-10 sm:w-12 sm:h-12 relative shrink-0">
                   <Image
                     src={method.icon}
                     alt={method.name}
                     fill
-                    className="object-contain"
+                    className="object-contain drop-shadow-sm"
                   />
                 </div>
-                <span className="text-white font-medium">{method.name}</span>
+                <span
+                  className={`font-bold text-base sm:text-lg ${
+                    selectedMethod === method.id
+                      ? "text-orange-600"
+                      : "text-gray-700 group-hover:text-gray-900"
+                  }`}
+                >
+                  {method.name}
+                </span>
+
+                {selectedMethod === method.id && (
+                  <div className="ml-auto text-orange-500">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="w-5 h-5 sm:w-6 sm:h-6"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                )}
               </button>
             ))}
           </div>
 
-          <div className="mt-6 flex flex-col gap-3">
+          <div className="flex flex-col gap-2 sm:gap-3 shrink-0 mt-4 sm:mt-0">
             <button
               onClick={handleContinue}
               disabled={!selectedMethod}
-              className={`w-full py-3 rounded-lg font-medium transition-all ${
+              className={`w-full py-3 sm:py-3.5 rounded-xl font-bold text-base sm:text-lg uppercase tracking-wider transition-all duration-300 shadow-lg ${
                 selectedMethod
-                  ? "bg-purple-600 text-white hover:bg-purple-700 shadow-lg"
-                  : "bg-slate-700 text-gray-500 cursor-not-allowed"
+                  ? "bg-gradient-to-r from-[#FF7C61] to-[#FFB464] text-white hover:shadow-orange-400/50 hover:scale-[1.02] active:scale-[0.98]"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed shadow-none border border-gray-200"
               }`}
             >
               Tiếp tục
@@ -103,7 +135,7 @@ export default function PaymentMethodModal({
 
             <button
               onClick={onClose}
-              className="w-full py-3 text-gray-400 hover:text-white font-medium"
+              className="w-full py-2.5 sm:py-3 text-gray-600 hover:text-gray-900 font-bold text-sm sm:text-base uppercase tracking-wider transition-colors hover:bg-black/5 rounded-xl"
             >
               Hủy bỏ
             </button>
