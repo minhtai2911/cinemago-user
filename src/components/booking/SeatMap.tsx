@@ -278,7 +278,7 @@ export default function SeatMap({
         />
 
         <LegendItem
-          color="bg-gray-700 border-gray-700"
+          color="bg-gray-300 border-gray-700"
           label="Đã đặt/Đang giữ"
         />
       </div>
