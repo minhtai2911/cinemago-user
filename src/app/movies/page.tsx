@@ -210,8 +210,8 @@ export default function MoviesPage() {
 
   return (
     <div className="min-h-screen font-sans text-stone-800 flex flex-col bg-[#FFF8F5] relative overflow-x-hidden">
-      <div className="absolute top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-orange-100 rounded-full blur-[100px] opacity-50 pointer-events-none fixed z-0"></div>
-      <div className="absolute top-[20%] right-[-5%] w-[30rem] h-[30rem] bg-red-50 rounded-full blur-[80px] opacity-60 pointer-events-none fixed z-0"></div>
+      <div className="fixed top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-orange-100 rounded-full blur-[100px] opacity-50 pointer-events-none z-0"></div>
+      <div className="fixed top-[20%] right-[-5%] w-[30rem] h-[30rem] bg-red-50 rounded-full blur-[80px] opacity-60 pointer-events-none z-0"></div>
 
       <div className="fixed top-0 left-0 right-0 h-screen overflow-hidden pointer-events-none z-0">
         <Image
