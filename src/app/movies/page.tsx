@@ -535,7 +535,7 @@ export default function MoviesPage() {
 
           <section className="relative z-0">
             <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-3xl font-black text-stone-800 uppercase tracking-tight">
+              <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FF7043] to-[#FFAB91] uppercase tracking-tight">
                 {getStatusLabel()}
               </h2>
               <div className="h-px flex-1 bg-stone-200"></div>
