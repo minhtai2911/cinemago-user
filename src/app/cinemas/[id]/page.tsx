@@ -20,8 +20,24 @@ export default async function CinemaDetailPage({
 
   const [cinemaRes, nowShowingRes, comingSoonRes] = await Promise.all([
     getCinemaById(id),
-    getMovies(undefined, 50, "", undefined, "", true, MovieStatus.NOW_SHOWING),
-    getMovies(undefined, 50, "", undefined, "", true, MovieStatus.COMING_SOON),
+    getMovies(
+      undefined,
+      undefined,
+      "",
+      undefined,
+      "",
+      true,
+      MovieStatus.NOW_SHOWING
+    ),
+    getMovies(
+      undefined,
+      undefined,
+      "",
+      undefined,
+      "",
+      true,
+      MovieStatus.COMING_SOON
+    ),
   ]);
 
   const cinema: Cinema = cinemaRes.data || cinemaRes;
@@ -30,6 +46,12 @@ export default async function CinemaDetailPage({
 
   const isNowTab = tab === "now";
   const isSoonTab = tab === "soon";
+
+  const mapQuery = encodeURIComponent(`${cinema.address}, ${cinema.city}`);
+
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+
+  const embedUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d${cinema.longitude}!3d${cinema.latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z${mapQuery}!5e0!3m2!1svi!2s!4v1234567890`;
 
   return (
     <div className="relative min-h-screen bg-peach-gradient font-sans selection:bg-[#F25019] selection:text-white flex flex-col">
@@ -65,16 +87,44 @@ export default async function CinemaDetailPage({
                 <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-4 leading-tight tracking-tight">
                   {cinema.name}
                 </h1>
-                <div className="inline-flex items-center gap-2 text-gray-500 font-medium text-lg bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
+
+                <a
+                  href={googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-gray-500 font-medium text-lg bg-gray-50 px-4 py-2 rounded-full border border-gray-100 hover:bg-orange-50 hover:border-orange-200 hover:text-[#F25019] transition cursor-pointer"
+                >
                   <MapPin className="w-5 h-5 text-[#F25019]" />
                   <span>{cinema.address}</span>
-                </div>
+                </a>
               </div>
 
               <div className="hidden md:block opacity-10 rotate-12 transform group-hover:scale-110 transition-transform duration-700">
                 <Ticket size={140} />
               </div>
             </div>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-xl border border-white/50 p-6 md:p-8 overflow-hidden">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+              <MapPin className="w-7 h-7 text-[#F25019]" />
+              Vị trí rạp chiếu
+            </h2>
+            <div className="relative w-full h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-inner border border-gray-200">
+              <iframe
+                src={embedUrl}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Bản đồ vị trí rạp"
+              ></iframe>
+            </div>
+            <p className="text-center text-sm text-gray-500 mt-4">
+              Nhấn vào địa chỉ phía trên để mở Google Maps chi tiết
+            </p>
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl border border-white/50 p-6 md:p-8 min-h-[600px]">
