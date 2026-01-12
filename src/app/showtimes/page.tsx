@@ -310,9 +310,8 @@ export default function ShowtimesPage() {
                             fill
                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent lg:bg-gradient-to-r" />
-                          <div className="absolute top-4 left-4">
-                            <span className="bg-[#F25019] text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-lg">
+                          <div className="absolute top-3 left-3">
+                            <span className="bg-[#F25019] text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">
                               {sessions[0]?.format || "2D"}
                             </span>
                           </div>
