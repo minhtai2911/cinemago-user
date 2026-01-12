@@ -65,11 +65,11 @@ interface EnrichedBooking {
 // --- COMPONENT: PRINTABLE TICKET ---
 const PrintableTicket = ({ booking }: { booking: EnrichedBooking }) => {
   return (
-    <div className="w-[210mm] min-h-[297mm] p-[15mm] bg-white font-sans text-sm relative">
+    <div className="w-[210mm] min-h-[297mm] p-[15mm] bg-white font-sans text-sm relative flex flex-col items-center">
       {/* Decorative Header */}
       <div className="absolute top-0 left-0 w-full h-4 bg-gradient-to-r from-orange-500 to-amber-500"></div>
 
-      <div className="text-center mb-8 mt-4">
+      <div className="text-center mb-8 mt-4 w-full">
         <h1 className="text-4xl font-bold text-orange-700 uppercase tracking-wider">
           VÉ XEM PHIM
         </h1>
@@ -84,8 +84,9 @@ const PrintableTicket = ({ booking }: { booking: EnrichedBooking }) => {
         </div>
       </div>
 
-      <div className="flex gap-8 mb-8 border-b border-orange-100 pb-8">
-        <div className="w-1/3">
+      <div className="flex gap-8 mb-8 border-b border-orange-100 pb-8 w-full">
+        <div className="w-1/3 flex justify-center">
+          {" "}
           <Image
             src={booking.movie?.thumbnail || "/placeholder-poster.jpg"}
             alt={booking.movie?.title || "N/A"}
@@ -137,87 +138,90 @@ const PrintableTicket = ({ booking }: { booking: EnrichedBooking }) => {
         </div>
       </div>
 
-      <h3 className="text-lg font-bold text-gray-800 mb-3 border-l-4 border-orange-500 pl-3">
-        Chi tiết ghế ngồi
-      </h3>
-      <table className="w-full mb-8 border-collapse">
-        <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
-          <tr>
-            <th className="text-left py-3 px-4 rounded-l-lg">Số ghế</th>
-            <th className="text-left py-3 px-4">Loại ghế</th>
-            <th className="text-right py-3 px-4 rounded-r-lg">Giá vé</th>
-          </tr>
-        </thead>
-        <tbody>
-          {booking.selectedSeatsDetails.map((s, index) => (
-            <tr
-              key={s.seatNumber}
-              className={index % 2 === 0 ? "bg-white" : "bg-orange-50/30"}
-            >
-              <td className="py-3 px-4 font-bold">{s.seatNumber}</td>
-              <td className="py-3 px-4">{s.type}</td>
-              <td className="py-3 px-4 text-right font-mono">
-                {new Intl.NumberFormat("vi-VN").format(s.price)} ₫
-              </td>
+      <div className="w-full">
+        {" "}
+        <h3 className="text-lg font-bold text-gray-800 mb-3 border-l-4 border-orange-500 pl-3">
+          Chi tiết ghế ngồi
+        </h3>
+        <table className="w-full mb-8 border-collapse">
+          <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+            <tr>
+              <th className="text-left py-3 px-4 rounded-l-lg">Số ghế</th>
+              <th className="text-left py-3 px-4">Loại ghế</th>
+              <th className="text-right py-3 px-4 rounded-r-lg">Giá vé</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {booking.foodDrinks.length > 0 && (
-        <>
-          <h3 className="text-lg font-bold text-gray-800 mb-3 border-l-4 border-orange-500 pl-3">
-            Combo & Bắp nước
-          </h3>
-          <table className="w-full mb-8 border-collapse">
-            <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
-              <tr>
-                <th className="text-left py-3 px-4 rounded-l-lg">Tên món</th>
-                <th className="text-center py-3 px-4">Số lượng</th>
-                <th className="text-right py-3 px-4 rounded-r-lg">
-                  Thành tiền
-                </th>
+          </thead>
+          <tbody>
+            {booking.selectedSeatsDetails.map((s, index) => (
+              <tr
+                key={s.seatNumber}
+                className={index % 2 === 0 ? "bg-white" : "bg-orange-50/30"}
+              >
+                <td className="py-3 px-4 font-bold">{s.seatNumber}</td>
+                <td className="py-3 px-4">{s.type}</td>
+                <td className="py-3 px-4 text-right font-mono">
+                  {new Intl.NumberFormat("vi-VN").format(s.price)} ₫
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {booking.foodDrinks.map((item, index) => (
-                <tr
-                  key={item.id}
-                  className={index % 2 === 0 ? "bg-white" : "bg-orange-50/30"}
-                >
-                  <td className="py-3 px-4 font-medium">{item.name}</td>
-                  <td className="py-3 px-4 text-center">{item.quantity}</td>
-                  <td className="py-3 px-4 text-right font-mono">
-                    {new Intl.NumberFormat("vi-VN").format(item.totalPrice)} ₫
-                  </td>
+            ))}
+          </tbody>
+        </table>
+        {booking.foodDrinks.length > 0 && (
+          <>
+            <h3 className="text-lg font-bold text-gray-800 mb-3 border-l-4 border-orange-500 pl-3">
+              Combo & Bắp nước
+            </h3>
+            <table className="w-full mb-8 border-collapse">
+              <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+                <tr>
+                  <th className="text-left py-3 px-4 rounded-l-lg">Tên món</th>
+                  <th className="text-center py-3 px-4">Số lượng</th>
+                  <th className="text-right py-3 px-4 rounded-r-lg">
+                    Thành tiền
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      )}
+              </thead>
+              <tbody>
+                {booking.foodDrinks.map((item, index) => (
+                  <tr
+                    key={item.id}
+                    className={index % 2 === 0 ? "bg-white" : "bg-orange-50/30"}
+                  >
+                    <td className="py-3 px-4 font-medium">{item.name}</td>
+                    <td className="py-3 px-4 text-center">{item.quantity}</td>
+                    <td className="py-3 px-4 text-right font-mono">
+                      {new Intl.NumberFormat("vi-VN").format(item.totalPrice)} ₫
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
+        <div className="flex justify-between items-end mt-10 pt-6 border-t-2 border-dashed border-gray-300">
+          <div className="text-center">
+            <Image
+              src={booking.qrUrl}
+              alt="QR Code vé"
+              width={120}
+              height={120}
+              className="border-2 border-gray-200 p-1 bg-white rounded-lg"
+            />
+            <p className="mt-2 text-xs text-gray-500 uppercase tracking-wide">
+              Quét mã check-in
+            </p>
+          </div>
 
-      <div className="flex justify-between items-end mt-10 pt-6 border-t-2 border-dashed border-gray-300">
-        <div className="text-center">
-          <Image
-            src={booking.qrUrl}
-            alt="QR Code vé"
-            width={120}
-            height={120}
-            className="border-2 border-gray-200 p-1 bg-white rounded-lg"
-          />
-          <p className="mt-2 text-xs text-gray-500 uppercase tracking-wide">
-            Quét mã check-in
-          </p>
-        </div>
-
-        <div className="text-right">
-          <p className="text-gray-500 mb-1">Tổng thanh toán</p>
-          <p className="text-4xl font-bold text-orange-600">
-            {new Intl.NumberFormat("vi-VN").format(booking.booking.totalPrice)}{" "}
-            ₫
-          </p>
-          <p className="text-gray-400 text-xs mt-2 italic">Đã bao gồm VAT</p>
+          <div className="text-right">
+            <p className="text-gray-500 mb-1">Tổng thanh toán</p>
+            <p className="text-4xl font-bold text-orange-600">
+              {new Intl.NumberFormat("vi-VN").format(
+                booking.booking.totalPrice
+              )}{" "}
+              ₫
+            </p>
+            <p className="text-gray-400 text-xs mt-2 italic">Đã bao gồm VAT</p>
+          </div>
         </div>
       </div>
 
