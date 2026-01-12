@@ -271,7 +271,7 @@ export default function MoviesPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div ref={statusDropdownRef}>
-                <label className="text-xs font-bold text-stone-500 mb-3 block uppercase tracking-wider">
+                <label className="text-sm font-bold text-stone-800 mb-2 block">
                   Trạng thái phim
                 </label>
                 <div className="relative">
@@ -281,7 +281,7 @@ export default function MoviesPage() {
                     }
                     className="w-full flex items-center justify-between px-5 py-4 bg-white border border-stone-200 rounded-2xl hover:border-[#E65100] hover:shadow-md transition-all"
                   >
-                    <span className="font-bold text-stone-700">
+                    <span className="font-medium text-stone-700">
                       {getStatusLabel()}
                     </span>
                     <ChevronDown
@@ -321,7 +321,7 @@ export default function MoviesPage() {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-stone-500 mb-3 block uppercase tracking-wider">
+                <label className="text-sm font-bold text-stone-800 mb-2 block">
                   Đánh giá {minRating > 0 ? `(${minRating}★+)` : ""}
                 </label>
                 <input
@@ -359,7 +359,7 @@ export default function MoviesPage() {
               </div>
 
               <div ref={genreDropdownRef}>
-                <label className="text-xs font-bold text-stone-500 mb-3 block uppercase tracking-wider">
+                <label className="text-sm font-bold text-stone-800 mb-2 block">
                   Thể loại
                 </label>
                 <div className="relative">
@@ -368,7 +368,7 @@ export default function MoviesPage() {
                     className="w-full flex items-center justify-between px-5 py-4 bg-white border border-stone-200 rounded-2xl hover:border-[#E65100] hover:shadow-md transition-all"
                   >
                     <span
-                      className={`font-bold truncate ${
+                      className={`font-medium truncate ${
                         selectedGenres.length === 0
                           ? "text-stone-400"
                           : "text-stone-700"
@@ -451,7 +451,7 @@ export default function MoviesPage() {
               </div>
 
               <div ref={sortDropdownRef}>
-                <label className="text-xs font-bold text-stone-500 mb-3 block uppercase tracking-wider">
+                <label className="text-sm font-bold text-stone-800 mb-2 block">
                   Sắp xếp
                 </label>
                 <div className="relative">
@@ -459,7 +459,7 @@ export default function MoviesPage() {
                     onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
                     className="w-full flex items-center justify-between px-5 py-4 bg-white border border-stone-200 rounded-2xl hover:border-[#E65100] hover:shadow-md transition-all"
                   >
-                    <span className="font-bold text-stone-700">
+                    <span className="font-medium text-stone-700">
                       {getSortLabel()}
                     </span>
                     <ChevronDown
