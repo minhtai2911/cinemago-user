@@ -259,12 +259,6 @@ export default function ShowtimesPage() {
                     </>
                   )}
                 </div>
-                {selectedCinema && (
-                  <div className="mt-3 ml-2 flex items-start gap-2 text-sm text-gray-500 font-medium animate-fade-in-up">
-                    <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-[#F25019]" />
-                    {selectedCinema.address}
-                  </div>
-                )}
               </div>
             </div>
           </div>
