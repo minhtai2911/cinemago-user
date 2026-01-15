@@ -20,7 +20,9 @@ export const metadata: Metadata = {
     "phim mới",
     "rạp chiếu phim",
   ],
-  authors: [{ name: "CinemaGo Team", url: "https://cinemago-user-one.vercel.app" }],
+  authors: [
+    { name: "CinemaGo Team", url: "https://cinemago-user-one.vercel.app" },
+  ],
   metadataBase: new URL("https://cinemago-user-one.vercel.app"),
   openGraph: {
     title: "CinemaGo - Đặt vé xem phim online nhanh chóng",
@@ -50,7 +52,7 @@ export const metadata: Metadata = {
     canonical: "https://cinemago-user-one.vercel.app",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.svg",
     apple: "/apple-touch-icon.png",
   },
 };
