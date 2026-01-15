@@ -20,13 +20,15 @@ export const metadata: Metadata = {
     "phim mới",
     "rạp chiếu phim",
   ],
-  authors: [{ name: "CinemaGo Team", url: "https://cinema-go-vn.vercel.app" }],
-  metadataBase: new URL("https://cinema-go-vn.vercel.app"),
+  authors: [
+    { name: "CinemaGo Team", url: "https://cinemago-user-one.vercel.app" },
+  ],
+  metadataBase: new URL("https://cinemago-user-one.vercel.app"),
   openGraph: {
     title: "CinemaGo - Đặt vé xem phim online nhanh chóng",
     description:
       "Đặt vé xem phim, chọn ghế, và xem lịch chiếu tại các rạp trên toàn quốc. CinemaGo mang đến trải nghiệm đặt vé tiện lợi và nhanh chóng.",
-    url: "https://cinema-go-vn.vercel.app",
+    url: "https://cinemago-user-one.vercel.app",
     siteName: "CinemaGo",
     locale: "vi_VN",
     type: "website",
@@ -47,10 +49,10 @@ export const metadata: Metadata = {
     images: ["/og-image.jpg"],
   },
   alternates: {
-    canonical: "https://cinema-go-vn.vercel.app",
+    canonical: "https://cinemago-user-one.vercel.app",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.svg",
     apple: "/apple-touch-icon.png",
   },
 };
