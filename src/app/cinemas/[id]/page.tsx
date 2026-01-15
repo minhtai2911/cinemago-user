@@ -105,12 +105,13 @@ export default async function CinemaDetailPage({
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-xl border border-white/50 p-6 md:p-8 overflow-hidden">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+          <div className="overflow-hidden">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3 px-2">
               <MapPin className="w-7 h-7 text-[#F25019]" />
               Vị trí rạp chiếu
             </h2>
-            <div className="relative w-full h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-inner border border-gray-200">
+
+            <div className="relative w-full h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-white/50">
               <iframe
                 src={embedUrl}
                 width="100%"
@@ -122,7 +123,8 @@ export default async function CinemaDetailPage({
                 title="Bản đồ vị trí rạp"
               ></iframe>
             </div>
-            <p className="text-center text-sm text-gray-500 mt-4">
+
+            <p className="text-center text-sm text-gray-600 font-medium mt-4">
               Nhấn vào địa chỉ phía trên để mở Google Maps chi tiết
             </p>
           </div>
