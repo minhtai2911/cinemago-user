@@ -333,7 +333,6 @@ export default function ShowtimesPage() {
                             </span>
                           </div>
                         </div>
-                        ={" "}
                         {selectedCinema && (
                           <div className="mt-auto mb-4 pt-4 border-t border-gray-100 border-dashed">
                             <div className="flex items-start gap-3">
