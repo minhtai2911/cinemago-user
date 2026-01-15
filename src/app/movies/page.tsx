@@ -2,12 +2,9 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import {
   ChevronLeft,
   ChevronRight,
-  Star,
-  Clock,
   Search,
   X,
   ChevronDown,
@@ -194,66 +191,77 @@ export default function MoviesPage() {
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
-      window.scrollTo({ top: 600, behavior: "smooth" });
+      window.scrollTo({ top: 400, behavior: "smooth" });
     }
   };
 
   const SkeletonCard = () => (
-    <div className="bg-white/80 backdrop-blur rounded-3xl overflow-hidden animate-pulse shadow-lg">
-      <div className="aspect-[2/3] bg-gray-300" />
+    <div className="bg-white rounded-3xl overflow-hidden animate-pulse shadow-sm border border-stone-100">
+      <div className="aspect-[2/3] bg-stone-200" />
       <div className="p-6 space-y-4">
-        <div className="h-8 bg-gray-300 rounded-xl w-4/5" />
-        <div className="h-5 bg-gray-300 rounded-lg w-3/5" />
+        <div className="h-6 bg-stone-200 rounded-xl w-4/5" />
+        <div className="h-4 bg-stone-200 rounded-lg w-3/5" />
         <div className="flex gap-3">
-          <div className="h-8 w-24 bg-gray-300 rounded-full" />
-          <div className="h-8 w-28 bg-gray-300 rounded-full" />
+          <div className="h-8 w-24 bg-stone-200 rounded-full" />
         </div>
-        <div className="h-12 bg-gray-300 rounded-2xl" />
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8F3] via-white to-[#FFF0EC] text-gray-900 font-sans selection:bg-[#F25019] selection:text-white">
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
+    <div className="min-h-screen font-sans text-stone-800 flex flex-col bg-[#FFF8F5] relative overflow-x-hidden">
+      <div className="fixed top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-orange-100 rounded-full blur-[100px] opacity-50 pointer-events-none z-0"></div>
+      <div className="fixed top-[20%] right-[-5%] w-[30rem] h-[30rem] bg-red-50 rounded-full blur-[80px] opacity-60 pointer-events-none z-0"></div>
+
+      <div className="fixed top-0 left-0 right-0 h-screen overflow-hidden pointer-events-none z-0">
+        <Image
+          src="/corn.png"
+          alt=""
+          width={1000}
+          height={1000}
+          className="hidden lg:block absolute top-32 -right-20 w-[40%] max-w-[700px] opacity-10 select-none grayscale-[20%] sepia-[20%]"
+          style={{ transform: "scaleX(-1) rotate(-6deg)" }}
+        />
+      </div>
+
+      <div className="sticky top-0 z-50 bg-[#FFF8F5]/90 backdrop-blur-md shadow-sm border-b border-stone-100">
         <Navbar />
       </div>
 
-      <main className="mt-20 pb-20">
-        <section className="py-20 px-4 text-center relative overflow-hidden">
-          <div className="container mx-auto max-w-7xl">
-            <h1 className="text-5xl md:text-7xl font-bold text-[#F25019] mb-6">
-              Khám Phá Phim Hay
+      <main className="relative z-10 flex-grow pt-10 pb-20 px-4 sm:px-6">
+        <div className="container mx-auto max-w-7xl">
+          <section className="text-center mb-16 animate-fade-in-up">
+            <span className="inline-block py-2 px-4 rounded-full bg-orange-50 border border-orange-100 text-[#E65100] text-xs font-bold tracking-widest uppercase mb-4">
+              Danh sách phim
+            </span>
+            <h1 className="text-5xl md:text-7xl font-black text-stone-800 mb-6 tracking-tight">
+              Khám phá{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7043] to-[#FFAB91]">
+                phim hay
+              </span>
             </h1>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              Tìm kiếm và đặt vé nhanh chóng cho những bộ phim hot nhất tại rạp
-              chiếu
+            <p className="text-lg text-stone-500 max-w-3xl mx-auto font-medium">
+              Tìm kiếm phim bạn yêu thích và đặt vé nhanh chóng cùng CinemaGo!
             </p>
-          </div>
-          <div className="absolute inset-0 -z-10">
-            <div className="absolute top-0 left-0 w-96 h-96 bg-orange-200/30 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-100/40 rounded-full blur-3xl" />
-          </div>
-        </section>
+          </section>
 
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="bg-white rounded-3xl shadow-2xl p-8 mb-16 -mt-8 relative z-10">
+          <div className="bg-white/70 backdrop-blur-xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-100 p-6 md:p-8 mb-16 relative z-40">
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-8">
-              <div className="relative flex-1 w-full">
-                <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400" />
+              <div className="relative flex-1 w-full group">
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400 group-focus-within:text-[#E65100] transition-colors" />
                 <input
                   type="text"
                   placeholder="Tìm tên phim..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-16 pr-6 py-5 text-lg rounded-2xl border-2 border-gray-200 focus:border-[#F25019] focus:outline-none transition-all"
+                  className="w-full pl-14 pr-6 py-4 text-lg rounded-2xl border border-stone-200 bg-stone-50/50 hover:bg-white focus:border-[#E65100] focus:bg-white focus:ring-4 focus:ring-orange-50 focus:outline-none transition-all font-medium text-stone-700"
                 />
               </div>
 
               {hasActiveFilter && (
                 <button
                   onClick={clearFilters}
-                  className="flex items-center gap-3 px-8 py-4 bg-gray-100 rounded-2xl hover:bg-gray-200 transition font-medium"
+                  className="flex items-center gap-2 px-6 py-4 bg-stone-100 rounded-2xl hover:bg-stone-200 transition font-bold text-stone-600"
                 >
                   <X className="w-5 h-5" />
                   Xóa bộ lọc
@@ -263,7 +271,7 @@ export default function MoviesPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div ref={statusDropdownRef}>
-                <label className="text-sm font-bold text-gray-800 mb-4 block">
+                <label className="text-sm font-bold text-stone-800 mb-2 block">
                   Trạng thái phim
                 </label>
                 <div className="relative">
@@ -271,18 +279,20 @@ export default function MoviesPage() {
                     onClick={() =>
                       setIsStatusDropdownOpen(!isStatusDropdownOpen)
                     }
-                    className="w-full flex items-center justify-between px-6 py-5 bg-gray-50 border-2 border-gray-200 rounded-2xl hover:border-gray-300 transition"
+                    className="w-full flex items-center justify-between px-5 py-4 bg-white border border-stone-200 rounded-2xl hover:border-[#E65100] hover:shadow-md transition-all"
                   >
-                    <span className="font-medium">{getStatusLabel()}</span>
+                    <span className="font-medium text-stone-700">
+                      {getStatusLabel()}
+                    </span>
                     <ChevronDown
-                      className={`w-6 h-6 transition-transform ${
+                      className={`w-5 h-5 text-stone-400 transition-transform ${
                         isStatusDropdownOpen ? "rotate-180" : ""
                       }`}
                     />
                   </button>
 
                   {isStatusDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-3 bg-white border-2 border-gray-200 rounded-3xl shadow-2xl z-30">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-100 rounded-2xl shadow-xl z-50 overflow-hidden p-1">
                       {[
                         { value: "ALL", label: "Tất cả phim" },
                         { value: MovieStatus.NOW_SHOWING, label: "Đang chiếu" },
@@ -296,10 +306,10 @@ export default function MoviesPage() {
                             setCurrentPage(1);
                             setIsStatusDropdownOpen(false);
                           }}
-                          className={`w-full text-left px-6 py-4 hover:bg-orange-50 transition font-medium ${
+                          className={`w-full text-left px-5 py-3 rounded-xl hover:bg-orange-50 transition font-medium text-sm ${
                             status === option.value
-                              ? "bg-orange-100 text-[#F25019]"
-                              : ""
+                              ? "bg-orange-50 text-[#E65100] font-bold"
+                              : "text-stone-600"
                           }`}
                         >
                           {option.label}
@@ -311,8 +321,8 @@ export default function MoviesPage() {
               </div>
 
               <div>
-                <label className="text-sm font-bold text-gray-800 mb-4 block">
-                  Đánh giá phim {minRating > 0 ? `(${minRating}★ trở lên)` : ""}
+                <label className="text-sm font-bold text-stone-800 mb-2 block">
+                  Đánh giá {minRating > 0 ? `(${minRating}★+)` : ""}
                 </label>
                 <input
                   type="range"
@@ -324,93 +334,100 @@ export default function MoviesPage() {
                     setMinRating(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="w-full h-4 bg-gray-200 rounded-full appearance-none cursor-pointer accent-[#F25019] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-8 [&::-webkit-slider-thumb]:w-8 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#F25019] [&::-webkit-slider-thumb]:shadow-lg"
+                  className="w-full h-2 bg-stone-200 rounded-full appearance-none cursor-pointer accent-[#E65100] mt-3 hover:accent-[#FF6D00]"
                 />
-                <div className="flex justify-between mt-3 text-sm font-medium">
+                <div className="relative mt-2 h-4 text-xs font-bold text-stone-400 select-none">
                   <span
-                    className={
-                      minRating === 0 ? "text-[#F25019]" : "text-gray-500"
-                    }
+                    className={`absolute left-0 ${
+                      minRating === 0 ? "text-[#E65100]" : ""
+                    }`}
                   >
-                    Bất kỳ
+                    Tất cả
                   </span>
                   {[1, 2, 3, 4, 5].map((i) => (
                     <span
                       key={i}
-                      className={
-                        minRating >= i ? "text-[#F25019]" : "text-gray-500"
-                      }
+                      className={`absolute top-0 ${
+                        i === 5 ? "right-0" : "-translate-x-1/2"
+                      } ${minRating >= i ? "text-[#E65100]" : ""}`}
+                      style={i !== 5 ? { left: `${i * 20}%` } : undefined}
                     >
-                      {i}★
+                      {i}
                     </span>
                   ))}
                 </div>
               </div>
 
               <div ref={genreDropdownRef}>
-                <label className="text-sm font-bold text-gray-800 mb-4 block">
+                <label className="text-sm font-bold text-stone-800 mb-2 block">
                   Thể loại
                 </label>
                 <div className="relative">
                   <button
                     onClick={() => setIsGenreDropdownOpen(!isGenreDropdownOpen)}
-                    className="w-full flex items-center justify-between px-6 py-5 bg-gray-50 border-2 border-gray-200 rounded-2xl hover:border-[#F25019] transition font-medium text-lg"
+                    className="w-full flex items-center justify-between px-5 py-4 bg-white border border-stone-200 rounded-2xl hover:border-[#E65100] hover:shadow-md transition-all"
                   >
                     <span
-                      className={
+                      className={`font-medium truncate ${
                         selectedGenres.length === 0
-                          ? "text-gray-500"
-                          : "text-gray-800"
-                      }
+                          ? "text-stone-400"
+                          : "text-stone-700"
+                      }`}
                     >
                       {selectedGenres.length === 0
                         ? "Chọn thể loại"
                         : selectedGenreNames}
                     </span>
                     <ChevronDown
-                      className={`w-6 h-6 transition-transform ${
+                      className={`w-5 h-5 text-stone-400 transition-transform ${
                         isGenreDropdownOpen ? "rotate-180" : ""
                       }`}
                     />
                   </button>
 
                   {isGenreDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-3 bg-white border-2 border-gray-200 rounded-3xl shadow-2xl max-h-96 overflow-y-auto z-30">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-100 rounded-2xl shadow-xl max-h-80 overflow-y-auto z-50 custom-scrollbar p-1">
                       {isGenresLoading ? (
-                        <div className="p-6 space-y-4">
-                          {[...Array(10)].map((_, i) => (
+                        <div className="p-4 space-y-2">
+                          {[...Array(5)].map((_, i) => (
                             <div
                               key={i}
-                              className="h-12 bg-gray-200 rounded-xl animate-pulse"
+                              className="h-8 bg-stone-100 rounded animate-pulse"
                             />
                           ))}
                         </div>
                       ) : genres.length === 0 ? (
-                        <p className="p-6 text-center text-gray-500">
+                        <p className="p-4 text-center text-stone-500 text-sm">
                           Không có thể loại
                         </p>
                       ) : (
-                        <div className="py-2">
+                        <div className="py-1">
                           {genres.map((genre) => (
                             <label
                               key={genre.id}
-                              className="flex items-center justify-between px-6 py-4 hover:bg-orange-50 cursor-pointer transition group"
+                              className="flex items-center justify-between px-5 py-3 hover:bg-orange-50 rounded-xl cursor-pointer transition group"
                               onClick={() => toggleGenre(genre.id)}
                             >
-                              <span className="text-lg font-medium text-gray-800">
+                              <span
+                                className={`text-sm font-medium ${
+                                  selectedGenres.includes(genre.id)
+                                    ? "text-[#E65100] font-bold"
+                                    : "text-stone-600"
+                                }`}
+                              >
                                 {genre.name}
                               </span>
 
                               <div
-                                className={`w-7 h-7 rounded-lg border-2 flex items-center justify-center transition-all ${
+                                className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${
                                   selectedGenres.includes(genre.id)
-                                    ? "bg-[#F25019] border-[#F25019]"
-                                    : "border-gray-300 group-hover:border-gray-400"
+                                    ? "bg-[#E65100] border-[#E65100]"
+                                    : "border-stone-300 group-hover:border-stone-400"
                                 }`}
                               >
                                 {selectedGenres.includes(genre.id) && (
                                   <svg
-                                    className="w-5 h-5 text-white"
+                                    className="w-3 h-3 text-white"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -434,24 +451,26 @@ export default function MoviesPage() {
               </div>
 
               <div ref={sortDropdownRef}>
-                <label className="text-sm font-bold text-gray-800 mb-4 block">
-                  Sắp xếp theo
+                <label className="text-sm font-bold text-stone-800 mb-2 block">
+                  Sắp xếp
                 </label>
                 <div className="relative">
                   <button
                     onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
-                    className="w-full flex items-center justify-between px-6 py-5 bg-gray-50 border-2 border-gray-200 rounded-2xl hover:border-gray-300 transition"
+                    className="w-full flex items-center justify-between px-5 py-4 bg-white border border-stone-200 rounded-2xl hover:border-[#E65100] hover:shadow-md transition-all"
                   >
-                    <span className="font-medium">{getSortLabel()}</span>
+                    <span className="font-medium text-stone-700">
+                      {getSortLabel()}
+                    </span>
                     <ChevronDown
-                      className={`w-6 h-6 transition-transform ${
+                      className={`w-5 h-5 text-stone-400 transition-transform ${
                         isSortDropdownOpen ? "rotate-180" : ""
                       }`}
                     />
                   </button>
 
                   {isSortDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-3 bg-white border-2 border-gray-200 rounded-3xl shadow-2xl z-30">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-100 rounded-2xl shadow-xl z-50 overflow-hidden p-1">
                       {[
                         {
                           sortBy: "releaseDate",
@@ -497,11 +516,11 @@ export default function MoviesPage() {
                             setCurrentPage(1);
                             setIsSortDropdownOpen(false);
                           }}
-                          className={`w-full text-left px-6 py-4 hover:bg-orange-50 transition font-medium ${
+                          className={`w-full text-left px-5 py-3 rounded-xl hover:bg-orange-50 transition font-medium text-sm ${
                             sortBy === option.sortBy &&
                             sortOrder === option.sortOrder
-                              ? "bg-orange-100 text-[#F25019]"
-                              : ""
+                              ? "bg-orange-50 text-[#E65100] font-bold"
+                              : "text-stone-600"
                           }`}
                         >
                           {option.label}
@@ -514,26 +533,35 @@ export default function MoviesPage() {
             </div>
           </div>
 
-          <section>
-            <h2 className="text-4xl font-bold text-[#F25019] mb-10">
-              {getStatusLabel()}
-            </h2>
+          <section className="relative z-0">
+            <div className="flex items-center gap-4 mb-8">
+              <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FF7043] to-[#FFAB91] uppercase tracking-tight">
+                {getStatusLabel()}
+              </h2>
+              <div className="h-px flex-1 bg-stone-200"></div>
+            </div>
 
             {isMoviesLoading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
-                {[...Array(20)].map((_, i) => (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 lg:gap-8">
+                {[...Array(10)].map((_, i) => (
                   <SkeletonCard key={i} />
                 ))}
               </div>
             ) : movies.length === 0 ? (
-              <div className="text-center py-32">
-                <p className="text-4xl font-bold text-gray-600 mb-4">
+              <div className="flex flex-col items-center justify-center py-32 bg-white/50 rounded-3xl border border-dashed border-stone-300">
+                <div className="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center mb-4">
+                  <Search className="w-10 h-10 text-stone-400" />
+                </div>
+                <p className="text-2xl font-bold text-stone-600 mb-2">
                   Không tìm thấy phim nào
+                </p>
+                <p className="text-stone-500">
+                  Thử thay đổi bộ lọc tìm kiếm xem sao
                 </p>
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 lg:gap-8">
                   {movies.map((movie) => (
                     <MovieCard
                       key={movie.id}
@@ -546,16 +574,16 @@ export default function MoviesPage() {
                 </div>
 
                 {totalPages > 1 && (
-                  <div className="flex justify-center items-center gap-4 mt-20">
+                  <div className="flex justify-center items-center gap-3 mt-16">
                     <button
                       onClick={() => handlePageChange(currentPage - 1)}
                       disabled={currentPage === 1}
-                      className="p-4 rounded-2xl bg-white shadow-lg disabled:opacity-50 hover:bg-gray-100 transition"
+                      className="p-4 rounded-2xl bg-white border border-stone-100 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 hover:border-[#E65100] hover:text-[#E65100] transition-all"
                     >
-                      <ChevronLeft className="w-7 h-7" />
+                      <ChevronLeft className="w-6 h-6" />
                     </button>
 
-                    <div className="flex gap-3">
+                    <div className="flex gap-2">
                       {Array.from(
                         { length: Math.min(7, totalPages) },
                         (_, i) => {
@@ -565,10 +593,10 @@ export default function MoviesPage() {
                             <button
                               key={pageNum}
                               onClick={() => handlePageChange(pageNum)}
-                              className={`w-14 h-14 rounded-2xl font-bold text-lg transition shadow-md ${
+                              className={`w-12 h-12 rounded-xl font-bold text-lg transition shadow-sm border ${
                                 currentPage === pageNum
-                                  ? "bg-gradient-to-r from-[#F25019] to-[#E9391B] text-white"
-                                  : "bg-white hover:bg-orange-100"
+                                  ? "bg-[#E65100] text-white border-transparent shadow-orange-500/30"
+                                  : "bg-white border-stone-100 text-stone-600 hover:bg-orange-50 hover:border-orange-200"
                               }`}
                             >
                               {pageNum}
@@ -576,17 +604,14 @@ export default function MoviesPage() {
                           );
                         }
                       )}
-                      {totalPages > 7 && (
-                        <span className="text-2xl text-gray-500">...</span>
-                      )}
                     </div>
 
                     <button
                       onClick={() => handlePageChange(currentPage + 1)}
                       disabled={currentPage === totalPages}
-                      className="p-4 rounded-2xl bg-white shadow-lg disabled:opacity-50 hover:bg-gray-100 transition"
+                      className="p-4 rounded-2xl bg-white border border-stone-100 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-stone-50 hover:border-[#E65100] hover:text-[#E65100] transition-all"
                     >
-                      <ChevronRight className="w-7 h-7" />
+                      <ChevronRight className="w-6 h-6" />
                     </button>
                   </div>
                 )}
@@ -596,7 +621,9 @@ export default function MoviesPage() {
         </div>
       </main>
 
-      <Footer />
+      <div className="relative z-10 border-t border-stone-200">
+        <Footer />
+      </div>
     </div>
   );
 }
