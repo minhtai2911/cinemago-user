@@ -144,30 +144,36 @@ export default async function CinemaDetailPage({
           </div>
 
           <div>
-            {/* TAB SECTION: Clean Underline Style */}
-            <div className="flex items-center gap-8 mb-8 border-b border-stone-200">
+            <div className="relative w-fit inline-grid grid-cols-2 items-center mb-8 border-b border-stone-200">
               <Link
                 href={{ query: { tab: "now" } }}
                 scroll={false}
-                className={`pb-3 text-lg md:text-xl font-black uppercase tracking-wide transition-all border-b-[3px] ${
+                className={`text-center pb-3 text-lg md:text-xl font-black uppercase tracking-wide transition-colors duration-300 px-6 md:px-8 relative z-10 ${
                   isNowTab
-                    ? "text-[#F25019] border-[#F25019]"
-                    : "text-stone-400 border-transparent hover:text-stone-600 hover:border-stone-300"
+                    ? "text-[#F25019]"
+                    : "text-stone-400 hover:text-stone-600"
                 }`}
               >
                 Phim đang chiếu
               </Link>
+
               <Link
                 href={{ query: { tab: "soon" } }}
                 scroll={false}
-                className={`pb-3 text-lg md:text-xl font-black uppercase tracking-wide transition-all border-b-[3px] ${
+                className={`text-center pb-3 text-lg md:text-xl font-black uppercase tracking-wide transition-colors duration-300 px-6 md:px-8 relative z-10 ${
                   isSoonTab
-                    ? "text-[#F25019] border-[#F25019]"
-                    : "text-stone-400 border-transparent hover:text-stone-600 hover:border-stone-300"
+                    ? "text-[#F25019]"
+                    : "text-stone-400 hover:text-stone-600"
                 }`}
               >
                 Phim sắp chiếu
               </Link>
+
+              <div
+                className={`absolute bottom-0 h-[3px] bg-[#F25019] w-1/2 transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                  isNowTab ? "translate-x-0" : "translate-x-full"
+                }`}
+              ></div>
             </div>
 
             <div className="min-h-[400px]">
