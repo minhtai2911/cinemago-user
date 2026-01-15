@@ -74,17 +74,20 @@ export default async function CinemaDetailPage({
       </div>
       <main className="relative z-10 flex-grow pt-10 pb-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto space-y-8">
+          {/* Card Thông tin Rạp */}
           <div className="bg-white rounded-2xl shadow-xl border border-white/50 p-8 md:p-12 relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-orange-100/40 to-transparent rounded-full blur-2xl -translate-y-1/2 translate-x-1/3"></div>
 
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="text-center md:text-left">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-50 text-[#F25019] rounded-lg text-sm font-bold border border-orange-100/50 mb-4">
+              {/* Đã sửa: Căn giữa toàn bộ nội dung text và cập nhật Gradient */}
+              <div className="flex flex-col items-center text-center w-full md:w-auto md:items-start md:text-left md:flex-1">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-50 text-[#F25019] rounded-lg text-sm font-bold border border-orange-100/50 mb-4 mx-auto md:mx-0">
                   <Film size={16} />
                   <span>Rạp chiếu phim</span>
                 </div>
 
-                <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-4 leading-tight tracking-tight">
+                {/* Tiêu đề Rạp: Gradient mới + Căn giữa (do thẻ cha flex-col items-center) */}
+                <h1 className="text-4xl md:text-6xl font-black mb-4 leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FF7043] to-[#FFAB91]">
                   {cinema.name}
                 </h1>
 
@@ -105,13 +108,16 @@ export default async function CinemaDetailPage({
             </div>
           </div>
 
-          <div className="overflow-hidden">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3 px-2">
-              <MapPin className="w-7 h-7 text-[#F25019]" />
-              Vị trí rạp chiếu
+          <div className="overflow-hidden py-4">
+            <h2 className="text-3xl font-black mb-8 flex items-center justify-center md:justify-start gap-3 px-2">
+              <MapPin className="w-8 h-8 text-[#FF7043]" strokeWidth={2.5} />
+              {/* Đã sửa: Gradient giống trang About */}
+              <span className="bg-gradient-to-r from-[#FF7043] to-[#FFAB91] bg-clip-text text-transparent">
+                Vị trí rạp chiếu
+              </span>
             </h2>
 
-            <div className="relative w-full h-96 md:h-[500px] rounded-2xl overflow-hidden shadow-2xl border border-white/50">
+            <div className="relative w-full h-96 md:h-[500px] rounded-3xl overflow-hidden shadow-[0_20px_50px_-12px_rgba(255,112,67,0.3)] border-[6px] border-white/60 ring-1 ring-white/50 transform hover:scale-[1.01] transition-transform duration-500 ease-out">
               <iframe
                 src={embedUrl}
                 width="100%"
@@ -121,12 +127,15 @@ export default async function CinemaDetailPage({
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Bản đồ vị trí rạp"
+                className="grayscale-[20%] hover:grayscale-0 transition-all duration-500"
               ></iframe>
             </div>
 
-            <p className="text-center text-sm text-gray-600 font-medium mt-4">
-              Nhấn vào địa chỉ phía trên để mở Google Maps chi tiết
-            </p>
+            <div className="flex justify-center mt-6">
+              <p className="text-sm text-gray-500 font-medium bg-white/40 px-6 py-2 rounded-full backdrop-blur-sm border border-white/50">
+                Nhấn vào bản đồ để mở Google Maps chỉ đường
+              </p>
+            </div>
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl border border-white/50 p-6 md:p-8 min-h-[600px]">
