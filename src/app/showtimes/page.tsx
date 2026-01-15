@@ -192,74 +192,75 @@ export default function ShowtimesPage() {
             </h1>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/40 p-6 md:p-8 mb-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-stone-800 mb-2 uppercase tracking-wider">
-                  <Calendar className="w-4 h-4 text-[#F25019]" />
-                  Ngày chiếu
-                </label>
-                <div className="relative group">
-                  <select
-                    value={format(selectedDate, "yyyy-MM-dd")}
-                    onChange={(e) => {
-                      const newDate = availableDates.find(
-                        (d) => format(d, "yyyy-MM-dd") === e.target.value
-                      );
-                      if (newDate) setSelectedDate(newDate);
-                    }}
-                    className="w-full pl-6 pr-12 py-4 bg-gray-50/50 hover:bg-white border border-gray-200 hover:border-[#F25019] rounded-xl focus:border-[#F25019] focus:bg-white focus:outline-none transition-all appearance-none text-lg font-medium text-stone-700 cursor-pointer shadow-sm"
-                  >
-                    {availableDates.map((date) => {
-                      const dateStr = format(date, "yyyy-MM-dd");
-                      const displayLabel = format(date, "EEEE, dd/MM/yyyy", {
-                        locale: vi,
-                      });
-                      const todayLabel =
-                        dateStr === format(today, "yyyy-MM-dd")
-                          ? " (Hôm nay)"
-                          : "";
-                      return (
-                        <option key={dateStr} value={dateStr}>
-                          {displayLabel}
-                          {todayLabel}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-[#F25019] transition-colors pointer-events-none" />
-                </div>
+          {/* FILTER SECTION: Input nằm ngang hàng */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            {/* 1. Cột Ngày chiếu */}
+            <div>
+              <label className="flex items-center gap-2 text-sm font-black text-[#F25019] mb-2 uppercase tracking-wider">
+                <Calendar className="w-4 h-4" />
+                Ngày chiếu
+              </label>
+              <div className="relative group">
+                <select
+                  value={format(selectedDate, "yyyy-MM-dd")}
+                  onChange={(e) => {
+                    const newDate = availableDates.find(
+                      (d) => format(d, "yyyy-MM-dd") === e.target.value
+                    );
+                    if (newDate) setSelectedDate(newDate);
+                  }}
+                  className="w-full pl-6 pr-12 py-4 bg-white hover:bg-white border border-stone-200 hover:border-[#F25019] rounded-xl focus:border-[#F25019] focus:bg-white focus:outline-none transition-all appearance-none text-lg font-medium text-stone-700 cursor-pointer shadow-sm"
+                >
+                  {availableDates.map((date) => {
+                    const dateStr = format(date, "yyyy-MM-dd");
+                    const displayLabel = format(date, "EEEE, dd/MM/yyyy", {
+                      locale: vi,
+                    });
+                    const todayLabel =
+                      dateStr === format(today, "yyyy-MM-dd")
+                        ? " (Hôm nay)"
+                        : "";
+                    return (
+                      <option key={dateStr} value={dateStr}>
+                        {displayLabel}
+                        {todayLabel}
+                      </option>
+                    );
+                  })}
+                </select>
+                <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-[#F25019] transition-colors pointer-events-none" />
               </div>
+            </div>
 
-              <div>
-                <label className="flex items-center gap-2 text-sm font-bold text-stone-800 mb-2 uppercase tracking-wider">
-                  <MapPin className="w-4 h-4 text-[#F25019]" />
-                  Rạp chiếu
-                </label>
-                <div className="relative group">
-                  {loadingCinemas ? (
-                    <div className="w-full px-6 py-4 bg-gray-50/50 rounded-xl flex items-center gap-3 text-gray-500 font-medium border border-gray-200">
-                      <Loader2 className="w-5 h-5 animate-spin text-[#F25019]" />
-                      <span>Đang tải danh sách rạp...</span>
-                    </div>
-                  ) : (
-                    <>
-                      <select
-                        value={selectedCinemaId}
-                        onChange={(e) => setSelectedCinemaId(e.target.value)}
-                        className="w-full pl-6 pr-12 py-4 bg-gray-50/50 hover:bg-white border border-gray-200 hover:border-[#F25019] rounded-xl focus:border-[#F25019] focus:bg-white focus:outline-none transition-all appearance-none text-lg font-medium text-stone-700 cursor-pointer shadow-sm"
-                      >
-                        <option value="">-- Chọn rạp --</option>
-                        {cinemas.map((cinema) => (
-                          <option key={cinema.id} value={cinema.id}>
-                            {cinema.name} - {cinema.city}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-[#F25019] transition-colors pointer-events-none" />
-                    </>
-                  )}
-                </div>
+            {/* 2. Cột Rạp chiếu (Phải nằm TRONG thẻ div grid ở trên) */}
+            <div>
+              <label className="flex items-center gap-2 text-sm font-black text-[#F25019] mb-2 uppercase tracking-wider">
+                <MapPin className="w-4 h-4" />
+                Rạp chiếu
+              </label>
+              <div className="relative group">
+                {loadingCinemas ? (
+                  <div className="w-full px-6 py-4 bg-white rounded-xl flex items-center gap-3 text-gray-500 font-medium border border-stone-200 shadow-sm">
+                    <Loader2 className="w-5 h-5 animate-spin text-[#F25019]" />
+                    <span>Đang tải danh sách rạp...</span>
+                  </div>
+                ) : (
+                  <>
+                    <select
+                      value={selectedCinemaId}
+                      onChange={(e) => setSelectedCinemaId(e.target.value)}
+                      className="w-full pl-6 pr-12 py-4 bg-white hover:bg-white border border-stone-200 hover:border-[#F25019] rounded-xl focus:border-[#F25019] focus:bg-white focus:outline-none transition-all appearance-none text-lg font-medium text-stone-700 cursor-pointer shadow-sm"
+                    >
+                      <option value="">-- Chọn rạp --</option>
+                      {cinemas.map((cinema) => (
+                        <option key={cinema.id} value={cinema.id}>
+                          {cinema.name} - {cinema.city}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-[#F25019] transition-colors pointer-events-none" />
+                  </>
+                )}
               </div>
             </div>
           </div>
