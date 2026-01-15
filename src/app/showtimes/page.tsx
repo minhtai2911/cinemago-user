@@ -163,10 +163,11 @@ export default function ShowtimesPage() {
   );
 
   return (
-    <div className="relative min-h-screen bg-peach-gradient flex flex-col font-sans">
-      <div className="absolute inset-0 bg-white/20 pointer-events-none"></div>
-
+    <div className="relative min-h-screen bg-[#FFF8F5] font-sans text-stone-800 selection:bg-[#F25019] selection:text-white flex flex-col">
       <div className="fixed top-0 left-0 right-0 h-screen overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-100 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3 opacity-60"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-red-50 rounded-full blur-[120px] -translate-x-1/3 translate-y-1/3 opacity-60"></div>
+
         <Image
           src="/corn.png"
           alt=""
@@ -404,7 +405,6 @@ export default function ShowtimesPage() {
           </div>
         </div>
       </main>
-
       <div className="relative z-10">
         <Footer />
       </div>
