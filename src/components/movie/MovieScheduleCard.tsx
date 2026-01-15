@@ -159,9 +159,9 @@ export default async function MovieScheduleCard({
                   return (
                     <div
                       key={dateKey}
-                      className="flex flex-col sm:flex-row gap-4 sm:gap-8 animate-fadeIn"
+                      className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 animate-fadeIn"
                     >
-                      <div className="shrink-0 w-24 pt-1">
+                      <div className="shrink-0 w-24">
                         <p className="text-sm text-gray-400 font-medium capitalize mb-0.5">
                           {weekday}
                         </p>
