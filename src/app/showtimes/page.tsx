@@ -209,12 +209,20 @@ export default function ShowtimesPage() {
       <main className="relative z-10 flex-grow pt-10 pb-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <span className="inline-block py-2 px-4 rounded-full bg-white/80 border border-orange-200 text-[#F25019] text-xs font-bold tracking-widest uppercase mb-4 shadow-sm backdrop-blur-sm">
-              Đặt vé ngay
-            </span>
-            <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight drop-shadow-sm">
-              Lịch chiếu <span className="text-[#F25019]">phim</span>
-            </h1>
+            <section className="text-center mb-16 animate-fade-in-up">
+              <span className="inline-block py-2 px-4 rounded-full bg-orange-50 border border-orange-100 text-[#E65100] text-xs font-bold tracking-widest uppercase mb-4">
+                Đặt vé ngay
+              </span>
+              <h1 className="text-5xl md:text-7xl font-black text-stone-800 mb-6 tracking-tight">
+                Lịch chiếu{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7043] to-[#FFAB91]">
+                  phim
+                </span>
+              </h1>
+              <p className="text-lg text-stone-500 max-w-3xl mx-auto font-medium">
+                Chọn lịch chiếu và rạp phim phù hợp để đặt vé ngay nhé!
+              </p>
+            </section>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-12">
