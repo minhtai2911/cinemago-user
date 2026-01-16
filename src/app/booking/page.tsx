@@ -654,7 +654,7 @@ export default function BookingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#fff6f0] text-orange-700 flex items-center justify-center">
         <div className="animate-pulse">Đang tải dữ liệu phim...</div>
       </div>
     );
@@ -662,7 +662,7 @@ export default function BookingPage() {
 
   if (!movieId || !movie) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#0b1220] via-[#0f172a] to-[#060714] text-white flex items-center justify-center relative overflow-hidden">
+      <div className="min-h-screen bg-[#fff6f0] text-orange-600 flex items-center justify-center relative overflow-hidden">
         <Image
           width={1000}
           height={1000}
