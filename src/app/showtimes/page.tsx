@@ -227,9 +227,8 @@ export default function ShowtimesPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-12">
             <div className="flex flex-col gap-3" ref={dateDropdownRef}>
-              <label className="flex items-center gap-2 text-xs font-black text-[#F25019] uppercase tracking-widest pl-1">
-                <Calendar className="w-4 h-4" />
-                Ngày chiếu
+              <label className="flex items-center gap-2 text-xs font-bold text-[#F25019] uppercase tracking-wider ml-1">
+                <Calendar className="w-4 h-4 mb-0.5" /> Ngày chiếu
               </label>
               <div className="relative">
                 <button
@@ -296,8 +295,8 @@ export default function ShowtimesPage() {
             </div>
 
             <div className="flex flex-col gap-3" ref={cinemaDropdownRef}>
-              <label className="flex items-center gap-2 text-xs font-black text-[#F25019] uppercase tracking-widest pl-1">
-                <MapPin className="w-4 h-4" />
+              <label className="flex items-center gap-2 text-xs font-bold text-[#F25019] uppercase tracking-wider ml-1">
+                <MapPin className="w-4 h-4 mb-0.5" />
                 Rạp chiếu
               </label>
               <div className="relative h-[60px]">
