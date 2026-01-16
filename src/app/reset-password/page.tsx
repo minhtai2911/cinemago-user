@@ -7,6 +7,7 @@ import { resetPassword, forgotPassword } from "@/services";
 import axios from "axios";
 import useAuth from "@/hooks/useAuth";
 import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -23,6 +24,9 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(180);
   const [resendLoading, setResendLoading] = useState(false);
+
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -134,6 +138,7 @@ export default function ResetPasswordPage() {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-3">
+                    {/* OTP INPUT */}
                     <div>
                       <input
                         type="text"
@@ -175,12 +180,12 @@ export default function ResetPasswordPage() {
                       </div>
                     </div>
 
-                    <div>
+                    <div className="relative">
                       <input
-                        type="password"
+                        type={showNewPassword ? "text" : "password"} // Toggle type
                         required
                         placeholder="Mật khẩu mới"
-                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm"
+                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm pr-10" // Thêm pr-10 để tránh text đè lên icon
                         value={formData.newPassword}
                         onChange={(e) =>
                           setFormData({
@@ -189,14 +194,26 @@ export default function ResetPasswordPage() {
                           })
                         }
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                        tabIndex={-1} // Tránh focus khi nhấn Tab
+                      >
+                        {showNewPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
                     </div>
 
-                    <div>
+                    <div className="relative">
                       <input
-                        type="password"
+                        type={showConfirmPassword ? "text" : "password"} // Toggle type
                         required
                         placeholder="Nhập lại mật khẩu mới"
-                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm"
+                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm pr-10" // Thêm pr-10
                         value={formData.confirmPassword}
                         onChange={(e) =>
                           setFormData({
@@ -205,6 +222,20 @@ export default function ResetPasswordPage() {
                           })
                         }
                       />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                        tabIndex={-1}
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
                     </div>
                   </div>
 
