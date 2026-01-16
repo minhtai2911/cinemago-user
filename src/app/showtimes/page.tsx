@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   format,
   addDays,
@@ -19,7 +19,7 @@ import {
   Clock,
   ChevronDown,
   Star,
-  Info,
+  Check,
 } from "lucide-react";
 import Link from "next/link";
 import { getCinemas, getCinemaById, getShowtimes, getMovies } from "@/services";
@@ -47,6 +47,30 @@ export default function ShowtimesPage() {
   const [nowShowingMovies, setNowShowingMovies] = useState<Movie[]>([]);
   const [loadingCinemas, setLoadingCinemas] = useState(true);
   const [loadingShowtimes, setLoadingShowtimes] = useState(false);
+
+  const [isDateOpen, setIsDateOpen] = useState(false);
+  const [isCinemaOpen, setIsCinemaOpen] = useState(false);
+  const dateDropdownRef = useRef<HTMLDivElement>(null);
+  const cinemaDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dateDropdownRef.current &&
+        !dateDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDateOpen(false);
+      }
+      if (
+        cinemaDropdownRef.current &&
+        !cinemaDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsCinemaOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const getDateRangeForAPI = (localDate: Date) => {
     const vnDate = toZonedTime(localDate, userTimezone);
@@ -193,73 +217,141 @@ export default function ShowtimesPage() {
             </h1>
           </div>
 
-          {/* FILTER SECTION: Input nằm ngang hàng */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            {/* 1. Cột Ngày chiếu */}
-            <div>
-              <label className="flex items-center gap-2 text-sm font-black text-[#F25019] mb-2 uppercase tracking-wider">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-12">
+            <div className="flex flex-col gap-3" ref={dateDropdownRef}>
+              <label className="flex items-center gap-2 text-xs font-black text-[#F25019] uppercase tracking-widest pl-1">
                 <Calendar className="w-4 h-4" />
                 Ngày chiếu
               </label>
-              <div className="relative group">
-                <select
-                  value={format(selectedDate, "yyyy-MM-dd")}
-                  onChange={(e) => {
-                    const newDate = availableDates.find(
-                      (d) => format(d, "yyyy-MM-dd") === e.target.value
-                    );
-                    if (newDate) setSelectedDate(newDate);
-                  }}
-                  className="w-full pl-6 pr-12 py-4 bg-white hover:bg-white border border-stone-200 hover:border-[#F25019] rounded-xl focus:border-[#F25019] focus:bg-white focus:outline-none transition-all appearance-none text-lg font-medium text-stone-700 cursor-pointer shadow-sm"
+              <div className="relative">
+                <button
+                  onClick={() => setIsDateOpen(!isDateOpen)}
+                  className={`w-full flex items-center justify-between pl-6 pr-5 py-4 bg-white border rounded-2xl text-base md:text-lg shadow-sm transition-all duration-300 ${
+                    isDateOpen
+                      ? "border-[#F25019] ring-4 ring-[#F25019]/10"
+                      : "border-stone-100 hover:border-[#F25019]"
+                  }`}
                 >
-                  {availableDates.map((date) => {
-                    const dateStr = format(date, "yyyy-MM-dd");
-                    const displayLabel = format(date, "EEEE, dd/MM/yyyy", {
-                      locale: vi,
-                    });
-                    const todayLabel =
-                      dateStr === format(today, "yyyy-MM-dd")
+                  <span className="font-medium text-stone-700">
+                    {format(selectedDate, "EEEE, dd/MM/yyyy", { locale: vi }) +
+                      (format(selectedDate, "yyyy-MM-dd") ===
+                      format(today, "yyyy-MM-dd")
                         ? " (Hôm nay)"
-                        : "";
-                    return (
-                      <option key={dateStr} value={dateStr}>
-                        {displayLabel}
-                        {todayLabel}
-                      </option>
-                    );
-                  })}
-                </select>
-                <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-[#F25019] transition-colors pointer-events-none" />
+                        : "")}
+                  </span>
+                  <ChevronDown
+                    className={`w-6 h-6 text-stone-300 transition-transform duration-300 ${
+                      isDateOpen ? "rotate-180 text-[#F25019]" : ""
+                    }`}
+                  />
+                </button>
+
+                {isDateOpen && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-100 rounded-2xl shadow-xl z-50 overflow-hidden p-2 animate-in fade-in zoom-in-95 duration-200">
+                    {availableDates.map((date) => {
+                      const isSelected =
+                        format(date, "yyyy-MM-dd") ===
+                        format(selectedDate, "yyyy-MM-dd");
+                      const displayLabel = format(date, "EEEE, dd/MM/yyyy", {
+                        locale: vi,
+                      });
+                      const todayLabel =
+                        format(date, "yyyy-MM-dd") ===
+                        format(today, "yyyy-MM-dd")
+                          ? " (Hôm nay)"
+                          : "";
+
+                      return (
+                        <button
+                          key={date.toISOString()}
+                          onClick={() => {
+                            setSelectedDate(date);
+                            setIsDateOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all ${
+                            isSelected
+                              ? "bg-orange-50 text-[#F25019] font-bold"
+                              : "text-stone-600 font-medium hover:bg-stone-50"
+                          }`}
+                        >
+                          <span>
+                            {displayLabel}
+                            {todayLabel}
+                          </span>
+                          {isSelected && <Check className="w-4 h-4" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* 2. Cột Rạp chiếu (Phải nằm TRONG thẻ div grid ở trên) */}
-            <div>
-              <label className="flex items-center gap-2 text-sm font-black text-[#F25019] mb-2 uppercase tracking-wider">
+            <div className="flex flex-col gap-3" ref={cinemaDropdownRef}>
+              <label className="flex items-center gap-2 text-xs font-black text-[#F25019] uppercase tracking-widest pl-1">
                 <MapPin className="w-4 h-4" />
                 Rạp chiếu
               </label>
-              <div className="relative group">
+              <div className="relative h-[60px]">
                 {loadingCinemas ? (
-                  <div className="w-full px-6 py-4 bg-white rounded-xl flex items-center gap-3 text-gray-500 font-medium border border-stone-200 shadow-sm">
+                  <div className="w-full h-full px-6 flex items-center gap-3 bg-white rounded-2xl border border-stone-100 shadow-sm text-stone-400 font-medium animate-pulse">
                     <Loader2 className="w-5 h-5 animate-spin text-[#F25019]" />
                     <span>Đang tải danh sách rạp...</span>
                   </div>
                 ) : (
                   <>
-                    <select
-                      value={selectedCinemaId}
-                      onChange={(e) => setSelectedCinemaId(e.target.value)}
-                      className="w-full pl-6 pr-12 py-4 bg-white hover:bg-white border border-stone-200 hover:border-[#F25019] rounded-xl focus:border-[#F25019] focus:bg-white focus:outline-none transition-all appearance-none text-lg font-medium text-stone-700 cursor-pointer shadow-sm"
+                    <button
+                      onClick={() => setIsCinemaOpen(!isCinemaOpen)}
+                      className={`w-full h-full flex items-center justify-between pl-6 pr-5 bg-white border rounded-2xl text-base md:text-lg shadow-sm transition-all duration-300 ${
+                        isCinemaOpen
+                          ? "border-[#F25019] ring-4 ring-[#F25019]/10"
+                          : "border-stone-100 hover:border-[#F25019]"
+                      }`}
                     >
-                      <option value="">-- Chọn rạp --</option>
-                      {cinemas.map((cinema) => (
-                        <option key={cinema.id} value={cinema.id}>
-                          {cinema.name} - {cinema.city}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-hover:text-[#F25019] transition-colors pointer-events-none" />
+                      <span
+                        className={`font-medium truncate ${
+                          selectedCinema ? "text-stone-700" : "text-stone-400"
+                        }`}
+                      >
+                        {selectedCinema
+                          ? `${selectedCinema.name} - ${selectedCinema.city}`
+                          : "-- Chọn rạp --"}
+                      </span>
+                      <ChevronDown
+                        className={`w-6 h-6 shrink-0 text-stone-300 transition-transform duration-300 ${
+                          isCinemaOpen ? "rotate-180 text-[#F25019]" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {isCinemaOpen && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-100 rounded-2xl shadow-xl z-50 overflow-hidden p-2 max-h-[300px] overflow-y-auto custom-scrollbar animate-in fade-in zoom-in-95 duration-200">
+                        {cinemas.map((cinema) => {
+                          const isSelected = selectedCinemaId === cinema.id;
+                          return (
+                            <button
+                              key={cinema.id}
+                              onClick={() => {
+                                setSelectedCinemaId(cinema.id);
+                                setIsCinemaOpen(false);
+                              }}
+                              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all ${
+                                isSelected
+                                  ? "bg-orange-50 text-[#F25019] font-bold"
+                                  : "text-stone-600 font-medium hover:bg-stone-50"
+                              }`}
+                            >
+                              <span className="truncate pr-2">
+                                {cinema.name} - {cinema.city}
+                              </span>
+                              {isSelected && (
+                                <Check className="w-4 h-4 shrink-0" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -307,7 +399,6 @@ export default function ShowtimesPage() {
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                           />
-                          {/* Label 2D */}
                           <div className="absolute top-2 left-2">
                             <span className="bg-[#F25019] text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
                               {sessions[0]?.format || "2D"}
