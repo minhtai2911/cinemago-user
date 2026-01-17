@@ -67,10 +67,10 @@ export default function BookingCompletedPage() {
   const method = searchParams.get("orderId")
     ? "MOMO"
     : searchParams.get("vnp_TxnRef")
-    ? "VNPAY"
-    : searchParams.get("apptransid")
-    ? "ZALOPAY"
-    : null;
+      ? "VNPAY"
+      : searchParams.get("apptransid")
+        ? "ZALOPAY"
+        : null;
   const statusParam = searchParams.get("status");
 
   const [verifying, setVerifying] = useState(true);
@@ -145,12 +145,12 @@ export default function BookingCompletedPage() {
         setBooking(bookingData);
 
         const generatedQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
-          bookingData.id
+          bookingData.id,
         )}&ecc=H`;
         setQrUrl(generatedQrUrl);
 
         const { data: showtimeData } = await getShowtimeById(
-          bookingData.showtimeId
+          bookingData.showtimeId,
         );
         setShowtime(showtimeData);
 
@@ -161,13 +161,13 @@ export default function BookingCompletedPage() {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
-          })
+          }),
         );
         setFormattedTime(
           date.toLocaleTimeString("vi-VN", {
             hour: "2-digit",
             minute: "2-digit",
-          })
+          }),
         );
 
         const [movieRes, cinemaRes, roomRes] = await Promise.all([
@@ -182,20 +182,20 @@ export default function BookingCompletedPage() {
 
         const foodTotal = bookingData.bookingFoodDrinks.reduce(
           (sum: number, item: { totalPrice: number }) => sum + item.totalPrice,
-          0
+          0,
         );
 
         const ticketTotal = bookingData.totalPrice - foodTotal;
 
         const selectedSeats = roomRes.data.seats.filter((s: { id: string }) =>
           bookingData.bookingSeats.some(
-            (bs: { seatId: string }) => bs.seatId === s.id
-          )
+            (bs: { seatId: string }) => bs.seatId === s.id,
+          ),
         );
 
         const sumExtra = selectedSeats.reduce(
           (sum: number, seat: { extraPrice: number }) => sum + seat.extraPrice,
-          0
+          0,
         );
 
         const seatCount = selectedSeats.length;
@@ -211,7 +211,7 @@ export default function BookingCompletedPage() {
             seatNumber: seat.seatNumber,
             type: seat.seatType,
             price: calculatedBasePrice + seat.extraPrice,
-          })
+          }),
         );
         setSelectedSeatsDetails(seatsDetails);
 
@@ -225,7 +225,7 @@ export default function BookingCompletedPage() {
               }) => {
                 try {
                   const { data: food } = await getFoodDrinkById(
-                    item.foodDrinkId
+                    item.foodDrinkId,
                   );
                   return {
                     ...food,
@@ -241,8 +241,8 @@ export default function BookingCompletedPage() {
                     totalPrice: item.totalPrice,
                   };
                 }
-              }
-            )
+              },
+            ),
           );
           setFoodDrinks(foods);
         }
@@ -263,10 +263,10 @@ export default function BookingCompletedPage() {
                     </td>
                     <td style="text-align:right; padding:8px 0; border-bottom:1px solid #eee;">
                       ${new Intl.NumberFormat("vi-VN").format(
-                        item.totalPrice
+                        item.totalPrice,
                       )} ₫
                     </td>
-                  </tr>`
+                  </tr>`,
                     )
                     .join("")
                 : `<tr><td colspan="2" style="text-align:center; color:#666; padding:20px;">Không có combo</td></tr>`;
@@ -282,12 +282,12 @@ export default function BookingCompletedPage() {
                 <td style="text-align:right; padding:8px 0; border-bottom:1px solid #eee;">
                   ${new Intl.NumberFormat("vi-VN").format(s.price)} ₫
                 </td>
-              </tr>`
+              </tr>`,
               )
               .join("");
 
             const emailQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
-              bookingData.id
+              bookingData.id,
             )}&ecc=H`;
 
             const htmlContent = `
@@ -325,8 +325,8 @@ export default function BookingCompletedPage() {
     <div class="content">
       <div style="text-align:center; margin-bottom:20px;">
         <img src="${movieRes.data.thumbnail || ""}" alt="${
-              movieRes.data.title
-            }" style="max-width:180px; height:auto; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" />
+          movieRes.data.title
+        }" style="max-width:180px; height:auto; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" />
       </div>
       
       <h2 style="text-align:center; color:#c2410c; margin:10px 0 25px; font-size: 24px; line-height: 1.3;">${
@@ -347,8 +347,8 @@ export default function BookingCompletedPage() {
           <td class="value" style="text-align: right;">${
             cinemaRes.data.name
           }<br><span style="font-weight: normal; font-size: 12px; color: #666;">${
-              cinemaRes.data.address
-            }</span></td>
+            cinemaRes.data.address
+          }</span></td>
         </tr>
         <tr>
           <td class="label">Phòng chiếu:</td>
@@ -402,7 +402,7 @@ export default function BookingCompletedPage() {
             await sendEmailNotification(
               profile.email,
               `Vé phim - Mã vé ${bookingData.id}`,
-              htmlContent
+              htmlContent,
             );
 
             localStorage.setItem(emailSentKey, "true");
@@ -443,7 +443,7 @@ export default function BookingCompletedPage() {
 
       const ratio = Math.min(
         maxWidth / canvas.width,
-        maxHeight / canvas.height
+        maxHeight / canvas.height,
       );
       const width = canvas.width * ratio;
       const height = canvas.height * ratio;
@@ -684,7 +684,7 @@ export default function BookingCompletedPage() {
                     </p>
                     <p className="text-3xl font-black text-[#F25019]">
                       {new Intl.NumberFormat("vi-VN").format(
-                        booking.totalPrice
+                        booking.totalPrice,
                       )}{" "}
                       ₫
                     </p>
@@ -804,7 +804,7 @@ export default function BookingCompletedPage() {
                 justifyContent: "center",
               }}
             >
-              <img
+              <Image
                 src={
                   movie.thumbnail ||
                   "https://via.placeholder.com/300x450?text=CinemaGO"
@@ -897,7 +897,7 @@ export default function BookingCompletedPage() {
                 borderRadius: "10px",
               }}
             >
-              <img
+              <Image
                 src={qrUrl}
                 style={{ width: "140px", height: "140px" }}
                 alt="QR"
