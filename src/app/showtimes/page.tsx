@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   format,
   addDays,
@@ -11,12 +11,22 @@ import {
 } from "date-fns";
 import { toZonedTime, fromZonedTime } from "date-fns-tz";
 import { vi } from "date-fns/locale";
-import { MapPin, Calendar, Loader2, Film, Clock } from "lucide-react";
+import {
+  MapPin,
+  Calendar,
+  Loader2,
+  Film,
+  Clock,
+  ChevronDown,
+  Star,
+  Check,
+} from "lucide-react";
 import Link from "next/link";
 import { getCinemas, getCinemaById, getShowtimes, getMovies } from "@/services";
 import { Cinema, Showtime, Movie, MovieStatus } from "@/types";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function ShowtimesPage() {
   const today = startOfToday();
@@ -37,6 +47,30 @@ export default function ShowtimesPage() {
   const [nowShowingMovies, setNowShowingMovies] = useState<Movie[]>([]);
   const [loadingCinemas, setLoadingCinemas] = useState(true);
   const [loadingShowtimes, setLoadingShowtimes] = useState(false);
+
+  const [isDateOpen, setIsDateOpen] = useState(false);
+  const [isCinemaOpen, setIsCinemaOpen] = useState(false);
+  const dateDropdownRef = useRef<HTMLDivElement>(null);
+  const cinemaDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dateDropdownRef.current &&
+        !dateDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDateOpen(false);
+      }
+      if (
+        cinemaDropdownRef.current &&
+        !cinemaDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsCinemaOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const getDateRangeForAPI = (localDate: Date) => {
     const vnDate = toZonedTime(localDate, userTimezone);
@@ -153,174 +187,294 @@ export default function ShowtimesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">
-      <Navbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-[#F25019] to-orange-600 bg-clip-text text-transparent mb-4">
-            Lịch Chiếu Phim
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Chọn rạp và ngày để xem lịch chiếu chi tiết
-          </p>
-        </div>
+    <div className="relative min-h-screen bg-[#FFF8F5] font-sans text-stone-800 selection:bg-[#F25019] selection:text-white flex flex-col">
+      <div className="fixed top-0 left-0 right-0 h-screen overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-100 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/3 opacity-60"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-red-50 rounded-full blur-[120px] -translate-x-1/3 translate-y-1/3 opacity-60"></div>
 
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl p-6 md:p-8 mb-8 border border-white/50">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <Calendar className="w-6 h-6 text-[#F25019]" />
-                <span className="text-lg font-bold text-gray-800">
-                  Ngày chiếu
+        <Image
+          src="/corn.png"
+          alt=""
+          width={1000}
+          height={1000}
+          className="hidden lg:block absolute top-32 -right-10 w-[45%] max-w-[800px] opacity-20 select-none"
+          style={{ transform: "scaleX(-1) rotate(-6deg)" }}
+        />
+      </div>
+
+      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-white/30">
+        <Navbar />
+      </div>
+
+      <main className="relative z-10 flex-grow pt-10 pb-20 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <section className="text-center mb-16 animate-fade-in-up">
+              <span className="inline-block py-2 px-4 rounded-full bg-orange-50 border border-orange-100 text-[#E65100] text-xs font-bold tracking-widest uppercase mb-4">
+                Đặt vé ngay
+              </span>
+              <h1 className="text-5xl md:text-7xl font-black text-stone-800 mb-6 tracking-tight">
+                Lịch chiếu{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7043] to-[#FFAB91]">
+                  phim
                 </span>
+              </h1>
+              <p className="text-lg text-stone-500 max-w-3xl mx-auto font-medium">
+                Chọn lịch chiếu và rạp phim phù hợp để đặt vé ngay nhé!
+              </p>
+            </section>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-12">
+            <div className="flex flex-col gap-3" ref={dateDropdownRef}>
+              <label className="flex items-center gap-2 text-xs font-bold text-[#F25019] uppercase tracking-wider ml-1">
+                <Calendar className="w-4 h-4 mb-0.5" /> Ngày chiếu
+              </label>
+              <div className="relative">
+                <button
+                  onClick={() => setIsDateOpen(!isDateOpen)}
+                  className={`w-full flex items-center justify-between pl-6 pr-5 py-4 bg-white border rounded-2xl text-base md:text-lg shadow-sm transition-all duration-300 ${
+                    isDateOpen
+                      ? "border-[#F25019] ring-4 ring-[#F25019]/10"
+                      : "border-stone-100 hover:border-[#F25019]"
+                  }`}
+                >
+                  <span className="font-medium text-stone-700">
+                    {format(selectedDate, "EEEE, dd/MM/yyyy", { locale: vi }) +
+                      (format(selectedDate, "yyyy-MM-dd") ===
+                      format(today, "yyyy-MM-dd")
+                        ? " (Hôm nay)"
+                        : "")}
+                  </span>
+                  <ChevronDown
+                    className={`w-6 h-6 text-stone-300 transition-transform duration-300 ${
+                      isDateOpen ? "rotate-180 text-[#F25019]" : ""
+                    }`}
+                  />
+                </button>
+
+                {isDateOpen && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-100 rounded-2xl shadow-xl z-50 overflow-hidden p-2 animate-in fade-in zoom-in-95 duration-200">
+                    {availableDates.map((date) => {
+                      const isSelected =
+                        format(date, "yyyy-MM-dd") ===
+                        format(selectedDate, "yyyy-MM-dd");
+                      const displayLabel = format(date, "EEEE, dd/MM/yyyy", {
+                        locale: vi,
+                      });
+                      const todayLabel =
+                        format(date, "yyyy-MM-dd") ===
+                        format(today, "yyyy-MM-dd")
+                          ? " (Hôm nay)"
+                          : "";
+
+                      return (
+                        <button
+                          key={date.toISOString()}
+                          onClick={() => {
+                            setSelectedDate(date);
+                            setIsDateOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all ${
+                            isSelected
+                              ? "bg-orange-50 text-[#F25019] font-bold"
+                              : "text-stone-600 font-medium hover:bg-stone-50"
+                          }`}
+                        >
+                          <span>
+                            {displayLabel}
+                            {todayLabel}
+                          </span>
+                          {isSelected && <Check className="w-4 h-4" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-              <select
-                value={format(selectedDate, "yyyy-MM-dd")}
-                onChange={(e) => {
-                  const newDate = availableDates.find(
-                    (d) => format(d, "yyyy-MM-dd") === e.target.value
-                  );
-                  if (newDate) setSelectedDate(newDate);
-                }}
-                className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#F25019] bg-white/50 backdrop-blur-sm text-lg font-medium transition-all"
-              >
-                {availableDates.map((date) => {
-                  const dateStr = format(date, "yyyy-MM-dd");
-                  const displayLabel = format(date, "EEEE, dd/MM/yyyy", {
-                    locale: vi,
-                  });
-                  const todayLabel =
-                    dateStr === format(today, "yyyy-MM-dd") ? " (Hôm nay)" : "";
-                  return (
-                    <option key={dateStr} value={dateStr}>
-                      {displayLabel}
-                      {todayLabel}
-                    </option>
-                  );
-                })}
-              </select>
             </div>
 
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <MapPin className="w-6 h-6 text-[#F25019]" />
-                <span className="text-lg font-bold text-gray-800">
-                  Chọn rạp
-                </span>
+            <div className="flex flex-col gap-3" ref={cinemaDropdownRef}>
+              <label className="flex items-center gap-2 text-xs font-bold text-[#F25019] uppercase tracking-wider ml-1">
+                <MapPin className="w-4 h-4 mb-0.5" />
+                Rạp chiếu
+              </label>
+              <div className="relative h-[60px]">
+                {loadingCinemas ? (
+                  <div className="w-full h-full px-6 flex items-center gap-3 bg-white rounded-2xl border border-stone-100 shadow-sm text-stone-400 font-medium animate-pulse">
+                    <Loader2 className="w-5 h-5 animate-spin text-[#F25019]" />
+                    <span>Đang tải danh sách rạp...</span>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setIsCinemaOpen(!isCinemaOpen)}
+                      className={`w-full h-full flex items-center justify-between pl-6 pr-5 bg-white border rounded-2xl text-base md:text-lg shadow-sm transition-all duration-300 ${
+                        isCinemaOpen
+                          ? "border-[#F25019] ring-4 ring-[#F25019]/10"
+                          : "border-stone-100 hover:border-[#F25019]"
+                      }`}
+                    >
+                      <span
+                        className={`font-medium truncate ${
+                          selectedCinema ? "text-stone-700" : "text-stone-400"
+                        }`}
+                      >
+                        {selectedCinema
+                          ? `${selectedCinema.name} - ${selectedCinema.city}`
+                          : "-- Chọn rạp --"}
+                      </span>
+                      <ChevronDown
+                        className={`w-6 h-6 shrink-0 text-stone-300 transition-transform duration-300 ${
+                          isCinemaOpen ? "rotate-180 text-[#F25019]" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {isCinemaOpen && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-100 rounded-2xl shadow-xl z-50 overflow-hidden p-2 max-h-[300px] overflow-y-auto custom-scrollbar animate-in fade-in zoom-in-95 duration-200">
+                        {cinemas.map((cinema) => {
+                          const isSelected = selectedCinemaId === cinema.id;
+                          return (
+                            <button
+                              key={cinema.id}
+                              onClick={() => {
+                                setSelectedCinemaId(cinema.id);
+                                setIsCinemaOpen(false);
+                              }}
+                              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all ${
+                                isSelected
+                                  ? "bg-orange-50 text-[#F25019] font-bold"
+                                  : "text-stone-600 font-medium hover:bg-stone-50"
+                              }`}
+                            >
+                              <span className="truncate pr-2">
+                                {cinema.name} - {cinema.city}
+                              </span>
+                              {isSelected && (
+                                <Check className="w-4 h-4 shrink-0" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
-              {loadingCinemas ? (
-                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-                  <Loader2 className="w-6 h-6 text-[#F25019] animate-spin" />
-                  <span>Đang tải rạp...</span>
-                </div>
-              ) : (
-                <select
-                  value={selectedCinemaId}
-                  onChange={(e) => setSelectedCinemaId(e.target.value)}
-                  className="w-full p-4 rounded-xl border-2 border-gray-200 focus:border-[#F25019] bg-white/50 backdrop-blur-sm text-lg font-medium transition-all"
-                >
-                  <option value="">-- Chọn rạp chiếu --</option>
-                  {cinemas.map((cinema) => (
-                    <option key={cinema.id} value={cinema.id}>
-                      {cinema.name} - {cinema.city}
-                    </option>
-                  ))}
-                </select>
-              )}
-              {selectedCinema && (
-                <div className="mt-3 p-3 bg-orange-50 rounded-xl border border-orange-100">
-                  <div className="font-semibold text-gray-800">
-                    {selectedCinema.name}
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    {selectedCinema.address}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
-        </div>
 
-        <div className="space-y-8">
-          {loadingShowtimes ? (
-            <div className="flex flex-col items-center py-24">
-              <Loader2 className="w-16 h-16 text-[#F25019] animate-spin mb-6" />
-              <p className="text-xl text-gray-500 font-semibold">
-                Đang tải lịch chiếu...
-              </p>
-              <p className="text-gray-500 mt-2">
-                {format(selectedDate, "dd/MM/yyyy", { locale: vi })} tại{" "}
-                {selectedCinema?.name || "..."}
-              </p>
-            </div>
-          ) : Object.keys(groupedByMovie).length === 0 ? (
-            <div className="text-center py-24 bg-white/50 backdrop-blur-sm rounded-2xl">
-              <Film className="w-24 h-24 mx-auto mb-6 text-gray-300" />
-              <h3 className="text-2xl font-bold text-gray-600 mb-2">
-                Không có suất chiếu
-              </h3>
-              <p className="text-lg text-gray-500">
-                Ngày {format(selectedDate, "dd/MM/yyyy", { locale: vi })} tại
-                rạp {selectedCinema?.name || "đã chọn"} chưa có lịch chiếu
-              </p>
-            </div>
-          ) : (
-            Object.values(groupedByMovie).map(({ movie, sessions }) => {
-              if (!movie) return null;
+          <div className="space-y-6">
+            {loadingShowtimes ? (
+              <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 p-16 text-center">
+                <Loader2 className="w-12 h-12 text-[#F25019] animate-spin mx-auto mb-4" />
+                <p className="text-xl text-gray-400 font-bold">
+                  Đang tìm lịch chiếu phù hợp...
+                </p>
+              </div>
+            ) : Object.keys(groupedByMovie).length === 0 ? (
+              <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/30 p-20 text-center">
+                <div className="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-8">
+                  <Film className="w-10 h-10 text-[#F25019]" />
+                </div>
+                <h3 className="text-3xl font-black text-gray-800 mb-3">
+                  Chưa có lịch chiếu
+                </h3>
+                <p className="text-lg text-gray-500 max-w-lg mx-auto font-medium">
+                  Rạp{" "}
+                  <span className="text-[#F25019]">{selectedCinema?.name}</span>{" "}
+                  hiện chưa có suất chiếu nào cho ngày{" "}
+                  {format(selectedDate, "dd/MM/yyyy")}.
+                </p>
+              </div>
+            ) : (
+              Object.values(groupedByMovie).map(({ movie, sessions }) => {
+                if (!movie) return null;
 
-              return (
-                <div
-                  key={movie.id}
-                  className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden hover:shadow-3xl transition-all group"
-                >
-                  <div className="flex flex-col lg:flex-row">
-                    <div className="lg:w-64 p-6 lg:p-8">
-                      <div className="relative h-80 lg:h-full lg:aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl">
-                        <Image
-                          src={movie.thumbnail || "/placeholder-movie.jpg"}
-                          alt={movie.title}
-                          width={280}
-                          height={420}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          priority={false}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        <div className="absolute bottom-4 left-4">
-                          <span className="bg-[#F25019]/90 text-white px-3 py-1 rounded-full text-sm font-bold">
-                            {sessions[0]?.format || "2D"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex-1 p-8 lg:pt-12">
-                      <h3 className="text-3xl lg:text-4xl font-black text-gray-900 mb-4">
-                        {movie.title}
-                      </h3>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-700 mb-8">
-                        <div>
-                          <span className="font-semibold">Thể loại:</span>{" "}
-                          {movie.genres.map((g) => g.name).join(", ") || "N/A"}
-                        </div>
-                        <div>
-                          <span className="font-semibold">Thời lượng:</span>{" "}
-                          {movie.duration} phút
-                        </div>
-                        <div>
-                          <span className="font-semibold">Đánh giá:</span> ⭐{" "}
-                          {movie.rating.toFixed(1)}
+                return (
+                  <div
+                    key={movie.id}
+                    className="bg-white rounded-2xl shadow-lg border border-white/50 overflow-hidden hover:shadow-xl transition-all duration-300 p-5"
+                  >
+                    <div className="flex flex-col lg:flex-row gap-6">
+                      <div className="lg:w-[180px] shrink-0">
+                        <div className="aspect-[2/3] relative rounded-lg overflow-hidden shadow-md group">
+                          <Image
+                            src={movie.thumbnail || "/placeholder-movie.jpg"}
+                            alt={movie.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                          <div className="absolute top-2 left-2">
+                            <span className="bg-[#F25019] text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
+                              {sessions[0]?.format || "2D"}
+                            </span>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="mb-8">
-                        <div className="flex items-center gap-3 mb-6">
-                          <Clock className="w-6 h-6 text-[#F25019]" />
-                          <span className="text-2xl font-bold text-gray-900">
+                      <div className="flex-1 flex flex-col justify-between min-w-0">
+                        <div>
+                          <h3 className="text-2xl font-black text-gray-900 mb-2 leading-tight uppercase">
+                            {movie.title}
+                          </h3>
+
+                          <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600 font-medium mb-4">
+                            <span className="flex items-center gap-1 text-yellow-500 font-bold">
+                              <Star className="w-4 h-4 fill-current" />
+                              {movie.rating.toFixed(1)}
+                            </span>
+                            <span className="text-gray-300">|</span>
+                            <span>{movie.duration} phút</span>
+                            <span className="text-gray-300">|</span>
+                            <span className="truncate">
+                              {movie.genres.map((g) => g.name).join(", ")}
+                            </span>
+                          </div>
+                        </div>
+                        {selectedCinema && (
+                          <div className="mt-auto mb-4 pt-4 border-t border-gray-100 border-dashed">
+                            <div className="flex items-start gap-3">
+                              <div className="bg-orange-50 p-2 rounded-lg shrink-0">
+                                <MapPin className="w-4 h-4 text-[#F25019]" />
+                              </div>
+                              <div>
+                                <h4 className="font-bold text-gray-900 text-sm leading-none mb-1.5">
+                                  {selectedCinema.name}
+                                </h4>
+                                <p className="text-xs text-gray-500 font-medium leading-relaxed">
+                                  {selectedCinema.address}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        <div className="flex gap-3 mt-4 lg:mt-0 pt-4 border-t border-gray-100 lg:border-none lg:pt-0">
+                          <Link
+                            href={`/booking?movie=${movie.id}`}
+                            className="flex-1 inline-flex justify-center items-center px-4 py-3 bg-[#F25019] hover:bg-[#d14012] text-white font-bold rounded-xl shadow-lg shadow-orange-500/20 transition-all hover:-translate-y-0.5 text-sm"
+                          >
+                            Đặt vé
+                          </Link>
+                          <Link
+                            href={`/movies/${movie.id}`}
+                            className="flex-1 inline-flex justify-center items-center px-4 py-3 bg-white border-2 border-gray-100 hover:border-gray-300 hover:bg-gray-50 text-gray-700 font-bold rounded-xl transition-all text-sm"
+                          >
+                            Chi tiết
+                          </Link>
+                        </div>
+                      </div>
+
+                      <div className="lg:w-[45%] lg:border-l lg:border-gray-100 lg:pl-6 flex flex-col">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Clock className="w-4 h-4 text-[#F25019]" />
+                          <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">
                             Suất chiếu
                           </span>
                         </div>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+
+                        <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-4 gap-2.5">
                           {sessions
                             .sort((a, b) =>
                               a.startTime.localeCompare(b.startTime)
@@ -329,40 +483,28 @@ export default function ShowtimesPage() {
                               <Link
                                 key={session.id}
                                 href={`/booking?movie=${movie.id}&showtime=${session.id}`}
-                                className="block p-4 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 hover:from-[#F25019] hover:to-orange-600 hover:text-white text-center font-bold shadow-md hover:shadow-xl hover:scale-105 transition-all"
+                                className="group/time relative bg-gray-50 hover:bg-[#F25019] border border-gray-200 hover:border-[#F25019] rounded-lg py-2 transition-all duration-200 text-center"
                               >
-                                <div className="text-lg">
+                                <div className="text-sm font-bold text-gray-800 group-hover/time:text-white">
                                   {formatShowtime(session.startTime)}
                                 </div>
-                                <div className="text-xs mt-1 opacity-80">
-                                  {session.format} • {session.language}
+                                <div className="text-[9px] uppercase font-bold text-gray-400 group-hover/time:text-orange-100 mt-0.5">
+                                  {session.language}
                                 </div>
                               </Link>
                             ))}
                         </div>
                       </div>
-
-                      <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
-                        <Link
-                          href={`/movies/${movie.id}`}
-                          className="flex-1 bg-gray-800 hover:bg-gray-700 text-white py-4 px-6 rounded-xl font-bold text-center transition-all"
-                        >
-                          Chi tiết phim
-                        </Link>
-                        <Link
-                          href={`/booking?movie=${movie.id}`}
-                          className="flex-1 bg-gradient-to-r from-[#F25019] to-orange-600 hover:from-orange-600 hover:to-[#F25019] text-white py-4 px-6 rounded-xl font-bold text-center transition-all shadow-xl"
-                        >
-                          Đặt vé ngay
-                        </Link>
-                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })
-          )}
+                );
+              })
+            )}
+          </div>
         </div>
+      </main>
+      <div className="relative z-10">
+        <Footer />
       </div>
     </div>
   );
