@@ -539,9 +539,9 @@ export default function BookingCompletedPage() {
             >
               <div className="relative w-[160px] aspect-[2/3] shadow-2xl rounded-lg overflow-hidden border-4 border-white/20 mb-4 transform hover:scale-105 transition-transform duration-500">
                 <Image
+                  fill
                   src={movie.thumbnail || "/placeholder-poster.jpg"}
                   alt={movie.title}
-                  fill
                   className="object-cover"
                 />
               </div>
@@ -724,235 +724,187 @@ export default function BookingCompletedPage() {
 
       {/* HIDDEN PRINTABLE AREA FOR PDF */}
       <div style={{ position: "absolute", left: "-9999px", top: 0 }}>
-        <div
-          ref={printableRef}
-          style={{
-            width: "210mm",
-            minHeight: "297mm",
-            padding: "20mm",
-            backgroundColor: "white",
-            fontFamily: "Arial, sans-serif",
-            fontSize: "12pt",
-            color: "#333",
-            lineHeight: "1.6",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          {/* Header PDF */}
-          <div
-            style={{
-              textAlign: "center",
-              marginBottom: "30px",
-              borderBottom: "3px solid #F25019",
-              paddingBottom: "20px",
-              width: "100%",
-            }}
-          >
-            <h1
-              style={{
-                color: "#F25019",
-                fontSize: "28pt",
-                margin: "0 0 10px 0",
-                textTransform: "uppercase",
-                fontWeight: "bold",
-              }}
-            >
-              VÉ XEM PHIM
-            </h1>
-            <p style={{ margin: 0, color: "#666", fontSize: "14pt" }}>
-              Cảm ơn quý khách đã sử dụng dịch vụ
-            </p>
-            <div
-              style={{
-                marginTop: "15px",
-                display: "inline-block",
-                background: "#fffbf5",
-                padding: "10px 20px",
-                borderRadius: "8px",
-                border: "1px solid #F25019",
-              }}
-            >
-              <span style={{ fontSize: "14pt", color: "#555" }}>Mã vé: </span>
-              <strong
-                style={{
-                  fontSize: "18pt",
-                  color: "#F25019",
-                  fontFamily: "monospace",
-                }}
-              >
-                {booking.id}
-              </strong>
-            </div>
-          </div>
+        <div ref={printableRef}>
+          <div className="w-[210mm] min-h-[297mm] p-[15mm] bg-white font-sans text-sm relative flex flex-col items-center">
+            {/* Decorative Header */}
+            <div className="absolute top-0 left-0 w-full h-4 bg-gradient-to-r from-orange-500 to-amber-500"></div>
 
-          {/* Info PDF */}
-          <div
-            style={{
-              display: "flex",
-              gap: "30px",
-              marginBottom: "30px",
-              width: "100%",
-            }}
-          >
-            {/* Poster phim bên trái */}
-            <div
-              style={{
-                width: "35%",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Image
-                src={
-                  movie.thumbnail ||
-                  "https://via.placeholder.com/300x450?text=CinemaGO"
-                }
-                style={{
-                  width: "100%",
-                  borderRadius: "8px",
-                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                  objectFit: "cover",
-                }}
-                alt="Poster"
-              />
+            <div className="text-center mb-8 mt-4 w-full">
+              <h1 className="text-4xl font-bold text-orange-700 uppercase tracking-wider">
+                VÉ XEM PHIM
+              </h1>
+              <p className="text-gray-500 mt-2">
+                Cảm ơn quý khách đã sử dụng dịch vụ
+              </p>
+              <div className="mt-4 inline-block border-2 border-orange-200 px-6 py-2 rounded-lg bg-orange-50">
+                <p className="text-lg text-orange-800">
+                  Mã vé:{" "}
+                  <strong className="font-mono text-xl">{booking.id}</strong>
+                </p>
+              </div>
             </div>
 
-            {/* Thông tin bên phải */}
-            <div style={{ width: "65%" }}>
-              <h2
-                style={{
-                  fontSize: "22pt",
-                  fontWeight: "bold",
-                  margin: "0 0 20px 0",
-                  color: "#222",
-                }}
-              >
-                {movie.title}
-              </h2>
+            <div className="flex gap-8 mb-8 border-b border-orange-100 pb-8 w-full">
+              <div className="w-1/3 flex justify-center">
+                <Image
+                  src={movie.thumbnail || "/placeholder-poster.jpg"}
+                  alt={movie.title || "N/A"}
+                  width={280}
+                  height={420}
+                  className="rounded-lg object-cover shadow-lg border border-gray-200"
+                />
+              </div>
+              <div className="w-2/3 space-y-4">
+                <h2 className="text-3xl font-bold text-gray-800">
+                  {movie.title || "N/A"}
+                </h2>
 
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <tbody>
-                  <tr>
-                    <td
-                      style={{
-                        padding: "8px 0",
-                        color: "#666",
-                        width: "130px",
-                      }}
-                    >
-                      Rạp chiếu:
-                    </td>
-                    <td
-                      style={{
-                        padding: "8px 0",
-                        fontWeight: "bold",
-                        color: "#F25019",
-                      }}
-                    >
+                <div className="grid grid-cols-2 gap-4 text-base">
+                  <div>
+                    <span className="text-gray-500 block text-xs uppercase font-bold">
+                      Ngày chiếu
+                    </span>
+                    <span className="font-semibold text-gray-800">
+                      {formattedDate}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block text-xs uppercase font-bold">
+                      Giờ chiếu
+                    </span>
+                    <span className="font-semibold text-gray-800">
+                      {formattedTime}
+                    </span>
+                  </div>
+                  <div className="col-span-2">
+                    <span className="text-gray-500 block text-xs uppercase font-bold">
+                      Rạp chiếu
+                    </span>
+                    <span className="font-semibold text-orange-600">
                       {cinema.name}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ padding: "8px 0", color: "#666" }}>
-                      Ngày giờ:
-                    </td>
-                    <td style={{ padding: "8px 0", fontWeight: "bold" }}>
-                      {formattedDate} - {formattedTime}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ padding: "8px 0", color: "#666" }}>
-                      Phòng chiếu:
-                    </td>
-                    <td style={{ padding: "8px 0", fontWeight: "bold" }}>
+                    </span>
+                    <p className="text-gray-600 text-sm">{cinema.address}</p>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block text-xs uppercase font-bold">
+                      Phòng
+                    </span>
+                    <span className="font-semibold text-gray-800">
                       {room.name}
-                    </td>
-                  </tr>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full">
+              <h3 className="text-lg font-bold text-gray-800 mb-3 border-l-4 border-orange-500 pl-3">
+                Chi tiết ghế ngồi
+              </h3>
+              <table className="w-full mb-8 border-collapse">
+                <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
                   <tr>
-                    <td style={{ padding: "8px 0", color: "#666" }}>Ghế:</td>
-                    <td
-                      style={{
-                        padding: "8px 0",
-                        fontWeight: "bold",
-                        fontSize: "14pt",
-                      }}
-                    >
-                      {selectedSeatsDetails.map((s) => s.seatNumber).join(", ")}
-                    </td>
+                    <th className="text-left py-3 px-4 rounded-l-lg">Số ghế</th>
+                    <th className="text-left py-3 px-4">Loại ghế</th>
+                    <th className="text-right py-3 px-4 rounded-r-lg">
+                      Giá vé
+                    </th>
                   </tr>
+                </thead>
+                <tbody>
+                  {selectedSeatsDetails.map((s, index) => (
+                    <tr
+                      key={s.seatNumber}
+                      className={
+                        index % 2 === 0 ? "bg-white" : "bg-orange-50/30"
+                      }
+                    >
+                      <td className="py-3 px-4 font-bold">{s.seatNumber}</td>
+                      <td className="py-3 px-4">{s.type}</td>
+                      <td className="py-3 px-4 text-right font-mono">
+                        {new Intl.NumberFormat("vi-VN").format(s.price)} ₫
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
-            </div>
-          </div>
 
-          {/* QR Code PDF */}
-          <div style={{ textAlign: "center", margin: "20px 0", width: "100%" }}>
-            <div
-              style={{
-                display: "inline-block",
-                padding: "10px",
-                border: "2px dashed #ddd",
-                borderRadius: "10px",
-              }}
-            >
-              <Image
-                src={qrUrl}
-                style={{ width: "140px", height: "140px" }}
-                alt="QR"
-              />
-            </div>
-            <p style={{ fontSize: "10pt", color: "#888", marginTop: "5px" }}>
-              Quét mã tại quầy soát vé
-            </p>
-          </div>
+              {foodDrinks.length > 0 && (
+                <>
+                  <h3 className="text-lg font-bold text-gray-800 mb-3 border-l-4 border-orange-500 pl-3">
+                    Combo & Bắp nước
+                  </h3>
+                  <table className="w-full mb-8 border-collapse">
+                    <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+                      <tr>
+                        <th className="text-left py-3 px-4 rounded-l-lg">
+                          Tên món
+                        </th>
+                        <th className="text-center py-3 px-4">Số lượng</th>
+                        <th className="text-right py-3 px-4 rounded-r-lg">
+                          Thành tiền
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {foodDrinks.map((item, index) => (
+                        <tr
+                          key={item.id}
+                          className={
+                            index % 2 === 0 ? "bg-white" : "bg-orange-50/30"
+                          }
+                        >
+                          <td className="py-3 px-4 font-medium">{item.name}</td>
+                          <td className="py-3 px-4 text-center">
+                            {item.quantity}
+                          </td>
+                          <td className="py-3 px-4 text-right font-mono">
+                            {new Intl.NumberFormat("vi-VN").format(
+                              item.totalPrice,
+                            )}{" "}
+                            ₫
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </>
+              )}
 
-          {/* Total Box PDF */}
-          <div
-            style={{
-              marginTop: "auto",
-              padding: "20px",
-              backgroundColor: "#fff5f0",
-              border: "1px solid #ffccb3",
-              textAlign: "center",
-              borderRadius: "12px",
-              width: "100%",
-            }}
-          >
-            <div style={{ fontSize: "14pt", color: "#666" }}>
-              Tổng thanh toán
-            </div>
-            <div
-              style={{
-                fontSize: "30pt",
-                fontWeight: "bold",
-                color: "#F25019",
-                margin: "10px 0",
-              }}
-            >
-              {new Intl.NumberFormat("vi-VN").format(booking.totalPrice)} ₫
-            </div>
-            {method && (
-              <div style={{ fontSize: "12pt", color: "#555" }}>
-                Phương thức: <strong>{method}</strong>
+              <div className="flex justify-between items-end mt-10 pt-6 border-t-2 border-dashed border-gray-300">
+                <div className="text-center">
+                  <Image
+                    src={qrUrl}
+                    alt="QR Code vé"
+                    width={120}
+                    height={120}
+                    className="border-2 border-gray-200 p-1 bg-white rounded-lg"
+                  />
+                  <p className="mt-2 text-xs text-gray-500 uppercase tracking-wide">
+                    Quét mã check-in
+                  </p>
+                </div>
+
+                <div className="text-right">
+                  <p className="text-gray-500 mb-1">Tổng thanh toán</p>
+                  <p className="text-4xl font-bold text-orange-600">
+                    {new Intl.NumberFormat("vi-VN").format(booking.totalPrice)}{" "}
+                    ₫
+                  </p>
+                  <p className="text-gray-400 text-xs mt-2 italic">
+                    Đã bao gồm VAT
+                  </p>
+                </div>
               </div>
-            )}
-          </div>
+            </div>
 
-          <p
-            style={{
-              textAlign: "center",
-              marginTop: "30px",
-              color: "#888",
-              fontSize: "10pt",
-              width: "100%",
-            }}
-          >
-            Vui lòng xuất trình mã vé hoặc QR code tại quầy khi vào rạp.
-            <br />
-            <strong>Chúc Quý khách xem phim vui vẻ!</strong>
-          </p>
+            <div className="absolute bottom-10 left-0 w-full text-center text-gray-400 text-xs">
+              <p>
+                Vé chỉ có giá trị cho suất chiếu đã chọn. Vui lòng đến trước giờ
+                chiếu 15 phút.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </>
