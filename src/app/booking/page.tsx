@@ -69,7 +69,7 @@ export default function BookingPage() {
   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedShowtime, setSelectedShowtime] = useState<Showtime | null>(
-    null
+    null,
   );
   const [selectedCinema, setSelectedCinema] = useState<Cinema | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
@@ -125,7 +125,7 @@ export default function BookingPage() {
             const seatId = heldSeat.seatId;
 
             const seatInLayout = enrichedLayout.find(
-              (s) => s.id === seatId || s.secondId === seatId
+              (s) => s.id === seatId || s.secondId === seatId,
             );
 
             if (seatInLayout) {
@@ -214,7 +214,7 @@ export default function BookingPage() {
           const now = Date.now();
           const remainingSeconds = Math.max(
             0,
-            Math.floor((earliestExpiresAt.getTime() - now) / 1000)
+            Math.floor((earliestExpiresAt.getTime() - now) / 1000),
           );
 
           if (remainingSeconds === 0) {
@@ -248,14 +248,14 @@ export default function BookingPage() {
 
         if (data.status === "released") {
           const isMySeat = chosenSeatsRef.current.some(
-            (s) => s.id === data.seatId || s.secondId === data.seatId
+            (s) => s.id === data.seatId || s.secondId === data.seatId,
           );
 
           if (isMySeat) {
             setChosenSeats((prev) =>
               prev.filter(
-                (s) => s.id !== data.seatId && s.secondId !== data.seatId
-              )
+                (s) => s.id !== data.seatId && s.secondId !== data.seatId,
+              ),
             );
           }
         }
@@ -273,11 +273,11 @@ export default function BookingPage() {
 
         if (data.status === "booked") {
           setBookedSeats((prev) =>
-            prev.includes(data.seatId) ? prev : [...prev, data.seatId]
+            prev.includes(data.seatId) ? prev : [...prev, data.seatId],
           );
           setHeldSeats((prev) => prev.filter((id) => id !== data.seatId));
         }
-      }
+      },
     );
 
     return () => {
@@ -329,7 +329,7 @@ export default function BookingPage() {
           movieId,
           undefined,
           true,
-          startTime
+          startTime,
         );
 
         setShowtimes(res.data || []);
@@ -378,7 +378,7 @@ export default function BookingPage() {
 
         const merged = mergeSeatData(
           res.data.seatLayout || [],
-          res.data.seats || []
+          res.data.seats || [],
         );
         setEnrichedLayout(merged);
         setTimeout(() => {
@@ -424,7 +424,7 @@ export default function BookingPage() {
           toast.warning(
             `Vui lòng bỏ chọn ${
               seatsOfType.length - newQty
-            } ghế trước khi giảm số lượng vé.`
+            } ghế trước khi giảm số lượng vé.`,
           );
           return prev;
         }
@@ -462,8 +462,8 @@ export default function BookingPage() {
             releaseSeat({
               showtimeId: showtimeIdStr,
               seatId: id,
-            })
-          )
+            }),
+          ),
         );
 
         setChosenSeats((prev) => prev.filter((s) => s.id !== seat.id));
@@ -475,8 +475,8 @@ export default function BookingPage() {
             holdSeat({
               showtimeId: showtimeIdStr,
               seatId: id,
-            })
-          )
+            }),
+          ),
         );
 
         setChosenSeats((prev) => [...prev, seat]);
@@ -597,7 +597,7 @@ export default function BookingPage() {
     try {
       const seatIds = chosenSeats
         .flatMap((seat) =>
-          seat.secondId ? [seat.id, seat.secondId] : [seat.id]
+          seat.secondId ? [seat.id, seat.secondId] : [seat.id],
         )
         .filter(Boolean) as string[];
 
@@ -619,7 +619,7 @@ export default function BookingPage() {
         String(selectedShowtime.id),
         seatIds,
         foodDrinks,
-        String(selectedShowtime.cinemaId)
+        String(selectedShowtime.cinemaId),
       );
 
       const bookingId = bookingResponse.data.data.id;
