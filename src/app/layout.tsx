@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     canonical: "https://cinemago-user-one.vercel.app",
   },
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favicon.svg?v=2",
     apple: "/apple-touch-icon.png",
   },
 };
