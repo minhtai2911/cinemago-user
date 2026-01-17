@@ -4,7 +4,6 @@ import { notFound, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import MovieDetailCard from "@/components/booking/MovieDetailCard";
-import MovieInfo from "@/components/movie/MovieInfo";
 import {
   getMovieById,
   getShowtimes,
@@ -44,7 +43,7 @@ import { toast } from "sonner";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import PaymentMethodModal from "@/components/booking/PaymentMethodModal";
-import Image from "next/image";
+import Footer from "@/components/Footer";
 const SOCKET_URL =
   process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:8000";
 
@@ -70,7 +69,7 @@ export default function BookingPage() {
   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedShowtime, setSelectedShowtime] = useState<Showtime | null>(
-    null
+    null,
   );
   const [selectedCinema, setSelectedCinema] = useState<Cinema | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
@@ -126,7 +125,7 @@ export default function BookingPage() {
             const seatId = heldSeat.seatId;
 
             const seatInLayout = enrichedLayout.find(
-              (s) => s.id === seatId || s.secondId === seatId
+              (s) => s.id === seatId || s.secondId === seatId,
             );
 
             if (seatInLayout) {
@@ -215,7 +214,7 @@ export default function BookingPage() {
           const now = Date.now();
           const remainingSeconds = Math.max(
             0,
-            Math.floor((earliestExpiresAt.getTime() - now) / 1000)
+            Math.floor((earliestExpiresAt.getTime() - now) / 1000),
           );
 
           if (remainingSeconds === 0) {
@@ -249,14 +248,14 @@ export default function BookingPage() {
 
         if (data.status === "released") {
           const isMySeat = chosenSeatsRef.current.some(
-            (s) => s.id === data.seatId || s.secondId === data.seatId
+            (s) => s.id === data.seatId || s.secondId === data.seatId,
           );
 
           if (isMySeat) {
             setChosenSeats((prev) =>
               prev.filter(
-                (s) => s.id !== data.seatId && s.secondId !== data.seatId
-              )
+                (s) => s.id !== data.seatId && s.secondId !== data.seatId,
+              ),
             );
           }
         }
@@ -274,11 +273,11 @@ export default function BookingPage() {
 
         if (data.status === "booked") {
           setBookedSeats((prev) =>
-            prev.includes(data.seatId) ? prev : [...prev, data.seatId]
+            prev.includes(data.seatId) ? prev : [...prev, data.seatId],
           );
           setHeldSeats((prev) => prev.filter((id) => id !== data.seatId));
         }
-      }
+      },
     );
 
     return () => {
@@ -330,7 +329,7 @@ export default function BookingPage() {
           movieId,
           undefined,
           true,
-          startTime
+          startTime,
         );
 
         setShowtimes(res.data || []);
@@ -379,7 +378,7 @@ export default function BookingPage() {
 
         const merged = mergeSeatData(
           res.data.seatLayout || [],
-          res.data.seats || []
+          res.data.seats || [],
         );
         setEnrichedLayout(merged);
         setTimeout(() => {
@@ -425,7 +424,7 @@ export default function BookingPage() {
           toast.warning(
             `Vui lòng bỏ chọn ${
               seatsOfType.length - newQty
-            } ghế trước khi giảm số lượng vé.`
+            } ghế trước khi giảm số lượng vé.`,
           );
           return prev;
         }
@@ -463,8 +462,8 @@ export default function BookingPage() {
             releaseSeat({
               showtimeId: showtimeIdStr,
               seatId: id,
-            })
-          )
+            }),
+          ),
         );
 
         setChosenSeats((prev) => prev.filter((s) => s.id !== seat.id));
@@ -476,8 +475,8 @@ export default function BookingPage() {
             holdSeat({
               showtimeId: showtimeIdStr,
               seatId: id,
-            })
-          )
+            }),
+          ),
         );
 
         setChosenSeats((prev) => [...prev, seat]);
@@ -598,7 +597,7 @@ export default function BookingPage() {
     try {
       const seatIds = chosenSeats
         .flatMap((seat) =>
-          seat.secondId ? [seat.id, seat.secondId] : [seat.id]
+          seat.secondId ? [seat.id, seat.secondId] : [seat.id],
         )
         .filter(Boolean) as string[];
 
@@ -620,7 +619,7 @@ export default function BookingPage() {
         String(selectedShowtime.id),
         seatIds,
         foodDrinks,
-        String(selectedShowtime.cinemaId)
+        String(selectedShowtime.cinemaId),
       );
 
       const bookingId = bookingResponse.data.data.id;
@@ -652,29 +651,10 @@ export default function BookingPage() {
     }
   };
 
-  if (loading) {
+  if (!movieId || !movie || loading) {
     return (
       <div className="min-h-screen bg-[#fff6f0] text-orange-700 flex items-center justify-center">
         <div className="animate-pulse">Đang tải dữ liệu phim...</div>
-      </div>
-    );
-  }
-
-  if (!movieId || !movie) {
-    return (
-      <div className="min-h-screen bg-[#fff6f0] text-orange-600 flex items-center justify-center relative overflow-hidden">
-        <Image
-          width={1000}
-          height={1000}
-          src="/popcorn.png"
-          alt=""
-          aria-hidden
-          className="hidden lg:block pointer-events-none select-none absolute -left-40 -top-8 w-[180%] opacity-40 -z-20"
-          style={{ transform: "scaleX(-1) rotate(-6deg)" }}
-        />
-        <div className="text-center">
-          <h2 className="text-2xl font-bold">Đang tải dữ liệu phim...</h2>
-        </div>
       </div>
     );
   }
@@ -703,18 +683,9 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50 text-white relative overflow-hidden">
-      {/* <Image
-        width={1000}
-        height={1000}
-        src="/popcorn.png"
-        alt=""
-        aria-hidden
-        className="hidden lg:block pointer-events-none select-none absolute -left-40 -top-8 w-[180%] opacity-40 -z-20"
-        style={{ transform: "scaleX(-1) rotate(-6deg)" }}
-      /> */}
+    <div className="min-h-screen bg-orange-50 text-white relative overflow-hidden flex flex-col">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 pt-[120px]">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 pt-[120px] flex-grow w-full">
         <div className="bg-white rounded-2xl shadow-xl border border-white/30 p-6 md:p-8">
           <MovieDetailCard movie={movie} />
         </div>
@@ -765,6 +736,12 @@ export default function BookingPage() {
           )}
         </div>
       </div>
+
+      <div className="mt-auto">
+        <Footer />
+      </div>
+
+      <div className="h-40 md:h-32 w-full"></div>
 
       {selectedShowtime && movie && (
         <BookingBottomBar
