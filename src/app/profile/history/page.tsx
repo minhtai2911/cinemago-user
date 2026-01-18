@@ -216,7 +216,7 @@ const PrintableTicket = ({ booking }: { booking: EnrichedBooking }) => {
             <p className="text-gray-500 mb-1">Tổng thanh toán</p>
             <p className="text-4xl font-bold text-orange-600">
               {new Intl.NumberFormat("vi-VN").format(
-                booking.booking.totalPrice
+                booking.booking.totalPrice,
               )}{" "}
               ₫
             </p>
@@ -240,7 +240,7 @@ export default function HistoryPage() {
   const { profile, isLogged } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [enrichedBookings, setEnrichedBookings] = useState<EnrichedBooking[]>(
-    []
+    [],
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -262,7 +262,7 @@ export default function HistoryPage() {
 
         const { data: response } = await getBookingsByUserId(
           currentPage,
-          limit
+          limit,
         );
 
         const bookingList = response.data || [];
@@ -280,7 +280,7 @@ export default function HistoryPage() {
         for (const booking of bookingList) {
           try {
             const { data: showtime } = await getShowtimeById(
-              booking.showtimeId
+              booking.showtimeId,
             );
 
             const date = new Date(showtime.startTime);
@@ -304,20 +304,20 @@ export default function HistoryPage() {
             const selectedSeats = roomRes.data.seats.filter(
               (s: { id: string }) =>
                 booking.bookingSeats.some(
-                  (bs: { seatId: string }) => bs.seatId === s.id
-                )
+                  (bs: { seatId: string }) => bs.seatId === s.id,
+                ),
             );
 
             const foodTotal = booking.bookingFoodDrinks.reduce(
               (sum: number, item: { totalPrice: number }) =>
                 sum + item.totalPrice,
-              0
+              0,
             );
             const ticketTotal = booking.totalPrice - foodTotal;
             const sumExtra = selectedSeats.reduce(
               (sum: number, seat: { extraPrice?: number }) =>
                 sum + (seat.extraPrice || 0),
-              0
+              0,
             );
             const seatCount = selectedSeats.length;
             const basePrice =
@@ -332,7 +332,7 @@ export default function HistoryPage() {
                 seatNumber: seat.seatNumber,
                 type: seat.seatType || "N/A",
                 price: basePrice + (seat.extraPrice || 0),
-              })
+              }),
             );
 
             const foodDrinks = await Promise.all(
@@ -344,7 +344,7 @@ export default function HistoryPage() {
                 }) => {
                   try {
                     const { data: food } = await getFoodDrinkById(
-                      item.foodDrinkId
+                      item.foodDrinkId,
                     );
                     return {
                       ...food,
@@ -360,12 +360,12 @@ export default function HistoryPage() {
                       totalPrice: item.totalPrice,
                     };
                   }
-                }
-              )
+                },
+              ),
             );
 
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
-              booking.id
+              booking.id,
             )}&ecc=H`;
 
             enriched.push({
@@ -519,8 +519,11 @@ export default function HistoryPage() {
       <ProfileLayout>
         <div className="space-y-8 pb-20">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-gray-900">
-              Lịch sử vé đã mua
+            <h1 className="text-4xl font-black uppercase tracking-tight mb-2 relative z-10">
+              <span className="text-gray-900">LỊCH SỬ </span>
+              <span className="bg-gradient-to-r from-[#FF7043] to-[#FFAB91] bg-clip-text text-transparent">
+                VÉ ĐÃ MUA
+              </span>
             </h1>
             <div className="text-sm text-gray-500 bg-gray-100 px-4 py-2 rounded-full">
               Trang {currentPage} / {totalPages}
@@ -562,7 +565,7 @@ export default function HistoryPage() {
                   <div className="flex-1 p-6 flex flex-col justify-between">
                     <div>
                       <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-2xl font-bold text-gray-800 line-clamp-1 group-hover:text-orange-600 transition-colors">
+                        <h3 className="text-2xl font-black text-gray-800 line-clamp-1 group-hover:text-orange-600 transition-colors">
                           {item.movie?.title || "N/A"}
                         </h3>
                         <p className="font-mono text-sm text-gray-400">
@@ -610,9 +613,9 @@ export default function HistoryPage() {
                         <p className="text-xs text-gray-500 uppercase font-bold tracking-wide">
                           Tổng tiền
                         </p>
-                        <p className="text-2xl font-bold text-orange-600">
+                        <p className="text-2xl font-black text-orange-600">
                           {new Intl.NumberFormat("vi-VN").format(
-                            item.booking.totalPrice
+                            item.booking.totalPrice,
                           )}{" "}
                           ₫
                         </p>
@@ -656,7 +659,7 @@ export default function HistoryPage() {
                     >
                       {page}
                     </button>
-                  )
+                  ),
                 )}
               </div>
 
@@ -696,15 +699,17 @@ export default function HistoryPage() {
             </div>
 
             <div className="p-6 md:p-8">
-              {/* Status Banner */}
-              <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center mb-8">
-                <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-3" />
-                <h1 className="text-2xl font-bold text-green-800">
-                  ĐẶT VÉ THÀNH CÔNG
+              {/* Status banner */}
+              <div className="text-center mb-10">
+                <div className="inline-flex items-center justify-center p-4 bg-green-100 rounded-full mb-4 shadow-sm animate-bounce">
+                  <CheckCircle2 className="w-12 h-12 text-green-600" />
+                </div>
+                <h1 className="text-3xl md:text-4xl font-black text-gray-800 uppercase tracking-wide mb-5">
+                  ĐẶT VÉ THÀNH CÔNG!
                 </h1>
-                <p className="text-green-700 mt-1">
+                <p className="text-green-700 font-medium mt-1">
                   Mã vé của bạn:{" "}
-                  <span className="font-mono font-bold text-xl bg-white px-3 py-1 rounded border border-green-200 ml-1">
+                  <span className="font-mono font-bold text-xl bg-green-50 px-3 py-1 rounded border border-green-200 ml-1">
                     {selectedBooking.booking.id}
                   </span>
                 </p>
@@ -740,7 +745,7 @@ export default function HistoryPage() {
                 {/* Column 2: Info */}
                 <div className="w-full md:w-2/3 space-y-8">
                   <div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                    <h2 className="text-3xl font-extrabold text-gray-900 mb-3">
                       {selectedBooking.movie?.title}
                     </h2>
                     <div className="flex flex-wrap gap-2">
@@ -867,7 +872,7 @@ export default function HistoryPage() {
                             </div>
                             <p className="font-medium text-orange-700">
                               {new Intl.NumberFormat("vi-VN").format(
-                                item.totalPrice
+                                item.totalPrice,
                               )}{" "}
                               ₫
                             </p>
@@ -883,9 +888,9 @@ export default function HistoryPage() {
                       <p className="text-gray-500 text-sm">
                         Tổng tiền thanh toán
                       </p>
-                      <p className="text-3xl font-bold text-orange-600">
+                      <p className="text-3xl font-black text-orange-600">
                         {new Intl.NumberFormat("vi-VN").format(
-                          selectedBooking.booking.totalPrice
+                          selectedBooking.booking.totalPrice,
                         )}{" "}
                         ₫
                       </p>
