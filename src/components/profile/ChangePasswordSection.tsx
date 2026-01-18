@@ -146,7 +146,6 @@ export default function ChangePasswordSection() {
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                {/* Logic icon cũ */}
                 {formData.confirmPassword &&
                 formData.newPassword === formData.confirmPassword ? (
                   <div className="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center">

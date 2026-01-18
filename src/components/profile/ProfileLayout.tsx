@@ -39,11 +39,8 @@ export default function ProfileLayout({
   // --- Background Component ---
   const AmbientBackground = () => (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#FFF9F6]">
-      {/* Soft Gradients */}
       <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-gradient-to-br from-orange-200/10 to-rose-200/10 blur-[120px]"></div>
       <div className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full bg-gradient-to-tr from-rose-100/20 to-orange-100/10 blur-[120px]"></div>
-
-      {/* --- POPCORN WATERMARK (NEW) --- */}
       <div className="absolute top-[40%] -left-[0%] w-[600px] h-[600px] opacity-[0.15] z-0 rotate-56">
         <Image
           src="/corn.png"
