@@ -3,7 +3,7 @@
 import { notFound, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import Navbar from "@/components/Navbar";
-import MovieInfo from "@/components/movie/MovieInfo";
+import MovieDetailCard from "@/components/booking/MovieDetailCard";
 import {
   getMovieById,
   getShowtimes,
@@ -43,7 +43,7 @@ import { toast } from "sonner";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import PaymentMethodModal from "@/components/booking/PaymentMethodModal";
-
+import Footer from "@/components/Footer";
 const SOCKET_URL =
   process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:8000";
 
@@ -653,17 +653,15 @@ export default function BookingPage() {
 
   if (!movieId || !movie || loading) {
     return (
-      <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold">Đang tải dữ liệu phim...</h2>
-        </div>
+      <div className="min-h-screen bg-[#fff6f0] text-orange-700 flex items-center justify-center">
+        <div className="animate-pulse">Đang tải dữ liệu phim...</div>
       </div>
     );
   }
 
   if (isLogged === false) {
     return (
-      <div className="min-h-screen bg-[#0f172a] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#fff4ef] text-black flex items-center justify-center">
         <div className="text-center px-4">
           <h2 className="text-2xl font-bold mb-4">
             Vui lòng đăng nhập để đặt vé xem phim
@@ -675,7 +673,7 @@ export default function BookingPage() {
             onClick={() => {
               router.push("/login");
             }}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
+            className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
           >
             Đăng nhập
           </button>
@@ -685,11 +683,12 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white">
+    <div className="min-h-screen bg-orange-50 text-white relative overflow-hidden flex flex-col">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 pt-[120px]">
-        <MovieInfo movie={movie} />
-
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 pt-[120px] flex-grow w-full">
+        <div className="bg-white rounded-2xl shadow-xl border border-white/30 p-6 md:p-8">
+          <MovieDetailCard movie={movie} />
+        </div>
         <div className="mt-12">
           <ShowtimeList
             showtimes={showtimes}
@@ -737,6 +736,12 @@ export default function BookingPage() {
           )}
         </div>
       </div>
+
+      <div className="mt-auto">
+        <Footer />
+      </div>
+
+      <div className="h-40 md:h-32 w-full"></div>
 
       {selectedShowtime && movie && (
         <BookingBottomBar
