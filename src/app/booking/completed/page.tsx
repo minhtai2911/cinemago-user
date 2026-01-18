@@ -510,7 +510,23 @@ export default function BookingCompletedPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-[#fffbf5] py-10 px-4 pb-32 font-sans">
+      <div className="relative z-10 min-h-screen bg-gradient-to-r from-[#fffbf5] to-[#fefefe] py-10 px-4 pb-32 font-sans">
+        {/* --- Background Effects --- */}
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+          {/* Gradient Blobs */}
+          <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-gradient-to-br from-orange-200/20 to-rose-200/20 blur-[100px]" />
+          <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-rose-100/30 to-orange-100/20 blur-[100px]" />
+
+          {/* Popcorn Watermark */}
+          <div className="absolute top-[20%] -right-[5%] w-[400px] h-[400px] lg:w-[600px] lg:h-[600px] opacity-[0.1] z-0">
+            <Image
+              src="/corn.png"
+              alt="bg-cinemago"
+              fill
+              className="object-contain"
+            />
+          </div>
+        </div>
         <div className="max-w-4xl mx-auto animate-in fade-in zoom-in duration-500">
           {/* Header Thông báo */}
           <div className="text-center mb-10">
@@ -527,6 +543,7 @@ export default function BookingCompletedPage() {
 
           {/* Ticket Card Style */}
           <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col md:flex-row relative filter drop-shadow-xl">
+            {" "}
             {/* Poster Section */}
             <div
               className="w-full md:w-[280px] bg-[#F25019] p-6 flex flex-col items-center justify-center relative shrink-0"
@@ -537,7 +554,17 @@ export default function BookingCompletedPage() {
                 backgroundRepeat: "no-repeat",
               }}
             >
-              <div className="relative w-[160px] aspect-[2/3] shadow-2xl rounded-lg overflow-hidden border-4 border-white/20 mb-4 transform hover:scale-105 transition-transform duration-500">
+              <div className="absolute -bottom-10 -left-20 w-85 h-85 opacity-15 z-0 pointer-events-none rotate-12">
+                <Image
+                  src="/filmroll.png"
+                  alt="watermark-cinemago"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+
+              <div className="relative z-10 flex flex-col items-center w-full"></div>
+              <div className="relative w-[185px] aspect-[2/3] shadow-2xl rounded-lg overflow-hidden border-4 border-white/20 mb-0 transform hover:scale-105 transition-transform duration-500">
                 <Image
                   fill
                   src={movie.thumbnail || "/placeholder-poster.jpg"}
@@ -545,16 +572,21 @@ export default function BookingCompletedPage() {
                   className="object-cover"
                 />
               </div>
-              <div className="text-white text-center">
-                <p className="opacity-80 text-xs font-bold uppercase tracking-widest mb-1">
-                  Mã vé
-                </p>
-                <p className="font-mono text-2xl font-black bg-white/20 px-4 py-1.5 rounded-lg backdrop-blur-sm border border-white/10">
-                  {booking.id}
-                </p>
+
+              <div className="w-full mt-6">
+                <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4 text-center">
+                  <p className="text-[11px] font-bold text-white opacity-70 uppercase tracking-[0.2em] mb-2">
+                    Mã vé
+                  </p>
+
+                  <div className="relative overflow-hidden rounded-lg bg-white/10 py-2 border border-white/5">
+                    <p className="font-mono text-[13px] md:text-x1 font-black text-white tracking-widest relative z-10">
+                      {booking.id}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-
             {/* Info Section (Right/Bottom) */}
             <div
               className="flex-1 p-8 bg-white relative flex flex-col"
@@ -570,7 +602,7 @@ export default function BookingCompletedPage() {
 
               <div className="pl-0 md:pl-6 flex flex-col h-full">
                 {/* Movie Title */}
-                <h2 className="text-3xl font-black text-gray-800 uppercase mb-4 leading-tight">
+                <h2 className="text-3xl font-black text-gray-800 uppercase mb-6 leading-tight">
                   {movie.title}
                 </h2>
 
