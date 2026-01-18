@@ -128,7 +128,7 @@ export default function PersonalInfoSection() {
                 e.target.value = "";
               } catch {
                 toast.error(
-                  "Cập nhật ảnh đại diện thất bại. Vui lòng thử lại."
+                  "Cập nhật ảnh đại diện thất bại. Vui lòng thử lại.",
                 );
               } finally {
                 setIsLoading(false);
@@ -148,14 +148,18 @@ export default function PersonalInfoSection() {
           </span>
         </div>
       </div>
+
       <div className="bg-white/70 rounded-2xl p-6 shadow-xl border border-white/30">
-        <h3 className="text-xl font-bold text-[#1f2937] mb-4">
-          Thông tin cá nhân
-        </h3>
+        <h2 className="text-xl font-black uppercase tracking-tight mb-2 relative z-10">
+          <span className="text-gray-900">THÔNG TIN </span>
+          <span className="bg-gradient-to-r from-[#FF7043] to-[#FFAB91] bg-clip-text text-transparent">
+            CÁ NHÂN
+          </span>
+        </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-4xl">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-3 group-focus-within/input:text-[#F25019] transition-colors">
               Họ và tên
             </label>
             <input
@@ -164,14 +168,14 @@ export default function PersonalInfoSection() {
               onChange={(e) =>
                 setFormData({ ...formData, fullname: e.target.value })
               }
-              className="appearance-none rounded-md block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm"
+              className="w-full px-5 py-3 bg-white/50 border border-gray-200 rounded-xl text-gray-800 font-bold focus:outline-none focus:bg-white focus:border-orange-300 focus:shadow-sm transition-all placeholder:text-gray-300 text-sm"
               placeholder="Nhập họ và tên"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-3 group-focus-within/input:text-[#F25019] transition-colors">
               Giới tính
             </label>
             <select
@@ -179,7 +183,7 @@ export default function PersonalInfoSection() {
               onChange={(e) =>
                 setFormData({ ...formData, gender: e.target.value })
               }
-              className="appearance-none rounded-md block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm"
+              className="w-full px-5 pr-10 py-3 appearance-none bg-white/50 border border-gray-200 rounded-xl text-gray-800 font-bold focus:outline-none focus:bg-white focus:border-orange-300 focus:shadow-sm transition-all placeholder:text-gray-300 text-sm"
             >
               <option value="male">Nam</option>
               <option value="female">Nữ</option>
@@ -188,14 +192,14 @@ export default function PersonalInfoSection() {
           </div>
 
           <div className="lg:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-3 group-focus-within/input:text-[#F25019] transition-colors">
               Email đăng nhập
             </label>
             <input
               type="email"
               value={profile.email}
               disabled
-              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-md text-gray-600 cursor-not-allowed"
+              className="w-full px-5 py-3 bg-gray-100 border border-gray-200 rounded-xl text-gray-600 font-bold cursor-not-allowed text-sm"
             />
           </div>
         </div>
@@ -204,10 +208,10 @@ export default function PersonalInfoSection() {
           <button
             type="submit"
             disabled={isLoading}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#F25019] to-[#E9391B] hover:from-[#E9391B] hover:to-[#F25019] text-white font-semibold text-sm px-4 py-2 rounded-md shadow transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gradient-to-r hover:from-[#F25019] hover:to-red-500 text-white font-black text-sm px-6 py-3.5 rounded-xl shadow-lg shadow-gray-200 hover:shadow-orange-500/20 transition-all duration-300 transform active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed group"
           >
             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isLoading ? "Đang lưu..." : "Lưu thông tin"}
+            {isLoading ? "ĐANG LƯU..." : "LƯU THÔNG TIN"}
           </button>
         </div>
       </div>
