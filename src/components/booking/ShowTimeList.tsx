@@ -210,7 +210,7 @@ export default function ShowtimeList({
   };
 
   const renderDateTabs = () => (
-    <div className="flex justify-center gap-4 flex-wrap">
+    <div className="flex justify-center gap-3 flex-wrap">
       {uniqueDates.map((date) => {
         const d = new Date(date);
         const dayName = format(d, "EEEE", { locale: vi });
@@ -221,14 +221,14 @@ export default function ShowtimeList({
           <button
             key={date}
             onClick={() => setSelectedDate(date)}
-            className={`flex flex-col items-center justify-center w-[100px] h-[80px] rounded-lg border-2 transition-all ${
+            className={`flex flex-col items-center justify-center px-6 py-4 rounded-2xl border-0 transition-all font-medium ${
               isActive
-                ? "bg-yellow-400 border-yellow-400 text-[#0f172a]"
-                : "border-yellow-400 text-yellow-400 bg-transparent hover:bg-yellow-400/10"
+                ? "bg-gradient-to-br from-[#FF7C61] to-[#FF9B7A] text-white shadow-lg scale-105 hover:shadow-xl"
+                : "bg-white/90 text-[#FF7C61] hover:bg-white hover:shadow-md"
             }`}
           >
-            <span className="text-xl font-bold">{dayMonth}</span>
-            <span className="text-sm font-semibold capitalize">{dayName}</span>
+            <span className="text-lg font-bold">{dayMonth}</span>
+            <span className="text-xs mt-1 capitalize">{dayName}</span>
           </button>
         );
       })}
@@ -246,38 +246,36 @@ export default function ShowtimeList({
   return (
     <div className="w-full font-sans">
       <div className="text-center mb-12">
-        <h2
-          className="text-4xl md:text-5xl font-bold uppercase text-white mb-8 tracking-tighter"
-          style={{ fontFamily: "Oswald, sans-serif" }}
-        >
-          Lịch Chiếu
+        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-orange-600 mb-8">
+          LỊCH CHIẾU
         </h2>
         <div>{renderDateTabs()}</div>
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-6 border-b border-gray-700 pb-2">
-        <h3
-          className="text-3xl font-bold uppercase text-white tracking-tighter"
-          style={{ fontFamily: "Oswald, sans-serif" }}
-        >
-          Danh Sách Rạp
+        <h3 className="text-3xl font-black uppercase tracking-tight text-orange-600">
+          DANH SÁCH RẠP
         </h3>
         {cities.length > 0 && (
           <div className="relative mt-4 md:mt-0">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-yellow-400 w-4 h-4" />
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-600 w-4 h-4" />
             <select
               value={selectedCity}
               onChange={(e) => setSelectedCity(e.target.value)}
-              className="appearance-none bg-transparent border border-yellow-400 text-yellow-400 font-bold py-2 pl-10 pr-10 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-400 cursor-pointer uppercase text-sm"
+              className="appearance-none bg-transparent border border-orange-400 text-orange-600 font-bold py-2 pl-10 pr-10 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-400 cursor-pointer uppercase text-sm"
             >
               {cities.map((c) => (
-                <option key={c} value={c} className="bg-[#0f172a] text-white">
+                <option
+                  key={c}
+                  value={c}
+                  className="bg-[#fff7f0] text-orange-600"
+                >
                   {c}
                 </option>
               ))}
             </select>
             <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-              <ChevronDown className="w-4 h-4 text-yellow-400" />
+              <ChevronDown className="w-4 h-4 text-orange-500" />
             </div>
           </div>
         )}
@@ -285,7 +283,7 @@ export default function ShowtimeList({
 
       <div className="space-y-4">
         {filteredCinemaIds.length === 0 ? (
-          <div className="text-gray-400 text-center py-12 bg-[#1e293b]/50 rounded-lg border border-dashed border-gray-700">
+          <div className="text-gray-500 text-center py-12 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-200">
             Không có suất chiếu tại {selectedCity} vào ngày này.
           </div>
         ) : (
@@ -300,24 +298,24 @@ export default function ShowtimeList({
                 ref={(el) => {
                   cinemaRefs.current[cinemaId] = el;
                 }}
-                className={`bg-[#60368c] rounded-lg overflow-hidden shadow-lg transition-all duration-300 ${
-                  isHighlighted ? "ring-2 ring-yellow-400" : ""
+                className={`relative rounded-lg overflow-hidden shadow-md transition-all duration-300 border border-orange-200 hover:shadow-lg cinema-card ${
+                  isHighlighted ? "ring-2 ring-orange-400" : ""
                 }`}
               >
                 <div
                   onClick={() => toggleCinema(cinemaId)}
-                  className="p-4 cursor-pointer hover:bg-[#6d409e] transition-colors flex justify-between items-center select-none"
+                  className="p-4 cursor-pointer hover:bg-orange-100/50 transition-colors flex justify-between items-center select-none"
                 >
                   <div>
-                    <h4 className="text-lg font-bold text-yellow-400 uppercase">
+                    <h4 className="text-lg font-bold text-orange-700 uppercase">
                       {cinemaData.cinemaName}
                     </h4>
-                    <p className="text-sm text-white/80 mt-1">
+                    <p className="text-sm text-gray-600 mt-1">
                       {cinemaData.cinemaAddress}
                     </p>
                   </div>
                   <div
-                    className={`text-white transition-transform duration-300 ${
+                    className={`text-orange-600 transition-transform duration-300 ${
                       isExpanded ? "rotate-180" : ""
                     }`}
                   >
@@ -332,13 +330,13 @@ export default function ShowtimeList({
                       : "max-h-0 opacity-0"
                   }`}
                 >
-                  <div className="p-4 pt-0 pb-6">
+                  <div className="p-4 pt-0 pb-6 bg-white/40">
                     {Object.keys(cinemaData.groups).map((groupName) => (
                       <div
                         key={groupName}
-                        className="mt-4 border-t border-white/10 pt-4 first:border-0 first:pt-0"
+                        className="mt-4 border-t border-orange-200 pt-4 first:border-0 first:pt-0"
                       >
-                        <h5 className="text-sm font-medium text-white mb-3">
+                        <h5 className="text-sm font-semibold text-orange-700 mb-3 uppercase tracking-wide">
                           {groupName}
                         </h5>
                         <div className="flex flex-wrap gap-3">
@@ -348,10 +346,10 @@ export default function ShowtimeList({
                             return (
                               <button
                                 key={st.id}
-                                className={`px-4 py-2 border rounded transition-all text-sm font-bold min-w-[80px] ${
+                                className={`px-4 py-2 border rounded-lg transition-all text-sm font-bold min-w-[80px] ${
                                   isSelectedSlot
-                                    ? "bg-yellow-400 border-yellow-400 text-black scale-110 shadow-[0_0_10px_rgba(250,204,21,0.5)]"
-                                    : "border-white/30 text-white hover:bg-white hover:text-[#60368c]"
+                                    ? "bg-gradient-to-r from-[#FF7C61] to-[#FFB464] border-orange-400 text-white scale-110 shadow-[0_4px_12px_rgba(255,124,97,0.3)]"
+                                    : "border-orange-300 text-orange-700 bg-white hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 hover:border-orange-400"
                                 }`}
                                 onClick={(e) => {
                                   e.stopPropagation();

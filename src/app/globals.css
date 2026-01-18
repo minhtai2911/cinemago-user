@@ -181,3 +181,23 @@
     @apply bg-background text-foreground;
   }
 }
+
+.cinema-card {
+  background: linear-gradient(
+    to right,
+    rgba(255, 237, 213, 0.95),
+    rgba(255, 251, 235, 0.95)
+  );
+}
+
+.cinema-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/corn.webp");
+  background-repeat: no-repeat;
+  background-size: 360px;
+  background-position: 110% 50%;
+  opacity: 0.18;
+  pointer-events: none;
+}
