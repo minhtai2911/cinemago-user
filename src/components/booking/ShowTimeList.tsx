@@ -52,7 +52,7 @@ export default function ShowtimeList({
 
   useEffect(() => {
     const allCinemaIds = Array.from(
-      new Set(showtimes.map((st) => st.cinemaId))
+      new Set(showtimes.map((st) => st.cinemaId)),
     );
     const missingIds = allCinemaIds.filter((id) => !cinemasMap[id] && id);
 
@@ -119,7 +119,7 @@ export default function ShowtimeList({
         Object.keys(groups[d][c].groups).forEach((f) => {
           groups[d][c].groups[f].sort(
             (a, b) =>
-              new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+              new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
           );
         });
       });
@@ -150,7 +150,7 @@ export default function ShowtimeList({
 
   const currentCinemas = selectedDate ? groupedData[selectedDate] : {};
   const filteredCinemaIds = Object.keys(currentCinemas || {}).filter(
-    (id) => currentCinemas[id].city === selectedCity || cities.length <= 1
+    (id) => currentCinemas[id].city === selectedCity || cities.length <= 1,
   );
 
   useEffect(() => {
@@ -163,7 +163,7 @@ export default function ShowtimeList({
     }
 
     const targetShowtime = showtimes.find(
-      (s) => s.id === preSelectedShowtimeId
+      (s) => s.id === preSelectedShowtimeId,
     );
 
     if (!targetShowtime) return;
@@ -205,7 +205,7 @@ export default function ShowtimeList({
     setExpandedCinemas((prev) =>
       prev.includes(cinemaId)
         ? prev.filter((id) => id !== cinemaId)
-        : [...prev, cinemaId]
+        : [...prev, cinemaId],
     );
   };
 
@@ -246,9 +246,18 @@ export default function ShowtimeList({
   return (
     <div className="w-full font-sans">
       <div className="text-center mb-12">
-        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-orange-600 mb-8">
-          LỊCH CHIẾU
+        <span className="inline-block py-2 px-4 rounded-full bg-orange-50 border border-orange-200 text-[#E65100] text-xs font-bold tracking-widest uppercase mb-6">
+          ĐẶT VÉ NGAY
+        </span>
+        <h2 className="text-3xl md:text-5xl font-black text-stone-800 mb-4 tracking-tight">
+          KHÁM PHÁ{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7043] to-[#FFAB91]">
+            LỊCH CHIẾU
+          </span>
         </h2>
+        <p className="text-lg text-stone-500 max-w-3xl mx-auto font-medium mb-6">
+          Tìm kiếm lịch chiếu phù hợp và đặt vé nhanh chóng cùng CinemaGo!
+        </p>
         <div>{renderDateTabs()}</div>
       </div>
 
@@ -307,7 +316,7 @@ export default function ShowtimeList({
                   className="p-4 cursor-pointer hover:bg-orange-100/50 transition-colors flex justify-between items-center select-none"
                 >
                   <div>
-                    <h4 className="text-lg font-bold text-orange-700 uppercase">
+                    <h4 className="text-lg font-extrabold text-orange-700 uppercase">
                       {cinemaData.cinemaName}
                     </h4>
                     <p className="text-sm text-gray-600 mt-1">
