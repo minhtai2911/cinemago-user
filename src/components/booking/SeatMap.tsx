@@ -165,17 +165,9 @@ export default function SeatMap({
           }}
         ></div>
 
-        {/* Các Đốm sáng trôi lơ lửng (Floating Blobs) */}
-        {/* Đốm Cam đào (Góc trên trái) */}
         <div className="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] bg-orange-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-blob"></div>
-
-        {/* Đốm Hồng phấn (Góc dưới phải) */}
         <div className="absolute bottom-[-10%] right-[-10%] w-[300px] h-[300px] bg-rose-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-blob animation-delay-2000"></div>
-
-        {/* Đốm Vàng nhạt (Giữa trái) */}
         <div className="absolute top-[30%] left-[20%] w-[200px] h-[200px] bg-yellow-100 rounded-full mix-blend-multiply filter blur-[80px] opacity-20 animate-blob animation-delay-4000"></div>
-
-        {/* Popcorn Watermark (Mờ hơn để hợp nền sáng) */}
       </div>
       <h3 className="text-3xl md:text-3xl font-black text-center text-gray-900 mb-8 tracking-tight">
         CHỌN{" "}
@@ -185,14 +177,11 @@ export default function SeatMap({
       </h3>
 
       <div className="w-full max-w-3xl mx-auto mb-12 relative flex flex-col items-center">
-        {/* Single white screen with stronger orange glow and expanded shadow */}
         <div className="relative w-[85%] mb-2">
-          {/* blurred orange glow behind the screen */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="w-full h-3 rounded-full bg-gradient-to-r from-transparent via-[#FFB07A]/40 to-transparent filter blur-[18px] opacity-95"></div>
           </div>
 
-          {/* white screen on top */}
           <div className="relative z-10 h-3 bg-white rounded-full w-full shadow-[0_20px_80px_rgba(255,120,60,0.28)]"></div>
         </div>
         <p className="text-center text-gray-600 text-sm uppercase tracking-widest mt-4">

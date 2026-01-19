@@ -63,7 +63,6 @@ export default function PaymentMethodModal({
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <div className="bg-[#fffbf5] rounded-2xl shadow-2xl w-full max-w-[500px] aspect-square p-5 sm:p-8 flex flex-col justify-between animate-in fade-in zoom-in-95 duration-300 relative border border-white">
           <div className="absolute inset-0 bg-[url('/corn.webp')] bg-cover bg-center opacity-8 pointer-events-none" />
-          {/* THAY ĐỔI Ở ĐÂY: Thêm 'mb-4 sm:mb-8' */}
           <h3 className="text-3xl md:text-3xl font-black text-center text-gray-900 mb-2 tracking-tight">
             LỰA CHỌN{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7043] to-[#FFAB91]">
