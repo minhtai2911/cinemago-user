@@ -1,49 +1,48 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 // Thêm icon (Home, Armchair, Info)
 import {
-  Ticket,
-  Popcorn,
-  Clock,
+  Armchair,
   Calendar,
-  MapPin,
-  Loader2,
   CheckCircle2,
-  XCircle,
+  Clock,
   Download,
   Home,
-  Armchair,
-  Info,
+  Loader2,
+  MapPin,
+  Popcorn,
+  Ticket,
+  XCircle,
 } from "lucide-react";
 
 import {
-  getBookingById,
-  getShowtimeById,
-  getMovieById,
-  getCinemaById,
-  getRoomById,
-  getFoodDrinkById,
   checkStatusTransactionMoMo,
   checkStatusTransactionZaloPay,
+  getBookingById,
+  getCinemaById,
+  getFoodDrinkById,
+  getMovieById,
+  getRoomById,
+  getShowtimeById,
   sendEmailNotification,
 } from "@/services";
 
 import type {
   Booking,
-  Showtime,
-  Movie,
   Cinema,
-  Room,
   FoodDrink,
+  Movie,
+  Room,
+  Showtime,
 } from "@/types";
 
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas-pro";
-import useAuth from "@/hooks/useAuth";
 import Navbar from "@/components/Navbar";
+import useAuth from "@/hooks/useAuth";
+import html2canvas from "html2canvas-pro";
+import jsPDF from "jspdf";
 
 export default function BookingCompletedPage() {
   const searchParams = useSearchParams();
@@ -129,7 +128,10 @@ export default function BookingCompletedPage() {
   }, [bookingId, method, statusParam, apptransid]);
 
   useEffect(() => {
-    if (verifying || verifyError || !bookingId || !profile?.email) return;
+    if (verifying || verifyError || !bookingId || !profile?.email) {
+      setLoading(false);
+      return;
+    }
 
     const loadData = async () => {
       setLoading(true);
@@ -155,20 +157,18 @@ export default function BookingCompletedPage() {
         setShowtime(showtimeData);
 
         const date = new Date(showtimeData.startTime);
-        setFormattedDate(
-          date.toLocaleDateString("vi-VN", {
-            weekday: "long",
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-          }),
-        );
-        setFormattedTime(
-          date.toLocaleTimeString("vi-VN", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        );
+        const formattedDateLocal = date.toLocaleDateString("vi-VN", {
+          weekday: "long",
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+        setFormattedDate(formattedDateLocal);
+        const formattedTimeLocal = date.toLocaleTimeString("vi-VN", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        setFormattedTime(formattedTimeLocal);
 
         const [movieRes, cinemaRes, roomRes] = await Promise.all([
           getMovieById(showtimeData.movieId),
@@ -291,113 +291,113 @@ export default function BookingCompletedPage() {
             )}&ecc=H`;
 
             const htmlContent = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Vé phim - ${bookingData.id}</title>
-  <style>
-    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background:#fff7ed; margin:0; padding:40px 0; }
-    .container { max-width:600px; margin:auto; background:white; border-radius:16px; overflow:hidden; box-shadow: 0 10px 25px rgba(242, 80, 25, 0.15); }
-    .header { background: #F25019; color:white; padding:30px; text-align:center; }
-    .content { padding:30px; }
-    table { width:100%; border-collapse:collapse; margin:10px 0; }
-    td { padding:8px 0; font-size: 14px; }
-    .qr { text-align:center; margin:30px 0; padding: 20px; background: #fff7ed; border-radius: 12px; border: 1px dashed #fdba74; }
-    .total { background: #F25019; color:white; padding:20px; text-align:center; border-radius:12px; margin-top: 20px; }
-    .footer { text-align:center; padding:20px; color:#9a3412; font-size:12px; background:#fff7ed; border-top: 1px solid #fed7aa; }
-    .label { color: #666; font-size: 13px; }
-    .value { font-weight: bold; color: #000; font-size: 15px; }
-    .section-title { text-align:center; color:#c2410c; margin:30px 0 15px; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; border-bottom: 2px solid #fed7aa; display: inline-block; padding-bottom: 5px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1 style="margin:0; font-size:26px; text-transform: uppercase;">Đặt Vé Thành Công!</h1>
-      <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-top: 10px;">
-        <p style="font-size:16px; margin:0;">Mã vé: <strong style="font-family: monospace; font-size: 18px;">${
-          bookingData.id
-        }</strong></p>
-      </div>
-    </div>
-    
-    <div class="content">
-      <div style="text-align:center; margin-bottom:20px;">
-        <img src="${movieRes.data.thumbnail || ""}" alt="${
-          movieRes.data.title
-        }" style="max-width:180px; height:auto; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" />
-      </div>
-      
-      <h2 style="text-align:center; color:#c2410c; margin:10px 0 25px; font-size: 24px; line-height: 1.3;">${
-        movieRes.data.title
-      }</h2>
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <title>Vé phim - ${bookingData.id}</title>
+              <style>
+                body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background:#fff7ed; margin:0; padding:40px 0; }
+                .container { max-width:600px; margin:auto; background:white; border-radius:16px; overflow:hidden; box-shadow: 0 10px 25px rgba(242, 80, 25, 0.15); }
+                .header { background: #F25019; color:white; padding:30px; text-align:center; }
+                .content { padding:30px; }
+                table { width:100%; border-collapse:collapse; margin:10px 0; }
+                td { padding:8px 0; font-size: 14px; }
+                .qr { text-align:center; margin:30px 0; padding: 20px; background: #fff7ed; border-radius: 12px; border: 1px dashed #fdba74; }
+                .total { background: #F25019; color:white; padding:20px; text-align:center; border-radius:12px; margin-top: 20px; }
+                .footer { text-align:center; padding:20px; color:#9a3412; font-size:12px; background:#fff7ed; border-top: 1px solid #fed7aa; }
+                .label { color: #666; font-size: 13px; }
+                .value { font-weight: bold; color: #000; font-size: 15px; }
+                .section-title { text-align:center; color:#c2410c; margin:30px 0 15px; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; border-bottom: 2px solid #fed7aa; display: inline-block; padding-bottom: 5px; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="header">
+                  <h1 style="margin:0; font-size:26px; text-transform: uppercase;">Đặt Vé Thành Công!</h1>
+                  <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-top: 10px;">
+                    <p style="font-size:16px; margin:0;">Mã vé: <strong style="font-family: monospace; font-size: 18px;">${
+                      bookingData.id
+                    }</strong></p>
+                  </div>
+                </div>
+                
+                <div class="content">
+                  <div style="text-align:center; margin-bottom:20px;">
+                    <img src="${movieRes.data.thumbnail || ""}" alt="${
+                      movieRes.data.title
+                    }" style="max-width:180px; height:auto; border-radius:12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" />
+                  </div>
+                  
+                  <h2 style="text-align:center; color:#c2410c; margin:10px 0 25px; font-size: 24px; line-height: 1.3;">${
+                    movieRes.data.title
+                  }</h2>
 
-      <table style="background: #fff; border-collapse: separate; border-spacing: 0 8px;">
-        <tr>
-          <td class="label">Ngày chiếu:</td>
-          <td class="value" style="text-align: right;">${formattedDate}</td>
-        </tr>
-        <tr>
-          <td class="label">Giờ chiếu:</td>
-          <td class="value" style="text-align: right;">${formattedTime}</td>
-        </tr>
-        <tr>
-          <td class="label">Rạp:</td>
-          <td class="value" style="text-align: right;">${
-            cinemaRes.data.name
-          }<br><span style="font-weight: normal; font-size: 12px; color: #666;">${
-            cinemaRes.data.address
-          }</span></td>
-        </tr>
-        <tr>
-          <td class="label">Phòng chiếu:</td>
-          <td class="value" style="text-align: right;">${roomRes.data.name}</td>
-        </tr>
-      </table>
+                  <table style="background: #fff; border-collapse: separate; border-spacing: 0 8px;">
+                    <tr>
+                      <td class="label">Ngày chiếu:</td>
+                      <td class="value" style="text-align: right;">${formattedDateLocal}</td>
+                    </tr>
+                    <tr>
+                      <td class="label">Giờ chiếu:</td>
+                      <td class="value" style="text-align: right;">${formattedTimeLocal}</td>
+                    </tr>
+                    <tr>
+                      <td class="label">Rạp:</td>
+                      <td class="value" style="text-align: right;">${
+                        cinemaRes.data.name
+                      }<br><span style="font-weight: normal; font-size: 12px; color: #666;">${
+                        cinemaRes.data.address
+                      }</span></td>
+                    </tr>
+                    <tr>
+                      <td class="label">Phòng chiếu:</td>
+                      <td class="value" style="text-align: right;">${roomRes.data.name}</td>
+                    </tr>
+                  </table>
 
-      <div style="text-align: center;"><div class="section-title">Ghế đã chọn</div></div>
-      <table style="width: 100%;">${seatRows}</table>
+                  <div style="text-align: center;"><div class="section-title">Ghế đã chọn</div></div>
+                  <table style="width: 100%;">${seatRows}</table>
 
-      ${
-        foodDrinks.length > 0
-          ? `
-      <div style="text-align: center;"><div class="section-title">Combo bắp nước</div></div>
-      <table style="width: 100%;">${foodRows}</table>
-      `
-          : ""
-      }
+                  ${
+                    foodDrinks.length > 0
+                      ? `
+                  <div style="text-align: center;"><div class="section-title">Combo bắp nước</div></div>
+                  <table style="width: 100%;">${foodRows}</table>
+                  `
+                      : ""
+                  }
 
-      <div class="qr">
-        <p style="color:#c2410c; margin: 0 0 10px; font-weight: bold; font-size: 14px;">QUÉT MÃ ĐỂ CHECK-IN</p>
-        <img src="${emailQrUrl}" alt="QR Code" style="width:200px; height:200px; border:2px solid white; border-radius: 8px;" />
-      </div>
+                  <div class="qr">
+                    <p style="color:#c2410c; margin: 0 0 10px; font-weight: bold; font-size: 14px;">QUÉT MÃ ĐỂ CHECK-IN</p>
+                    <img src="${emailQrUrl}" alt="QR Code" style="width:200px; height:200px; border:2px solid white; border-radius: 8px;" />
+                  </div>
 
-      <div class="total">
-        <div style="font-size:14px; opacity: 0.9; text-transform: uppercase;">Tổng thanh toán</div>
-        <div style="font-size:36px; font-weight:900; margin: 5px 0;">
-          ${new Intl.NumberFormat("vi-VN").format(bookingData.totalPrice)} ₫
-        </div>
-        ${
-          method
-            ? `<div style="font-size:12px; background: rgba(0,0,0,0.1); display: inline-block; padding: 4px 12px; border-radius: 20px;">Qua cổng: ${method}</div>`
-            : ""
-        }
-      </div>
+                  <div class="total">
+                    <div style="font-size:14px; opacity: 0.9; text-transform: uppercase;">Tổng thanh toán</div>
+                    <div style="font-size:36px; font-weight:900; margin: 5px 0;">
+                      ${new Intl.NumberFormat("vi-VN").format(bookingData.totalPrice)} ₫
+                    </div>
+                    ${
+                      method
+                        ? `<div style="font-size:12px; background: rgba(0,0,0,0.1); display: inline-block; padding: 4px 12px; border-radius: 20px;">Qua cổng: ${method}</div>`
+                        : ""
+                    }
+                  </div>
 
-      <p style="text-align:center; margin-top:30px; color:#666; font-size: 13px; line-height: 1.6;">
-        Vui lòng xuất trình mã vé hoặc QR code khi vào rạp.<br>
-        <strong>Chúc Quý khách xem phim vui vẻ!</strong>
-      </p>
-    </div>
-    
-    <div class="footer">
-      Email được gửi tự động từ hệ thống đặt vé phim CinemaGO.<br>
-      Vui lòng không trả lời email này.
-    </div>
-  </div>
-</body>
-</html>`; /* --- END OF htmlContent for mail --- */
+                  <p style="text-align:center; margin-top:30px; color:#666; font-size: 13px; line-height: 1.6;">
+                    Vui lòng xuất trình mã vé hoặc QR code khi vào rạp.<br>
+                    <strong>Chúc Quý khách xem phim vui vẻ!</strong>
+                  </p>
+                </div>
+                
+                <div class="footer">
+                  Email được gửi tự động từ hệ thống đặt vé phim CinemaGO.<br>
+                  Vui lòng không trả lời email này.
+                </div>
+              </div>
+            </body>
+            </html>`; /* --- END OF htmlContent for mail --- */
 
             await sendEmailNotification(
               profile.email,
@@ -414,7 +414,7 @@ export default function BookingCompletedPage() {
           }
         }
       } catch {
-        setLoadError("Không thể tải thông tin vé. Vui lòng thử lại sau.");
+        setLoadError("Thanh toán thất bại hoặc không tìm thấy vé.");
       } finally {
         setLoading(false);
       }
