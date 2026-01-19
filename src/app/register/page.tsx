@@ -1,31 +1,59 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signUp } from "@/services";
 import { toast } from "sonner";
 import axios from "axios";
 import useAuth from "@/hooks/useAuth";
 import Image from "next/image";
-import { Eye, EyeOff, ChevronDown } from "lucide-react";
+import { Eye, EyeOff, ChevronDown, Check } from "lucide-react"; // Import thêm icon Check nếu muốn đẹp hơn
 
 export default function RegisterPage() {
   const router = useRouter();
   const { isLogged } = useAuth();
+
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
     password: "",
     gender: "male",
   });
+
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const [openGender, setOpenGender] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpenGender(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleGenderSelect = (value: string) => {
+    setFormData((prev) => ({ ...prev, gender: value }));
+    setOpenGender(false);
+  };
+
+  const genderLabels: Record<string, string> = {
+    male: "Nam",
+    female: "Nữ",
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,9 +67,8 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await signUp(formData);
-
       toast.success(
-        "Đăng ký thành công. Vui lòng kiểm tra email để kích hoạt tài khoản."
+        "Đăng ký thành công. Vui lòng kiểm tra email để kích hoạt tài khoản.",
       );
       router.push("/login");
     } catch (error: unknown) {
@@ -144,25 +171,79 @@ export default function RegisterPage() {
                         )}
                       </button>
                     </div>
-                    <div className="relative">
-                      <select
-                        name="gender"
-                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm pr-10"
-                        value={formData.gender}
-                        onChange={handleChange}
+
+                    {/* --- CUSTOM DROPDOWN --- */}
+                    <div className="relative" ref={dropdownRef}>
+                      {/* Nút bấm mô phỏng thẻ select */}
+                      <button
+                        type="button"
+                        onClick={() => setOpenGender(!openGender)}
+                        className={`appearance-none rounded-md relative w-full px-3 py-2 border bg-white text-left flex items-center justify-between sm:text-sm transition-all
+                          ${
+                            openGender
+                              ? "border-red-500 ring-2 ring-red-100"
+                              : "border-gray-200 text-gray-900 hover:border-gray-300"
+                          }
+                        `}
                       >
-                        <option value="male">Nam</option>
-                        <option value="female">Nữ</option>
-                      </select>
-                      <ChevronDown
-                        className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500"
-                        size={18}
-                      />
+                        <span
+                          className={
+                            formData.gender ? "text-gray-900" : "text-gray-400"
+                          }
+                        >
+                          {genderLabels[formData.gender] || "Chọn giới tính"}
+                        </span>
+                        <ChevronDown
+                          className={`text-gray-500 transition-transform duration-200 ${
+                            openGender ? "rotate-180" : ""
+                          }`}
+                          size={18}
+                        />
+                      </button>
+
+                      {/* Menu xổ xuống */}
+                      {openGender && (
+                        <div className="absolute z-50 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-orange-700 ring-opacity-5 overflow-auto focus:outline-none sm:text-sm animate-in fade-in zoom-in-95 duration-100">
+                          {/* Option Nam */}
+                          <div
+                            onClick={() => handleGenderSelect("male")}
+                            className={`cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-red-50 hover:text-red-600 transition-colors ${
+                              formData.gender === "male"
+                                ? "text-red-600 bg-red-50 font-medium"
+                                : "text-gray-900"
+                            }`}
+                          >
+                            <span className="block truncate">Nam</span>
+                            {formData.gender === "male" && (
+                              <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-red-600">
+                                <Check size={16} />
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Option Nữ */}
+                          <div
+                            onClick={() => handleGenderSelect("female")}
+                            className={`cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-red-50 hover:text-red-600 transition-colors ${
+                              formData.gender === "female"
+                                ? "text-red-600 bg-red-50 font-medium"
+                                : "text-gray-900"
+                            }`}
+                          >
+                            <span className="block truncate">Nữ</span>
+                            {formData.gender === "female" && (
+                              <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-red-600">
+                                <Check size={16} />
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <button
                     type="submit"
-                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-[#F25019] to-[#E9391B] hover:from-[#E9391B] hover:to-[#F25019] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F25019] disabled:opacity-60"
+                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-[#F25019] to-[#E9391B] hover:from-[#E9391B] hover:to-[#F25019] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F25019] disabled:opacity-60 transition-all shadow-md hover:shadow-lg"
                     disabled={loading}
                   >
                     {loading ? (
