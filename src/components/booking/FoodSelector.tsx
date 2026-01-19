@@ -45,8 +45,11 @@ export default function FoodDrinkSelector({
       <div className="absolute inset-0 bg-black/80 pointer-events-none" />
 
       <div className="relative z-10 p-6">
-        <h3 className="text-3xl font-black text-center text-white mb-8 uppercase">
-          Chọn Bắp Nước
+        <h3 className="text-3xl md:text-3xl font-black text-center text-white mb-8 tracking-tight">
+          CHỌN{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7043] to-[#FFAB91]">
+            BẮP NƯỚC
+          </span>
         </h3>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -60,7 +63,7 @@ export default function FoodDrinkSelector({
                 key={item.id}
                 className={`flex bg-white/5 border rounded-lg overflow-hidden transition-all duration-300 group ${
                   qty > 0
-                    ? "border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.1)]"
+                    ? "border-orange-400 shadow-[0_0_10px_rgba(250,204,21,0.1)]"
                     : "border-white/10 hover:border-gray-500"
                 }`}
               >
@@ -88,7 +91,7 @@ export default function FoodDrinkSelector({
 
                 <div className="flex-1 p-3 flex flex-col justify-between">
                   <div>
-                    <h4 className="text-sm font-bold text-white uppercase line-clamp-1 group-hover:text-yellow-400 transition-colors">
+                    <h4 className="text-sm font-bold text-white uppercase line-clamp-1 group-hover:text-orange-400 transition-colors">
                       {item.name}
                     </h4>
                     <p className="text-[11px] text-gray-400 line-clamp-2 mt-1 leading-snug">
@@ -104,7 +107,7 @@ export default function FoodDrinkSelector({
 
                     <div className="flex items-center bg-gray-800 rounded border border-gray-600">
                       <button
-                        className="w-7 h-7 flex items-center justify-center text-white hover:bg-gray-700 hover:text-yellow-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed rounded-l"
+                        className="w-7 h-7 flex items-center justify-center text-white hover:bg-gray-700 hover:text-orange-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed rounded-l"
                         onClick={() => onUpdate(item, -1)}
                         disabled={qty === 0}
                       >
@@ -114,7 +117,7 @@ export default function FoodDrinkSelector({
                         {qty}
                       </span>
                       <button
-                        className="w-7 h-7 flex items-center justify-center text-white hover:bg-gray-700 hover:text-yellow-400 transition-colors rounded-r"
+                        className="w-7 h-7 flex items-center justify-center text-white hover:bg-gray-700 hover:text-orange-400 transition-colors rounded-r"
                         onClick={() => onUpdate(item, 1)}
                       >
                         <Plus size={12} />
