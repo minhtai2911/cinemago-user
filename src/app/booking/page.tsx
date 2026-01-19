@@ -320,7 +320,6 @@ export default function BookingPage() {
       setLoading(true);
 
       const startTime = new Date();
-      startTime.setHours(0, 0, 0, 0);
 
       try {
         const res = await getShowtimes(
