@@ -5,6 +5,9 @@ import { toast } from "sonner";
 import { Eye, EyeOff, Loader2, Lock, KeyRound } from "lucide-react";
 import { changePassword } from "@/services";
 
+const strongPasswordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
 export default function ChangePasswordSection() {
   const [isLoading, setIsLoading] = useState(false);
   const [showOld, setShowOld] = useState(false);
@@ -25,8 +28,10 @@ export default function ChangePasswordSection() {
       return;
     }
 
-    if (formData.newPassword.length < 6) {
-      toast.error("Mật khẩu mới phải có ít nhất 6 ký tự");
+    if (!strongPasswordRegex.test(formData.newPassword)) {
+      toast.error(
+        "Mật khẩu mới yếu! Vui lòng sử dụng ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.",
+      );
       return;
     }
 
@@ -64,7 +69,7 @@ export default function ChangePasswordSection() {
           </span>
         </h2>
         <p className="text-xs text-gray-500 font-medium">
-          Mật khẩu cần ít nhất 6 ký tự để bảo mật.
+          Quản lý thông tin bảo mật tài khoản của bạn
         </p>
       </div>
 

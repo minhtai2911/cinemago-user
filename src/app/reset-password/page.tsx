@@ -8,6 +8,9 @@ import axios from "axios";
 import useAuth from "@/hooks/useAuth";
 import Image from "next/image";
 
+const strongPasswordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
 export default function ResetPasswordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -33,7 +36,7 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     if (!emailParam) {
       toast.error(
-        "Thiếu email, vui lòng thực hiện lại quy trình quên mật khẩu"
+        "Thiếu email, vui lòng thực hiện lại quy trình quên mật khẩu",
       );
       router.push("/forgot-password");
     }
@@ -54,6 +57,13 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!strongPasswordRegex.test(formData.newPassword)) {
+      toast.error(
+        "Mật khẩu mới yếu! Vui lòng sử dụng ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.",
+      );
+      return;
+    }
 
     if (formData.newPassword !== formData.confirmPassword) {
       toast.error("Mật khẩu xác nhận không khớp!");
@@ -169,8 +179,8 @@ export default function ResetPasswordPage() {
                           {resendLoading
                             ? "Đang gửi..."
                             : countdown > 0
-                            ? "Chờ"
-                            : "Gửi lại"}
+                              ? "Chờ"
+                              : "Gửi lại"}
                         </button>
                       </div>
                     </div>
