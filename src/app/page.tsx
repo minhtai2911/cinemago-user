@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import Loading from "@/components/ui/Loading";
 
 export default function HomePage() {
+  // --- GIỮ NGUYÊN LOGIC CŨ ---
   const [nowShowing, setNowShowing] = useState<Movie[]>([]);
   const [comingSoon, setComingSoon] = useState<Movie[]>([]);
   const [cinemas, setCinemas] = useState<Cinema[]>([]);
@@ -84,28 +85,31 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 flex flex-col font-sans selection:bg-[#F25019] selection:text-white">
+    <div className="min-h-screen bg-[#FFFBF8] text-gray-900 flex flex-col font-sans selection:bg-[#F25019] selection:text-white">
       <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
         <Navbar />
       </div>
 
-      <main className="mt-20 relative bg-gradient-to-br from-[#FFF8F3] via-white to-[#FFF0EC] overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-orange-200/20 rounded-full blur-[120px] translate-x-1/3 -translate-y-1/4"></div>
-          <div className="absolute top-[40%] left-0 w-[600px] h-[600px] bg-orange-100/30 rounded-full blur-[100px] -translate-x-1/3"></div>
+      <main className="mt-20 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-orange-100/40 rounded-full blur-[100px] translate-x-1/4 -translate-y-1/4"></div>
 
-          <Image
-            src="/corn.png"
-            alt=""
-            width={600}
-            height={600}
-            className="hidden 2xl:block absolute top-[15%] -left-20 w-[15%] max-w-[300px] opacity-10 select-none object-contain animate-float"
-            style={{ transform: "rotate(15deg)" }}
-          />
+          <div className="absolute top-[40%] left-0 w-[600px] h-[600px] bg-orange-50/30 rounded-full blur-[80px] -translate-x-1/3"></div>
+
+          <div className="absolute top-0 right-0 w-[40%] max-w-[600px] h-[800px] opacity-20 pointer-events-none">
+            <Image
+              src="/corn.png"
+              alt="Background Decoration"
+              fill
+              className="object-contain object-right-top"
+              priority
+            />
+          </div>
         </div>
 
         <div className="relative z-10">
           <BannerSlider movies={nowShowing} />
+
           <div className="container mx-auto px-4 -mt-24 mb-20 relative z-30">
             <QuickBooking
               cinemas={cinemas}
@@ -129,7 +133,7 @@ export default function HomePage() {
               showBookingButton
             />
 
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-orange-200 to-transparent opacity-60" />
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-orange-200/50 to-transparent" />
 
             <MovieSection
               title="PHIM ĐANG CHIẾU"
@@ -137,7 +141,7 @@ export default function HomePage() {
               showBookingButton
             />
 
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-orange-200 to-transparent opacity-60" />
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-orange-200/50 to-transparent" />
 
             <MovieSection title="PHIM SẮP CHIẾU" movies={comingSoon} />
           </div>
