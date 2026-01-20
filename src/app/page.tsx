@@ -84,32 +84,34 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFFBF8] text-gray-900 flex flex-col font-sans selection:bg-[#F25019] selection:text-white">
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
-        <Navbar />
+    <div className="relative min-h-screen font-sans selection:bg-[#F25019] selection:text-white">
+      <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden bg-[#FFF9F6]">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FFF5F2] via-[#FFF9F6] to-white opacity-80" />
+
+        <div className="absolute -top-[20%] -right-[10%] w-[800px] h-[800px] bg-[#FF8E53]/10 rounded-full blur-[120px]" />
+
+        <div className="absolute top-[40%] -left-[10%] w-[600px] h-[600px] bg-[#F25019]/5 rounded-full blur-[100px]" />
+
+        <div className="absolute top-0 right-0 w-[40%] max-w-[600px] h-[800px] opacity-[0.15]">
+          <Image
+            src="/corn.png"
+            alt="Background Decoration"
+            fill
+            className="object-contain object-right-top"
+            priority
+          />
+        </div>
       </div>
 
-      <main className="mt-20 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-orange-100/40 rounded-full blur-[100px] translate-x-1/4 -translate-y-1/4"></div>
-
-          <div className="absolute top-[40%] left-0 w-[600px] h-[600px] bg-orange-50/30 rounded-full blur-[80px] -translate-x-1/3"></div>
-
-          <div className="absolute top-0 right-0 w-[40%] max-w-[600px] h-[800px] opacity-20 pointer-events-none">
-            <Image
-              src="/corn.png"
-              alt="Background Decoration"
-              fill
-              className="object-contain object-right-top"
-              priority
-            />
-          </div>
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.03)] border-b border-white/20">
+          <Navbar />
         </div>
 
-        <div className="relative z-10">
+        <main className="flex-grow">
           <BannerSlider movies={nowShowing} />
 
-          <div className="container mx-auto px-4 -mt-24 mb-20 relative z-30">
+          <div className="container mx-auto px-4 -mt-24 mb-16 relative z-30">
             <QuickBooking
               cinemas={cinemas}
               nowShowing={nowShowing}
@@ -125,14 +127,16 @@ export default function HomePage() {
             />
           </div>
 
-          <div className="container mx-auto px-4 pb-20 space-y-24">
+          <div className="space-y-16 pb-24">
             <MovieSection
               title="PHIM ĐƯỢC ĐÁNH GIÁ CAO"
               movies={topRatedMovies}
               showBookingButton
             />
 
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-orange-200/50 to-transparent" />
+            <div className="container mx-auto px-4">
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-[#F25019]/20 to-transparent" />
+            </div>
 
             <MovieSection
               title="PHIM ĐANG CHIẾU"
@@ -140,16 +144,18 @@ export default function HomePage() {
               showBookingButton
             />
 
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-orange-200/50 to-transparent" />
+            <div className="container mx-auto px-4">
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-[#F25019]/20 to-transparent" />
+            </div>
 
             <MovieSection title="PHIM SẮP CHIẾU" movies={comingSoon} />
           </div>
 
           <Features />
-        </div>
-      </main>
+        </main>
 
-      <Footer />
+        <Footer />
+      </div>
     </div>
   );
 }
