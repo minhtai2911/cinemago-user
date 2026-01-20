@@ -19,7 +19,6 @@ import { toast } from "sonner";
 import Loading from "@/components/ui/Loading";
 
 export default function HomePage() {
-  // --- GIỮ NGUYÊN LOGIC CŨ ---
   const [nowShowing, setNowShowing] = useState<Movie[]>([]);
   const [comingSoon, setComingSoon] = useState<Movie[]>([]);
   const [cinemas, setCinemas] = useState<Cinema[]>([]);
