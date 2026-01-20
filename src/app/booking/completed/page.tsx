@@ -543,7 +543,6 @@ export default function BookingCompletedPage() {
 
           {/* Ticket Card Style */}
           <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col md:flex-row relative filter drop-shadow-xl">
-            {" "}
             {/* Poster Section */}
             <div
               className="w-full md:w-[280px] bg-[#F25019] p-6 flex flex-col items-center justify-center relative shrink-0"
