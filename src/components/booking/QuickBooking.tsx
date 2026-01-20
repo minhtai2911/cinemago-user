@@ -157,8 +157,8 @@ export default function QuickBooking({
 
   return (
     <div className="relative -mt-24 z-30 container mx-auto px-4 mb-16">
-      <div className="bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-6 md:p-8">
-        <div className="flex gap-8 mb-6 border-b border-gray-700 pb-4">
+      <div className="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-xl p-6 md:p-8 border border-orange-100">
+        <div className="flex gap-8 mb-6 border-b border-gray-100 pb-4">
           <button className="text-[#F25019] font-bold text-lg border-b-2 border-[#F25019] pb-4 -mb-4.5 uppercase tracking-wide">
             Mua vé nhanh
           </button>
@@ -166,12 +166,12 @@ export default function QuickBooking({
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="relative group">
-            <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-gray-400 group-hover:text-[#F25019] transition-colors">
+            <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-gray-500 group-hover:text-[#F25019] transition-colors">
               <Film size={16} /> Chọn Phim
             </div>
             <div className="relative">
               <select
-                className="w-full p-3 bg-black/50 border border-gray-700 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[#F25019] text-white font-medium truncate pr-10 cursor-pointer hover:border-[#F25019] transition-colors"
+                className="w-full p-3 bg-white border border-gray-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[#F25019] text-gray-900 font-medium truncate pr-10 cursor-pointer hover:border-[#F25019] transition-colors"
                 value={selectedMovie}
                 onChange={(e) => setSelectedMovie(e.target.value)}
               >
@@ -183,19 +183,19 @@ export default function QuickBooking({
                 ))}
               </select>
               <ChevronDown
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
                 size={20}
               />
             </div>
           </div>
 
           <div className="relative group">
-            <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-gray-400 group-hover:text-[#F25019] transition-colors">
+            <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-gray-500 group-hover:text-[#F25019] transition-colors">
               <MapPin size={16} /> Chọn Rạp
             </div>
             <div className="relative">
               <select
-                className="w-full p-3 bg-black/50 border border-gray-700 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[#F25019] text-white font-medium truncate pr-10 cursor-pointer hover:border-[#F25019] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full p-3 bg-white border border-gray-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[#F25019] text-gray-900 font-medium truncate pr-10 cursor-pointer hover:border-[#F25019] transition-colors disabled:opacity-50 disabled:bg-gray-50 disabled:cursor-not-allowed"
                 value={selectedCinema}
                 onChange={(e) => setSelectedCinema(e.target.value)}
               >
@@ -207,19 +207,19 @@ export default function QuickBooking({
                 ))}
               </select>
               <ChevronDown
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
                 size={20}
               />
             </div>
           </div>
 
           <div className="relative group">
-            <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-gray-400 group-hover:text-[#F25019] transition-colors">
+            <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-gray-500 group-hover:text-[#F25019] transition-colors">
               <Calendar size={16} /> Chọn Ngày
             </div>
             <div className="relative">
               <select
-                className="w-full p-3 bg-black/50 border border-gray-700 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[#F25019] text-white font-medium truncate pr-10 cursor-pointer hover:border-[#F25019] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full p-3 bg-white border border-gray-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[#F25019] text-gray-900 font-medium truncate pr-10 cursor-pointer hover:border-[#F25019] transition-colors disabled:opacity-50 disabled:bg-gray-50 disabled:cursor-not-allowed"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
                 disabled={!selectedMovie || !selectedCinema}
@@ -232,7 +232,7 @@ export default function QuickBooking({
                 ))}
               </select>
               <ChevronDown
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
                 size={20}
               />
             </div>
@@ -240,12 +240,12 @@ export default function QuickBooking({
 
           <div className="flex gap-2 items-end">
             <div className="relative flex-1 group">
-              <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-gray-400 group-hover:text-[#F25019] transition-colors">
+              <div className="flex items-center gap-2 mb-2 text-sm font-semibold text-gray-500 group-hover:text-[#F25019] transition-colors">
                 <Clock size={16} /> Suất Chiếu
               </div>
               <div className="relative">
                 <select
-                  className="w-full p-3 bg-black/50 border border-gray-700 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[#F25019] text-white font-medium truncate pr-10 cursor-pointer hover:border-[#F25019] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full p-3 bg-white border border-gray-200 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-[#F25019] text-gray-900 font-medium truncate pr-10 cursor-pointer hover:border-[#F25019] transition-colors disabled:opacity-50 disabled:bg-gray-50 disabled:cursor-not-allowed"
                   value={selectedShowtime}
                   onChange={(e) => setSelectedShowtime(e.target.value)}
                   disabled={!selectedDate || !selectedMovie || !selectedCinema}
@@ -261,7 +261,7 @@ export default function QuickBooking({
                   ))}
                 </select>
                 <ChevronDown
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
                   size={20}
                 />
               </div>
@@ -270,7 +270,7 @@ export default function QuickBooking({
             <button
               onClick={handleBooking}
               disabled={!selectedShowtime}
-              className="bg-[#F25019] hover:bg-[#d14012] disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg h-[50px] whitespace-nowrap flex items-center justify-center"
+              className="bg-[#F25019] hover:bg-[#d14012] disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl h-[50px] whitespace-nowrap flex items-center justify-center"
             >
               MUA VÉ
             </button>
