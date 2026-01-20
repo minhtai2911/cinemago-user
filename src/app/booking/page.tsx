@@ -44,8 +44,7 @@ import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import PaymentMethodModal from "@/components/booking/PaymentMethodModal";
 import Footer from "@/components/Footer";
-const SOCKET_URL =
-  process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:8000";
+const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const TICKET_TO_SEAT_MAP: Record<TicketType, string> = {
   STANDARD: "NORMAL",
