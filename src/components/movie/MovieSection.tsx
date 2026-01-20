@@ -38,45 +38,57 @@ export default function MovieSection({
   if (!movies || movies.length === 0) return null;
 
   return (
-    <section className="relative w-full py-10">
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl md:text-3xl font-black text-gray-900 border-l-4 border-[#F25019] pl-4 uppercase">
-          {title}
-        </h2>
-        <div className="flex gap-3">
-          <button
-            onClick={prevSlide}
-            disabled={currentIndex === 0}
-            className="p-3 rounded-full bg-white border hover:bg-[#F25019] hover:text-white transition-all"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            onClick={nextSlide}
-            disabled={currentIndex >= maxIndex}
-            className="p-3 rounded-full bg-white border hover:bg-[#F25019] hover:text-white transition-all"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      </div>
+    // BỎ bg-gradient, để trong suốt
+    <section className="relative w-full py-8">
+      <div className="container mx-auto px-4">
+        {/* HEADER STYLE MỚI: Giống ảnh mẫu */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center flex-grow">
+            <h2 className="text-2xl md:text-3xl font-black text-[#F25019] uppercase tracking-wide shrink-0 mr-6">
+              {title}
+            </h2>
+            {/* Đường kẻ mờ chạy ngang sang phải */}
+            <div className="h-[2px] w-full max-w-xs bg-gradient-to-r from-orange-200/50 to-transparent rounded-full hidden sm:block"></div>
+          </div>
 
-      <div className="relative overflow-hidden -mx-3 p-3">
-        <div
-          className="flex transition-transform duration-500 ease-in-out"
-          style={{
-            transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)`,
-          }}
-        >
-          {movies.map((movie) => (
-            <div
-              key={movie.id}
-              style={{ width: `${100 / itemsPerPage}%` }}
-              className="flex-shrink-0 px-3 pb-4"
+          <div className="flex gap-2">
+            <button
+              onClick={prevSlide}
+              disabled={currentIndex === 0}
+              className="w-9 h-9 flex items-center justify-center rounded-full border border-orange-100 bg-white/50 text-gray-500 hover:bg-[#F25019] hover:border-[#F25019] hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
             >
-              <MovieCard movie={movie} showBookingButton={showBookingButton} />
-            </div>
-          ))}
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={nextSlide}
+              disabled={currentIndex >= maxIndex}
+              className="w-9 h-9 flex items-center justify-center rounded-full border border-orange-100 bg-white/50 text-gray-500 hover:bg-[#F25019] hover:border-[#F25019] hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        <div className="relative overflow-hidden -mx-4 p-4 -my-4 pt-2 pb-6">
+          <div
+            className="flex transition-transform duration-500 ease-out"
+            style={{
+              transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)`,
+            }}
+          >
+            {movies.map((movie) => (
+              <div
+                key={movie.id}
+                style={{ width: `${100 / itemsPerPage}%` }}
+                className="flex-shrink-0 px-3"
+              >
+                <MovieCard
+                  movie={movie}
+                  showBookingButton={showBookingButton}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
