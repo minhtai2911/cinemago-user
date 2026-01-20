@@ -96,7 +96,7 @@ export default function SeatMap({
       toast.warning(
         limit === 0
           ? `Bạn chưa chọn vé loại ${ticketName}!`
-          : `Đủ số lượng vé ${ticketName}. Bỏ chọn ghế cũ trước khi chọn mới.`
+          : `Đủ số lượng vé ${ticketName}. Bỏ chọn ghế cũ trước khi chọn mới.`,
       );
       return;
     }
@@ -155,19 +155,33 @@ export default function SeatMap({
 
   return (
     <div className="w-full bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-[0_40px_80px_rgba(255,110,70,0.08)] border border-white/10 mt-12 mb-24 animate-in fade-in slide-in-from-bottom-8 duration-700">
-      <h3 className="text-3xl font-black text-center text-[#1f2937] mb-4 uppercase">
-        Chọn Ghế
+      {/* --- 1. AMBIENT BACKGROUND (Sáng, Mơ màng & Đốm sáng trôi) --- */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Lớp Noise (Tạo texture giấy/phim cũ) */}
+        <div
+          className="absolute inset-0 opacity-[0.04] z-20"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          }}
+        ></div>
+
+        <div className="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] bg-orange-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-blob"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[300px] h-[300px] bg-rose-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-[30%] left-[20%] w-[200px] h-[200px] bg-yellow-100 rounded-full mix-blend-multiply filter blur-[80px] opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
+      <h3 className="text-3xl md:text-3xl font-black text-center text-gray-900 mb-8 tracking-tight">
+        CHỌN{" "}
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7043] to-[#FFAB91]">
+          GHẾ NGỒI
+        </span>
       </h3>
 
       <div className="w-full max-w-3xl mx-auto mb-12 relative flex flex-col items-center">
-        {/* Single white screen with stronger orange glow and expanded shadow */}
         <div className="relative w-[85%] mb-2">
-          {/* blurred orange glow behind the screen */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="w-full h-3 rounded-full bg-gradient-to-r from-transparent via-[#FFB07A]/40 to-transparent filter blur-[18px] opacity-95"></div>
           </div>
 
-          {/* white screen on top */}
           <div className="relative z-10 h-3 bg-white rounded-full w-full shadow-[0_20px_80px_rgba(255,120,60,0.28)]"></div>
         </div>
         <p className="text-center text-gray-600 text-sm uppercase tracking-widest mt-4">
@@ -214,7 +228,8 @@ export default function SeatMap({
                   } else if (isHeld) {
                     seatClass = `bg-gray-400 border-gray-600 text-gray-700 cursor-not-allowed opacity-90 h-9 ${widthClass}`;
                   } else if (isSelected) {
-                    seatClass = `bg-gradient-to-r from-[#FFE089] to-[#FFAE57] border-transparent text-white font-bold scale-100 z-10 h-9 ${widthClass} cursor-pointer`;
+                    seatClass = `bg-gradient-to-r from-[#FF7043] to-[#FFAB91]
+                     border-transparent text-white font-bold scale-100 z-10 h-9 ${widthClass} cursor-pointer`;
                     // Selected gradients per seat type as requested
                     /*if (seat.type === "NORMAL") {
                       seatClass = `bg-gradient-to-r from-[#FFE089] to-[#FFAE57] border-transparent text-white font-bold scale-100 z-10 h-9 ${widthClass} cursor-pointer`;
@@ -236,7 +251,7 @@ export default function SeatMap({
                       onClick={() => handleSeatClick(seat)}
                       className={cn(
                         "rounded-t-lg border flex items-center justify-center text-xs font-semibold transition-all duration-200 relative group",
-                        seatClass
+                        seatClass,
                       )}
                     >
                       {seat.type !== "EMPTY" && (
@@ -273,7 +288,7 @@ export default function SeatMap({
         />
 
         <LegendItem
-          color="bg-gradient-to-r from-[#FFE089] to-[#FFAE57] border-transparent"
+          color="bg-gradient-to-r from-[#FF7043] to-[#FFAB91] border-transparent"
           label="Đang chọn"
         />
 

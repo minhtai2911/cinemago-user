@@ -3,7 +3,7 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
-import { MapPin, ChevronDown } from "lucide-react";
+import { MapPin, ChevronDown, Check } from "lucide-react";
 import { getCinemaById } from "@/services";
 import type { Showtime, Cinema } from "@/types";
 
@@ -52,7 +52,7 @@ export default function ShowtimeList({
 
   useEffect(() => {
     const allCinemaIds = Array.from(
-      new Set(showtimes.map((st) => st.cinemaId))
+      new Set(showtimes.map((st) => st.cinemaId)),
     );
     const missingIds = allCinemaIds.filter((id) => !cinemasMap[id] && id);
 
@@ -119,7 +119,7 @@ export default function ShowtimeList({
         Object.keys(groups[d][c].groups).forEach((f) => {
           groups[d][c].groups[f].sort(
             (a, b) =>
-              new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+              new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
           );
         });
       });
@@ -150,7 +150,7 @@ export default function ShowtimeList({
 
   const currentCinemas = selectedDate ? groupedData[selectedDate] : {};
   const filteredCinemaIds = Object.keys(currentCinemas || {}).filter(
-    (id) => currentCinemas[id].city === selectedCity || cities.length <= 1
+    (id) => currentCinemas[id].city === selectedCity || cities.length <= 1,
   );
 
   useEffect(() => {
@@ -163,7 +163,7 @@ export default function ShowtimeList({
     }
 
     const targetShowtime = showtimes.find(
-      (s) => s.id === preSelectedShowtimeId
+      (s) => s.id === preSelectedShowtimeId,
     );
 
     if (!targetShowtime) return;
@@ -205,7 +205,7 @@ export default function ShowtimeList({
     setExpandedCinemas((prev) =>
       prev.includes(cinemaId)
         ? prev.filter((id) => id !== cinemaId)
-        : [...prev, cinemaId]
+        : [...prev, cinemaId],
     );
   };
 
@@ -246,9 +246,18 @@ export default function ShowtimeList({
   return (
     <div className="w-full font-sans">
       <div className="text-center mb-12">
-        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-orange-600 mb-8">
-          LỊCH CHIẾU
+        <span className="inline-block py-2 px-4 rounded-full bg-orange-50 border border-orange-200 text-[#E65100] text-xs font-bold tracking-widest uppercase mb-6">
+          ĐẶT VÉ NGAY
+        </span>
+        <h2 className="text-3xl md:text-5xl font-black text-stone-800 mb-4 tracking-tight">
+          KHÁM PHÁ{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF7043] to-[#FFAB91]">
+            LỊCH CHIẾU
+          </span>
         </h2>
+        <p className="text-lg text-stone-500 max-w-3xl mx-auto font-medium mb-6">
+          Tìm kiếm lịch chiếu phù hợp và đặt vé nhanh chóng cùng CinemaGo!
+        </p>
         <div>{renderDateTabs()}</div>
       </div>
 
@@ -256,26 +265,45 @@ export default function ShowtimeList({
         <h3 className="text-3xl font-black uppercase tracking-tight text-orange-600">
           DANH SÁCH RẠP
         </h3>
+        {/* DROPDOWN */}
         {cities.length > 0 && (
-          <div className="relative mt-4 md:mt-0">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-600 w-4 h-4" />
-            <select
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
-              className="appearance-none bg-transparent border border-orange-400 text-orange-600 font-bold py-2 pl-10 pr-10 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-400 cursor-pointer uppercase text-sm"
+          <div className="relative mt-4 md:mt-0 z-30 group">
+            <button
+              type="button"
+              className="flex items-center gap-3 bg-white border-2 border-orange-100 text-gray-700 font-bold py-2.5 pl-4 pr-12 rounded-xl cursor-pointer shadow-sm transition-all duration-300 hover:border-orange-300 hover:shadow-md hover:text-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-100 focus:border-orange-400 group-focus-within:border-orange-400 group-focus-within:ring-4 group-focus-within:ring-orange-100"
             >
-              {cities.map((c) => (
-                <option
-                  key={c}
-                  value={c}
-                  className="bg-[#fff7f0] text-orange-600"
-                >
-                  {c}
-                </option>
-              ))}
-            </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-              <ChevronDown className="w-4 h-4 text-orange-500" />
+              <div className="bg-orange-50 p-1.5 rounded-lg">
+                <MapPin className="w-4 h-4 text-orange-600" />
+              </div>
+              <span className="uppercase text-sm tracking-wide">
+                {selectedCity || "Chọn thành phố"}
+              </span>
+              <ChevronDown className="w-4 h-4 text-orange-400 absolute right-4 transition-transform duration-300 group-focus-within:rotate-180" />
+            </button>
+
+            <div className="absolute right-0 top-full mt-2 w-full md:w-[240px] bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden invisible opacity-0 -translate-y-2 scale-95 transition-all duration-200 origin-top-right group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:scale-100">
+              <div className="max-h-[300px] overflow-y-auto py-2 custom-scrollbar">
+                {cities.map((c) => (
+                  <button
+                    key={c}
+                    onClick={(e) => {
+                      setSelectedCity(c);
+                      (document.activeElement as HTMLElement)?.blur();
+                      e.currentTarget.blur();
+                    }}
+                    className={`w-full text-left px-4 py-3 text-sm font-semibold transition-all flex items-center justify-between group/item ${
+                      selectedCity === c
+                        ? "bg-orange-50 text-orange-700"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-orange-600"
+                    }`}
+                  >
+                    <span>{c}</span>
+                    {selectedCity === c && (
+                      <Check className="w-4 h-4 text-orange-600" />
+                    )}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -307,7 +335,7 @@ export default function ShowtimeList({
                   className="p-4 cursor-pointer hover:bg-orange-100/50 transition-colors flex justify-between items-center select-none"
                 >
                   <div>
-                    <h4 className="text-lg font-bold text-orange-700 uppercase">
+                    <h4 className="text-lg font-extrabold text-orange-700 uppercase">
                       {cinemaData.cinemaName}
                     </h4>
                     <p className="text-sm text-gray-600 mt-1">
