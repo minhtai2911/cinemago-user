@@ -115,7 +115,7 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setIsMenuOpen((prev) => !prev)}
-                className="flex items-center gap-2 focus:outline-none hover:bg-[#fff4ee] hover:rounded-xl px-2 py-1 transition cursor-pointer"
+                className="flex items-center gap-2 focus:outline-none hover:bg-[#fff4ee] hover:rounded-lg px-2 py-1 transition cursor-pointer"
               >
                 <Image
                   src={profile?.avatarUrl || "/default-avatar.png"}
@@ -130,7 +130,7 @@ export default function Navbar() {
               </button>
 
               {isMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-lg shadow-lg py-0 animate-fadeIn">
+                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-lg shadow-lg py-0 animate-fadeIn overflow-hidden">
                   <Link
                     href="/profile"
                     className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-[#fff4ee]"

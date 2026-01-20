@@ -7,6 +7,7 @@ import { resetPassword, forgotPassword } from "@/services";
 import axios from "axios";
 import useAuth from "@/hooks/useAuth";
 import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -24,6 +25,9 @@ export default function ResetPasswordPage() {
   const [countdown, setCountdown] = useState(180);
   const [resendLoading, setResendLoading] = useState(false);
 
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   useEffect(() => {
     if (countdown <= 0) return;
     const timer = setInterval(() => setCountdown((prev) => prev - 1), 1000);
@@ -33,7 +37,7 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     if (!emailParam) {
       toast.error(
-        "Thiếu email, vui lòng thực hiện lại quy trình quên mật khẩu"
+        "Thiếu email, vui lòng thực hiện lại quy trình quên mật khẩu",
       );
       router.push("/forgot-password");
     }
@@ -104,8 +108,8 @@ export default function ResetPasswordPage() {
         <Image
           width={500}
           height={500}
-          src="/popcorn.png"
-          alt=""
+          src="/popcorn.webp"
+          alt="popcorn cinemago"
           aria-hidden
           className="hidden lg:block pointer-events-none select-none absolute -left-52 top-1/2 -translate-y-1/2 w-[50%] opacity-25"
           style={{ transform: "scaleX(-1) rotate(-6deg)" }}
@@ -169,18 +173,19 @@ export default function ResetPasswordPage() {
                           {resendLoading
                             ? "Đang gửi..."
                             : countdown > 0
-                            ? "Chờ"
-                            : "Gửi lại"}
+                              ? "Chờ"
+                              : "Gửi lại"}
                         </button>
                       </div>
                     </div>
 
-                    <div>
+                    {/* Input Mật khẩu mới */}
+                    <div className="relative">
                       <input
-                        type="password"
+                        type={showNewPassword ? "text" : "password"}
                         required
                         placeholder="Mật khẩu mới"
-                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm"
+                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm pr-10"
                         value={formData.newPassword}
                         onChange={(e) =>
                           setFormData({
@@ -189,14 +194,26 @@ export default function ResetPasswordPage() {
                           })
                         }
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                      >
+                        {showNewPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
                     </div>
 
-                    <div>
+                    {/* Input Nhập lại mật khẩu mới */}
+                    <div className="relative">
                       <input
-                        type="password"
+                        type={showConfirmPassword ? "text" : "password"}
                         required
                         placeholder="Nhập lại mật khẩu mới"
-                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm"
+                        className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm pr-10"
                         value={formData.confirmPassword}
                         onChange={(e) =>
                           setFormData({
@@ -205,6 +222,19 @@ export default function ResetPasswordPage() {
                           })
                         }
                       />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
                     </div>
                   </div>
 
@@ -232,8 +262,8 @@ export default function ResetPasswordPage() {
               <Image
                 width={300}
                 height={300}
-                src="/popcorn.png"
-                alt="popcorn"
+                src="/popcorn.webp"
+                alt="popcorn cinemago"
                 className="w-[60%] h-auto object-contain drop-shadow-2xl"
               />
             </div>
