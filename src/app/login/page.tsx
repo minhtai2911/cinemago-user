@@ -33,7 +33,7 @@ export default function LoginPage() {
           case 400:
             if (error.response.data?.error === "User account is not active") {
               toast.error(
-                "Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để kích hoạt tài khoản."
+                "Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để kích hoạt tài khoản.",
               );
             } else {
               toast.error("Email hoặc mật khẩu không chính xác");
@@ -64,8 +64,8 @@ export default function LoginPage() {
         <Image
           width={500}
           height={500}
-          src="/popcorn.png"
-          alt=""
+          src="/popcorn.webp"
+          alt="popcorn cinemago"
           aria-hidden
           className="hidden lg:block pointer-events-none select-none absolute -left-52 top-1/2 -translate-y-1/2 w-[50%] opacity-25"
           style={{ transform: "scaleX(-1) rotate(-6deg)" }}
@@ -186,8 +186,8 @@ export default function LoginPage() {
               <Image
                 width={300}
                 height={300}
-                src="/popcorn.png"
-                alt="popcorn"
+                src="/popcorn.webp"
+                alt="popcorn cinemago"
                 className="w-[60%] h-auto object-contain drop-shadow-2xl"
               />
             </div>
