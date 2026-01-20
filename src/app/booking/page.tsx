@@ -683,7 +683,7 @@ export default function BookingPage() {
   return (
     <div className="min-h-screen bg-orange-50 text-white relative overflow-hidden flex flex-col">
       <Navbar />
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 pt-[120px] flex-grow w-full">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 pt-[70px] flex-grow w-full">
         <div className="bg-white rounded-2xl shadow-xl border border-white/30 p-6 md:p-8">
           <MovieDetailCard movie={movie} />
         </div>
@@ -738,8 +738,6 @@ export default function BookingPage() {
       <div className="mt-auto">
         <Footer />
       </div>
-
-      <div className="h-40 md:h-32 w-full"></div>
 
       {selectedShowtime && movie && (
         <BookingBottomBar
