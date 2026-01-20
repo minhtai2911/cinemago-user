@@ -38,16 +38,13 @@ export default function MovieSection({
   if (!movies || movies.length === 0) return null;
 
   return (
-    // BỎ bg-gradient, để trong suốt
     <section className="relative w-full py-8">
       <div className="container mx-auto px-4">
-        {/* HEADER STYLE MỚI: Giống ảnh mẫu */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center flex-grow">
             <h2 className="text-2xl md:text-3xl font-black text-[#F25019] uppercase tracking-wide shrink-0 mr-6">
               {title}
             </h2>
-            {/* Đường kẻ mờ chạy ngang sang phải */}
             <div className="h-[2px] w-full max-w-xs bg-gradient-to-r from-orange-200/50 to-transparent rounded-full hidden sm:block"></div>
           </div>
 
