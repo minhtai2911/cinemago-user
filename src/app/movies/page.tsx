@@ -31,7 +31,7 @@ export default function MoviesPage() {
   const [status, setStatus] = useState<"ALL" | MovieStatus>("ALL");
 
   const [sortBy, setSortBy] = useState<"releaseDate" | "rating" | "title">(
-    "releaseDate"
+    "releaseDate",
   );
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
@@ -103,7 +103,7 @@ export default function MoviesPage() {
           true,
           movieStatus,
           sortBy,
-          sortOrder
+          sortOrder,
         );
 
         setMovies(res.data || []);
@@ -115,7 +115,7 @@ export default function MoviesPage() {
         setIsMoviesLoading(false);
       }
     }, 500),
-    [selectedGenres, minRating, status, sortBy, sortOrder]
+    [selectedGenres, minRating, status, sortBy, sortOrder],
   );
 
   useEffect(() => {
@@ -135,7 +135,7 @@ export default function MoviesPage() {
     setSelectedGenres((prev) =>
       prev.includes(genreId)
         ? prev.filter((id) => id !== genreId)
-        : [...prev, genreId]
+        : [...prev, genreId],
     );
     setCurrentPage(1);
   };
@@ -215,7 +215,7 @@ export default function MoviesPage() {
 
       <div className="fixed top-0 left-0 right-0 h-screen overflow-hidden pointer-events-none z-0">
         <Image
-          src="/corn.png"
+          src="/corn.webp"
           alt=""
           width={1000}
           height={1000}
@@ -510,7 +510,7 @@ export default function MoviesPage() {
                               option.sortBy as
                                 | "releaseDate"
                                 | "rating"
-                                | "title"
+                                | "title",
                             );
                             setSortOrder(option.sortOrder as "asc" | "desc");
                             setCurrentPage(1);
@@ -602,7 +602,7 @@ export default function MoviesPage() {
                               {pageNum}
                             </button>
                           );
-                        }
+                        },
                       )}
                     </div>
 
