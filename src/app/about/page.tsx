@@ -173,7 +173,7 @@ export default async function AboutPage() {
               <div className="absolute w-[300px] h-[300px] lg:w-[450px] lg:h-[450px] bg-gradient-to-b from-[#FFF3E0] to-white rounded-full shadow-2xl shadow-orange-100/50"></div>
               <div className="relative w-full h-full transform hover:scale-105 transition-transform duration-700 animate-float">
                 <Image
-                  src="/popcorn.png"
+                  src="/popcorn.webp"
                   alt="Delicious Popcorn"
                   fill
                   className="object-contain drop-shadow-2xl"
@@ -195,7 +195,7 @@ export default async function AboutPage() {
 
           <div className="absolute top-0 right-0 w-64 h-64 opacity-90 hidden lg:block animate-bounce-slow pointer-events-none z-0">
             <Image
-              src="/popcorn.png"
+              src="/popcorn.webp"
               width={300}
               height={300}
               alt="Popcorn"

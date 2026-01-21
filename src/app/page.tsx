@@ -94,7 +94,7 @@ export default function HomePage() {
 
         <div className="absolute top-0 right-0 w-[40%] max-w-[600px] h-[800px] opacity-[0.15]">
           <Image
-            src="/corn.png"
+            src="/corn.webp"
             alt="Background Decoration"
             fill
             className="object-contain object-right-top"
