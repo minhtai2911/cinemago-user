@@ -43,7 +43,7 @@ export default function ProfileLayout({
       <div className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full bg-gradient-to-tr from-rose-100/20 to-orange-100/10 blur-[120px]"></div>
       <div className="absolute top-[40%] -left-[0%] w-[600px] h-[600px] opacity-[0.15] z-0 rotate-56">
         <Image
-          src="/corn.png"
+          src="/corn.webp"
           alt="Popcorn Background - Cinemago"
           fill
           className="object-contain"
