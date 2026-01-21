@@ -53,7 +53,7 @@ export default function BookingCompletedPage() {
 
   // --- START ---
   let bookingId: string | null =
-    searchParams.get("orderId") || searchParams.get("vnp_TxnRef");
+    searchParams.get("orderId") || searchParams.get("bookingId");
 
   const apptransid = searchParams.get("apptransid");
   if (apptransid?.includes("_")) {

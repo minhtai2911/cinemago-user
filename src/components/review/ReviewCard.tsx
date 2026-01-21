@@ -23,7 +23,7 @@ export default function ReviewCard({
   const [isReplying, setIsReplying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [responses, setResponses] = useState<ReviewResponse[]>(
-    review.response || []
+    review.response || [],
   );
 
   const router = useRouter();
@@ -39,7 +39,7 @@ export default function ReviewCard({
 
     const tempResponse: ReviewResponse = {
       content,
-      createdAt: new Date().toISOString(),
+      createdAt: Number(new Date()).toString(),
       userId: profile!.id,
       userDetail: {
         fullname: profile?.fullname || "Bạn",
@@ -47,7 +47,7 @@ export default function ReviewCard({
       },
     };
 
-    setResponses((prev) => [...prev, tempResponse]);
+    setResponses((prev) => [tempResponse, ...prev]);
     setReply("");
     setIsReplying(false);
 
@@ -57,7 +57,7 @@ export default function ReviewCard({
       toast.success("Phản hồi đã được gửi!");
     } catch {
       setResponses((prev) =>
-        prev.filter((r) => r.createdAt !== tempResponse.createdAt)
+        prev.filter((r) => r.createdAt !== tempResponse.createdAt),
       );
       toast.error("Gửi phản hồi thất bại. Vui lòng thử lại.");
     } finally {
@@ -128,8 +128,8 @@ export default function ReviewCard({
                 i < Math.floor(review.rating)
                   ? "fill-yellow-400 text-yellow-400"
                   : i < review.rating
-                  ? "fill-yellow-400/40 text-yellow-400"
-                  : "text-gray-200"
+                    ? "fill-yellow-400/40 text-yellow-400"
+                    : "text-gray-200"
               }`}
             />
           ))}
