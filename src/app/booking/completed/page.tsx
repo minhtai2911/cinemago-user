@@ -520,7 +520,7 @@ export default function BookingCompletedPage() {
           {/* Popcorn Watermark */}
           <div className="absolute top-[20%] -right-[5%] w-[400px] h-[400px] lg:w-[600px] lg:h-[600px] opacity-[0.1] z-0">
             <Image
-              src="/corn.png"
+              src="/corn.webp"
               alt="bg-cinemago"
               fill
               className="object-contain"
@@ -555,7 +555,7 @@ export default function BookingCompletedPage() {
             >
               <div className="absolute -bottom-10 -left-20 w-85 h-85 opacity-15 z-0 pointer-events-none rotate-12">
                 <Image
-                  src="/filmroll.png"
+                  src="/filmroll.webp"
                   alt="watermark-cinemago"
                   fill
                   className="object-contain"
