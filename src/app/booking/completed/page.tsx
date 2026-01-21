@@ -399,7 +399,7 @@ export default function BookingCompletedPage() {
             </body>
             </html>`; /* --- END OF htmlContent for mail --- */
 
-            await sendEmailNotification(
+            sendEmailNotification(
               profile.email,
               `Vé phim - Mã vé ${bookingData.id}`,
               htmlContent,
