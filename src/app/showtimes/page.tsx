@@ -110,7 +110,7 @@ export default function ShowtimesPage() {
           undefined,
           undefined,
           true,
-          MovieStatus.NOW_SHOWING
+          MovieStatus.NOW_SHOWING,
         );
         setNowShowingMovies(res.data || []);
       } catch (err) {
@@ -150,7 +150,7 @@ export default function ShowtimesPage() {
         selectedCinemaId,
         true,
         startTime,
-        endTime
+        endTime,
       );
       setShowtimes(res.data || []);
     } catch (err) {
@@ -174,7 +174,7 @@ export default function ShowtimesPage() {
   const groupedByMovie = showtimes.reduce(
     (
       acc: Record<string, { movie?: Movie; sessions: Showtime[] }>,
-      st: Showtime
+      st: Showtime,
     ) => {
       const movie = nowShowingMovies.find((m) => m.id === st.movieId);
       if (!acc[st.movieId]) {
@@ -183,7 +183,7 @@ export default function ShowtimesPage() {
       acc[st.movieId].sessions.push(st);
       return acc;
     },
-    {}
+    {},
   );
 
   return (
@@ -193,7 +193,7 @@ export default function ShowtimesPage() {
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-red-50 rounded-full blur-[120px] -translate-x-1/3 translate-y-1/3 opacity-60"></div>
 
         <Image
-          src="/corn.png"
+          src="/corn.webp"
           alt=""
           width={1000}
           height={1000}
@@ -477,7 +477,7 @@ export default function ShowtimesPage() {
                         <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-4 gap-2.5">
                           {sessions
                             .sort((a, b) =>
-                              a.startTime.localeCompare(b.startTime)
+                              a.startTime.localeCompare(b.startTime),
                             )
                             .map((session) => (
                               <Link
