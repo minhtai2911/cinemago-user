@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
-import { Camera, Loader2 } from "lucide-react";
+import { Camera, Check, ChevronDown, Loader2 } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
 import { updateProfile } from "@/services";
 
@@ -15,6 +15,33 @@ export default function PersonalInfoSection() {
     fullname: profile?.fullname || "",
     gender: profile?.gender || "",
   });
+
+  const [openGender, setOpenGender] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpenGender(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleGenderSelect = (value: string) => {
+    setFormData({ ...formData, gender: value });
+    setOpenGender(false);
+  };
+
+  const genderLabels: Record<string, string> = {
+    male: "Nam",
+    female: "Nữ",
+    other: "Khác",
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,7 +155,7 @@ export default function PersonalInfoSection() {
                 e.target.value = "";
               } catch {
                 toast.error(
-                  "Cập nhật ảnh đại diện thất bại. Vui lòng thử lại."
+                  "Cập nhật ảnh đại diện thất bại. Vui lòng thử lại.",
                 );
               } finally {
                 setIsLoading(false);
@@ -148,14 +175,18 @@ export default function PersonalInfoSection() {
           </span>
         </div>
       </div>
+
       <div className="bg-white/70 rounded-2xl p-6 shadow-xl border border-white/30">
-        <h3 className="text-xl font-bold text-[#1f2937] mb-4">
-          Thông tin cá nhân
-        </h3>
+        <h2 className="text-xl font-black uppercase tracking-tight mb-2 relative z-10">
+          <span className="text-gray-900">THÔNG TIN </span>
+          <span className="bg-gradient-to-r from-[#FF7043] to-[#FFAB91] bg-clip-text text-transparent">
+            CÁ NHÂN
+          </span>
+        </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-4xl">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-3 group-focus-within/input:text-[#F25019] transition-colors">
               Họ và tên
             </label>
             <input
@@ -164,38 +195,107 @@ export default function PersonalInfoSection() {
               onChange={(e) =>
                 setFormData({ ...formData, fullname: e.target.value })
               }
-              className="appearance-none rounded-md block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm"
+              className="w-full px-5 py-3 bg-white/50 border border-gray-200 rounded-xl text-gray-800 font-bold focus:outline-none focus:bg-white focus:border-orange-300 focus:shadow-sm transition-all placeholder:text-gray-300 text-sm"
               placeholder="Nhập họ và tên"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-3 group-focus-within/input:text-[#F25019] transition-colors">
               Giới tính
             </label>
-            <select
-              value={formData.gender}
-              onChange={(e) =>
-                setFormData({ ...formData, gender: e.target.value })
-              }
-              className="appearance-none rounded-md block w-full px-3 py-2 border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 sm:text-sm"
-            >
-              <option value="male">Nam</option>
-              <option value="female">Nữ</option>
-              <option value="other">Khác</option>
-            </select>
+
+            <div className="relative" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setOpenGender(!openGender)}
+                className={`appearance-none rounded-xl relative w-full px-5 py-3 border bg-white/50 text-left flex items-center justify-between text-sm font-bold transition-all
+             ${
+               openGender
+                 ? "border-orange-300 ring-2 ring-orange-100 bg-white shadow-sm"
+                 : "border-gray-200 text-gray-800 hover:border-gray-300 hover:bg-white"
+             }
+            `}
+              >
+                <span
+                  className={
+                    formData.gender ? "text-gray-800" : "text-gray-300"
+                  }
+                >
+                  {genderLabels[formData.gender] || "Chọn giới tính"}
+                </span>
+                <ChevronDown
+                  className={`text-gray-500 transition-transform duration-200 ${
+                    openGender ? "rotate-180" : ""
+                  }`}
+                  size={18}
+                />
+              </button>
+
+              {openGender && (
+                <div className="absolute z-50 mt-1 w-full bg-white shadow-lg max-h-60 rounded-xl py-1 text-base ring-1 ring-orange-500 ring-opacity-5 overflow-auto focus:outline-none sm:text-sm animate-in fade-in zoom-in-95 duration-100">
+                  <div
+                    onClick={() => handleGenderSelect("male")}
+                    className={`cursor-pointer select-none relative py-2 pl-5 pr-9 hover:bg-orange-50 hover:text-orange-600 transition-colors ${
+                      formData.gender === "male"
+                        ? "text-orange-600 bg-orange-50 font-bold"
+                        : "text-gray-900"
+                    }`}
+                  >
+                    <span className="block truncate">Nam</span>
+                    {formData.gender === "male" && (
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-orange-600">
+                        <Check size={16} />
+                      </span>
+                    )}
+                  </div>
+
+                  <div
+                    onClick={() => handleGenderSelect("female")}
+                    className={`cursor-pointer select-none relative py-2 pl-5 pr-9 hover:bg-orange-50 hover:text-orange-600 transition-colors ${
+                      formData.gender === "female"
+                        ? "text-orange-600 bg-orange-50 font-bold"
+                        : "text-gray-900"
+                    }`}
+                  >
+                    <span className="block truncate">Nữ</span>
+                    {formData.gender === "female" && (
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-orange-600">
+                        <Check size={16} />
+                      </span>
+                    )}
+                  </div>
+
+                  <div
+                    onClick={() => handleGenderSelect("other")}
+                    className={`cursor-pointer select-none relative py-2 pl-5 pr-9 hover:bg-orange-50 hover:text-orange-600 transition-colors ${
+                      formData.gender === "other"
+                        ? "text-orange-600 bg-orange-50 font-bold"
+                        : "text-gray-900"
+                    }`}
+                  >
+                    <span className="block truncate">Khác</span>
+                    {formData.gender === "other" && (
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-orange-600">
+                        <Check size={16} />
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="lg:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5 ml-3 group-focus-within/input:text-[#F25019] transition-colors">
               Email đăng nhập
             </label>
             <input
               type="email"
               value={profile.email}
               disabled
-              className="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-md text-gray-600 cursor-not-allowed"
+              className="w-full px-5 py-3 bg-gray-100 border border-gray-200 rounded-xl text-gray-600 font-bold cursor-not-allowed text-sm"
             />
           </div>
         </div>
@@ -204,10 +304,10 @@ export default function PersonalInfoSection() {
           <button
             type="submit"
             disabled={isLoading}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#F25019] to-[#E9391B] hover:from-[#E9391B] hover:to-[#F25019] text-white font-semibold text-sm px-4 py-2 rounded-md shadow transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gradient-to-r hover:from-[#F25019] hover:to-red-500 text-white font-black text-sm px-6 py-3.5 rounded-xl shadow-lg shadow-gray-200 hover:shadow-orange-500/20 transition-all duration-300 transform active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed group"
           >
             {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isLoading ? "Đang lưu..." : "Lưu thông tin"}
+            {isLoading ? "ĐANG LƯU..." : "LƯU THÔNG TIN"}
           </button>
         </div>
       </div>

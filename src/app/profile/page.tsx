@@ -8,8 +8,15 @@ export default function ProfilePage() {
     <>
       <Navbar />
       <ProfileLayout>
-        <PersonalInfoSection />
-        <ChangePasswordSection />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full items-start">
+          <div className="h-full">
+            <PersonalInfoSection />
+          </div>
+
+          <div className="h-full">
+            <ChangePasswordSection />
+          </div>
+        </div>
       </ProfileLayout>
     </>
   );

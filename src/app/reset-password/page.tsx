@@ -9,6 +9,9 @@ import useAuth from "@/hooks/useAuth";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
 
+const strongPasswordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
 export default function ResetPasswordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -58,6 +61,13 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!strongPasswordRegex.test(formData.newPassword)) {
+      toast.error(
+        "Mật khẩu mới yếu! Vui lòng sử dụng ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.",
+      );
+      return;
+    }
 
     if (formData.newPassword !== formData.confirmPassword) {
       toast.error("Mật khẩu xác nhận không khớp!");
