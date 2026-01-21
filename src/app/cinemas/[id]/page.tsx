@@ -28,7 +28,7 @@ export default async function CinemaDetailPage({
       undefined,
       "",
       true,
-      MovieStatus.NOW_SHOWING
+      MovieStatus.NOW_SHOWING,
     ),
     getMovies(
       undefined,
@@ -37,7 +37,7 @@ export default async function CinemaDetailPage({
       undefined,
       "",
       true,
-      MovieStatus.COMING_SOON
+      MovieStatus.COMING_SOON,
     ),
   ]);
 
@@ -74,7 +74,7 @@ export default async function CinemaDetailPage({
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-red-50 rounded-full blur-[120px] -translate-x-1/3 translate-y-1/3 opacity-60"></div>
 
         <Image
-          src="/corn.png"
+          src="/corn.webp"
           alt=""
           width={1000}
           height={1000}
