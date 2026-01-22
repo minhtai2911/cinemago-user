@@ -11,20 +11,21 @@ import {
 import { getShowtimes } from "@/services";
 import type { Movie, Showtime } from "@/types";
 
+const VN_TIMEZONE = "Asia/Ho_Chi_Minh";
+
 type MovieScheduleCardProps = {
   movie: Movie;
   cinemaId: string;
 };
 
 const getLocalDateKey = (iso: string) => {
-  return new Date(iso).toLocaleDateString("sv-SE");
+  return new Date(iso).toLocaleDateString("sv-SE", { timeZone: VN_TIMEZONE });
 };
 
 const toUtcFromVN = (dateStr: string, endOfDay = false) => {
-  const d = new Date(`${dateStr}T00:00:00`);
-  if (endOfDay) {
-    d.setHours(23, 59, 59, 999);
-  }
+  const d = new Date(
+    `${dateStr}T${endOfDay ? "23:59:59.999" : "00:00:00"}+07:00`
+  );
   return d;
 };
 
@@ -32,6 +33,7 @@ const formatTime = (iso: string) =>
   new Date(iso).toLocaleTimeString("vi-VN", {
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: VN_TIMEZONE,
   });
 
 const getNext3Days = () => {
@@ -41,7 +43,7 @@ const getNext3Days = () => {
   for (let i = 0; i < 3; i++) {
     const d = new Date(now);
     d.setDate(d.getDate() + i);
-    days.push(d.toLocaleDateString("sv-SE"));
+    days.push(d.toLocaleDateString("sv-SE", { timeZone: VN_TIMEZONE }));
   }
 
   return days;
@@ -49,10 +51,14 @@ const getNext3Days = () => {
 
 const getDateParts = (dateStr: string) => {
   const date = new Date(dateStr);
-  const weekday = date.toLocaleDateString("vi-VN", { weekday: "long" });
+  const weekday = date.toLocaleDateString("vi-VN", {
+    weekday: "long",
+    timeZone: VN_TIMEZONE,
+  });
   const dayMonth = date.toLocaleDateString("vi-VN", {
     day: "2-digit",
     month: "2-digit",
+    timeZone: VN_TIMEZONE,
   });
   return { weekday, dayMonth };
 };
