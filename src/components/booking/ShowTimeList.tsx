@@ -54,9 +54,7 @@ export default function ShowtimeList({
     const allCinemaIds = Array.from(
       new Set(showtimes.map((st) => st.cinemaId)),
     );
-    const missingIds = allCinemaIds.filter(
-      (id) => id && (!cinemasMap[id] || !cinemasMap[id].isActive),
-    );
+    const missingIds = allCinemaIds.filter((id) => !cinemasMap[id] && id);
 
     if (missingIds.length === 0) return;
 
